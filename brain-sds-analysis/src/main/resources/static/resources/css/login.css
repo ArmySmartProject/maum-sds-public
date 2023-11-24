@@ -1,0 +1,96 @@
+@charset "utf-8";
+/* MINDsLab. UX/UI Team. YMJ. 20180825 */ 
+
+/* Loading */ 
+.page_loading {position:fixed; top:0; left:0; width:100%; height:100%; background:#02112e; z-index:9999;}
+.loading_itemBox {display:block; position:absolute; top:50%; left:50%; width:80px; height:80px; margin:-40px 0 0 -40px;}
+.loading_itemBox span {position:absolute; top:33px; width:13px; height:13px; border-radius:50%; background:#0678c8; animation-timing-function:cubic-bezier(0, 1, 1, 0);}
+.loading_itemBox span:nth-child(1) {left:8px;  animation:loading_item1 0.6s infinite;}
+.loading_itemBox span:nth-child(2) {left:8px;  animation:loading_item2 0.6s infinite;}
+.loading_itemBox span:nth-child(3) {left:32px; animation:loading_item2 0.6s infinite;}
+.loading_itemBox span:nth-child(4) {left:56px; animation:loading_item3 0.6s infinite;}
+
+@keyframes loading_item1 {
+  0% {transform:scale(0);}
+100% {transform:scale(1);}
+}
+@keyframes loading_item3 {
+  0% {transform:scale(1);}
+100% {transform:scale(0);}
+}
+@keyframes loading_item2 {
+  0% {transform:translate(0, 0);}
+100% {transform:translate(24px, 0);}
+}
+.pageldg_hide {-webkit-animation-duration:1s; animation-duration:1s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:pageldg_hide; animation-name:pageldg_hide;}
+
+@-webkit-keyframes pageldg_hide {
+0% {opacity:1;}
+100% {opacity:0;}
+}
+
+@keyframes pageldg_hide {
+0% {opacity:1;}
+100% {opacity:0;}
+}
+
+body {background:url(../images/bg_login.png) 50% 50% no-repeat; background-size:cover;}
+
+/* IE 지원 브리우저 안내메세지 */ 
+.legacy_browser {position:fixed; top:0; left:0; width:100%; height:100%; background:url(../images/bg_legacy_browser.png) 0 0 repeat; z-index:9999;}
+.legacy_browser .legacyBox {overflow:hidden; position:absolute; top:50px; left:50%; width:400px; margin:0 0 0 -200px; border-radius:5px; box-shadow:0 0 30px rgba(0,0,0,0.5); background:#fff;}
+.legacy_browser .legacyBox .tit {clear:both; overflow:hidden; padding:10px 20px; background:#183554;}
+.legacy_browser .legacyBox .tit h1 {float:left;}
+.legacy_browser .legacyBox .tit h1 img {width:120px;}
+.legacy_browser .legacyBox .tit .btn_legacy_close {overflow:hidden; float:right; width:30px; height:30px; text-indent:-999px; border:none; background:url(../images/btn_legacy_close_w.png) 50% 50% no-repeat; opacity:0.3; cursor:pointer;}
+.legacy_browser .legacyBox .txt {display:block; padding:20px; color:#333; font-size:15px; line-height:24px; word-break:keep-all;}
+.legacy_browser .legacyBox .txt a {color:#0678c8;}
+.legacy_browser .legacyBox .txt a:hover, .legacy_browser .legacyBox .txt a:focus {text-decoration:underline;}
+
+.main_tit {position:absolute; top:40%; left:0; width:100%; margin:-180px 0 0 0; color:#fff; font-size:20px; font-weight:bold; text-align:center;}
+.main_tit img {width:250px;}
+
+/* Login */ 
+.loginWrap {overflow:hidden; position:absolute; top:50%; left:50%; width:853px; height:416px; margin:-208px 0 0 -426px; border-radius:5px; box-shadow:0 0 30px rgba(0,0,0,0.1); background:#fff;}
+.loginWrap fieldset {display:block; float:left; width:100%; height:100%;}
+.loginWrap .loginBox {display:table; width:100%; height:100%;}
+.loginWrap .fl {display:table-cell;  width:50%; height:100%; text-align:center; vertical-align:middle;font-size:50px; font-weight:bold;color:#3b445b; background:#2d374f;}
+.loginWrap .fl i {font-size:150px;color:#e85f49;}
+.loginWrap .fr {display:table-cell; position:relative; width:50%; padding:0 55px; text-align:center; vertical-align:middle;}
+
+.loginWrap .fr span {display:block; position:relative; margin:0 0 5px 0;}
+.loginWrap .fr span .ipt_txt {display:block; width:calc(100% - 47px); height:36px; padding:0 5px 0 40px; line-height:36px; border:2px solid #fff; border-radius:5px; box-shadow:inset 2px 2px 5px rgba(0,0,0,0.1); transition:all 0.3s ease-out;}
+.loginWrap .fr span #ipt_id {background:#e0e9f6 url(../images/ico_email.png) 10px 50% no-repeat;}
+.loginWrap .fr span #ipt_pw {background:#e0e9f6 url(../images/ico_pw.png) 10px 50% no-repeat;}
+.loginWrap .fr span .ipt_txt:focus {border:2px solid #c72127; box-shadow:none; background-color:#fff !important; transition:all 0.3s ease-out;}
+.loginWrap .fr span .ipt_txt.error {border:2px solid #c72127; transition:all 0.3s ease-out;}
+.loginWrap .fr span .rta_txt:focus{border:2px solid #c72127;}
+.loginWrap .fr span .chatbot_txt:focus{border:2px solid #c72127;}
+.loginWrap .fr span .voc_txt:focus{border:2px solid #c72127;}
+
+.loginWrap .fr span .txt_error { display:none; position:absolute; top:-23px; left:0; color:#f00; text-align:left;}
+.loginWrap .fr span .disbBox {position:absolute; top:0; left:0; width:100%; height:100%; cursor:pointer;}
+.loginWrap .fr span .btn_login {display:block; width:100%; height:46px; margin:27px 0 0 0; color:#fff; font-size:14px; line-height:46px; border:none; border-radius:3px; background:#c72127; cursor:pointer; transition:all 0.3s ease-out;}
+.loginWrap .fr span .btn_login.disabled {height:46px; background:#c72127;}
+.loginWrap .fr .btn_forgot {margin:10px 0 0 0; color:#0678c8; text-align:center; background-color:transparent; border:none;}
+
+.checkBox { padding:0 0 5px 2px; text-align:left;}
+.checkBox input[type="checkbox"] {position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0} 
+.checkBox input[type="checkbox"] + label {display:inline-block; position:relative; color:#363a44; font-size:13px; cursor:pointer; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;} 
+.checkBox input[type="checkbox"] + label:before {content:''; display:inline-block; overflow:hidden; width:17px; height:17px; font-size:13px; line-height:14px; margin:-1px 5px 0 0; text-align:center; vertical-align:middle; border:none; border-radius:3px; box-shadow:inset 2px 2px 3px rgba(0,0,0,0.1); background:#e0e9f6; transition:all 0.3s ease-out;} 
+.checkBox input[type="checkbox"]:checked + label:before {content:'\2714'; color:#fff; font-size:10px; box-shadow:inset 2px 2px 3px rgba(0,0,0,0);  background:#c72127; transition:all 0.3s ease-out;}
+
+.copyRight {position:absolute; bottom:20px; width:100%; color:#fff; text-align:center;}
+
+
+
+
+
+
+
+
+
+
+
+
+

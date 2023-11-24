@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.analysis.mapper.AnalysisMapper">
+    <select id="selectTotalMessages" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="java.lang.Integer">
+        <![CDATA[
+        select count(*) from IntentLog
+        where session is not null and intent != '처음으로'
+            and #{startDate} < createDate and createDate < #{endDate} and host=#{host}
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+    </select>
+    <select
+            id="selectTotalMsgPerHour"
+            parameterType="maum.brain.sds.analysis.model.AnalysisDto"
+            resultType="maum.brain.sds.analysis.model.AnalysisTimeDto"
+    >
+        <![CDATA[
+        select DATEPART(HOUR, createDate) as hour, count(createDate) as count
+        from IntentLog
+        where DATEPART(HOUR, createDate) is not null
+            and createDate > #{startDate} and createDate < #{endDate}
+            and host=#{host} and intent != '처음으로'
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+        group by DATEPART(HOUR, createDate)
+        order by hour
+
+    </select>
+    <select id="selectTotalUsers" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="java.lang.Integer">
+        <![CDATA[
+        select count(distinct session) from IntentLog where session is not null and intent != '처음으로' and host=#{host}
+            and #{startDate} < createDate and createDate < #{endDate}
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+    </select>
+    <select id="selectUsers" resultType="java.lang.Integer">
+        <![CDATA[
+        select count(distinct session) from IntentLog where session is not null and intent != '처음으로' and host=#{dto.host}
+            and #{dto.startDate} < createDate and createDate < #{dto.endDate} and channel like '%' + #{key} + '%'
+        ]]>
+        <if test='dto.lang != "100"'>
+            and lang=#{dto.lang}
+        </if>
+    </select>
+    <select
+            id="selectTotalUserPerHour"
+            parameterType="maum.brain.sds.analysis.model.AnalysisDto"
+            resultType="maum.brain.sds.analysis.model.AnalysisTimeDto"
+    >
+        <![CDATA[
+        select DATEPART(HOUR , createDate) as hour, count(createDate) as count from (
+            select session, min(createDate) as createDate
+            from IntentLog
+            where createDate > #{startDate} and createDate < #{endDate}
+                and host=#{host} and intent != '처음으로'
+        ]]>
+                <if test='lang != "100"'>
+                    and lang=#{lang}
+                </if>
+            group by session
+        ) a
+        where DATEPART(HOUR, createDate) is not null
+        group by DATEPART(HOUR, createDate) order by hour
+    </select>
+    <select id="selectWeakProb" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="java.lang.Integer">
+        <![CDATA[
+        select count(*) from IntentLog
+        where host=#{host} and #{startDate} < createDate and createDate < #{endDate} and (prob < 0.4 or intent ='Unknown2')
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+    </select>
+    <select id="selectTotalEmails" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="java.lang.Integer">
+        <![CDATA[
+        select count(*) from IntentLog
+        where host=#{host} and lang=#{lang} and #{startDate} < createDate and createDate < #{endDate} and channel like '%"sendResult":true%'
+        ]]>
+    </select>
+    <select id="selectMostIntents" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="maum.brain.sds.analysis.model.AnalysisAcumDto">
+        <![CDATA[
+        select top 10 count(id) as count, intent as content
+        from IntentLog
+        where host=#{host} and intent!='처음으로'
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+        group by intent order by count(id) desc
+    </select>
+    <select id="selectMostIntentsAll" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="maum.brain.sds.analysis.model.AnalysisAcumDto">
+        <![CDATA[
+        select count(id) as count, intent as content
+        from IntentLog
+        where host=#{host} and intent!='처음으로'
+        and createDate > #{startDate} and createDate < #{endDate}
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+        group by intent order by count desc
+    </select>
+    <select id="selectUttersFromIntents" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="maum.brain.sds.analysis.model.AnalysisAcumDto">
+        <![CDATA[
+        select count(id) as count, utter as content
+        from IntentLog
+        where intent=#{intent} and host=#{host}
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+        group by utter
+        order by count desc
+    </select>
+    <select id="selectEmailInfo" parameterType="String" resultType="String">
+        <![CDATA[
+        select Email
+        from Chatbot.dbo.Account
+        where No=#{host}
+        ]]>
+    </select>
+    <update id="updateEmailInfo" parameterType="String">
+        update Chatbot.dbo.Account
+		set Email=#{email}
+		where No=#{host}
+    </update>
+    <select id="selectUserCountry" parameterType="maum.brain.sds.analysis.model.AnalysisDto" resultType="maum.brain.sds.analysis.model.AnalysisAcumDto">
+        <![CDATA[
+        select distinct session, channel as content from IntentLog where session is not null and intent != '처음으로' and host=#{host}
+            and #{startDate} < createDate and createDate < #{endDate} and channel like '%country%'
+        ]]>
+        <if test='lang != "100"'>
+            and lang=#{lang}
+        </if>
+    </select>
+</mapper>

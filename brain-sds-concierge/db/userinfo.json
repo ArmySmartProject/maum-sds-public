@@ -1,0 +1,6 @@
+{
+    "data":
+    [
+        "{\"ok\":true,\"access_token\":\"xoxp-764024554533-751244281634-764773421250-9896af0cdadb518b1c5aa8fa5bfcad40\",\"scope\":\"identify,incoming-webhook\",\"user_id\":\"UN37689JN\",\"team_name\":\"goldentulip haeundae hotel\",\"team_id\":\"TNG0QGAFP\",\"enterprise_id\":null,\"incoming_webhook\":{\"channel\":\"#concierge\",\"channel_id\":\"CNVFN376H\",\"configuration_url\":\"https://goldentulipha-ump8253.slack.com/services/BNXNFUQTG\",\"url\":\"https://hooks.slack.com/services/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\"}}"
+    ]
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mail format</title>
+</head>
+<body>
+    <div style="font-family: sans-serif; text-align: center;">
+        <div style="display: inline-block; width: 100%; max-width: 800px; min-width: 400px; margin: 50px 0px; padding: 0px 5px; text-align: left;">
+            <div>
+                <p style="margin: 16px 0px; font-size: 24px; font-weight: bold;">고객님께서 남기신 <em style="font-style: normal; color: #0b6bf3ff;">{{ir_title}}</em>입니다.</p>
+                <p style="margin: 24px 0px; line-height: 22px; font-size: 14px;">
+                    방금 <em style="font-style: normal; color: #0b6bf3ff;">{{host}}</em> 님의 챗봇을 통하여 고객 문의 내용이 접수 되었습니다.<br>
+                    아래의 내용을 확인해주세요.
+                </p>
+            </div>
+
+            <div style="margin: 50px 0px 0px 0px;">
+                <div style="overflow: hidden; clear: both; padding: 0px 10px;">
+                    <div style="float: left;"><span style="font-size: 14px; font-weight: bold;">접수 내용</span></div>
+                    <div style="float: right;"><span style="font-size: 12px;">접수일 : <em style="font-style: normal;">{{date}}</em></span></div>
+                </div>
+                <table style="width: 100%; margin: 12px 0px; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black;">
+                    <colgroup>
+                        <col style="width: 150px;"><col>
+                    </colgroup>
+                    <tbody>
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">이름</th>
+                            <td style="padding: 10px 0px; font-size: 14px;">{{user_name}}</td>
+                        </tr>
+                        {{#if user_gender}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">성별</th>
+                            <td style="padding: 10px 0px; font-size: 14px;">{{user_gender}}</td>
+                        </tr>
+                        {{/if}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">전화번호</th>
+                            <td style="padding: 10px 0px; font-size: 14px;">{{user_phone}}</td>
+                        </tr>
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">이메일</th>
+                            <!-- [D] mailto 로 답변 시 현재의 메일 내용 전달이 자동으로 들어가게 가능할까요 -->
+                            <td style="padding: 10px 0px; font-size: 14px;">{{user_email}}<a href="mailto:hello@mindslab.ai?body=메일내용전달"></a></td>
+                        </tr>
+                        {{#if person_cnt}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">참석인원</th>
+                            <!-- [D] mailto 로 답변 시 현재의 메일 내용 전달이 자동으로 들어가게 가능할까요 -->
+                            <td style="padding: 10px 0px; font-size: 14px;">{{person_cnt}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if event_type}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">행사유형</th>
+                            <!-- [D] mailto 로 답변 시 현재의 메일 내용 전달이 자동으로 들어가게 가능할까요 -->
+                            <td style="padding: 10px 0px; font-size: 14px;">{{event_type}}</td>
+                        </tr>
+                        {{/if}}
+                        {{#if table_style}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">테이블유형</th>
+                            <!-- [D] mailto 로 답변 시 현재의 메일 내용 전달이 자동으로 들어가게 가능할까요 -->
+                            <td style="padding: 10px 0px; font-size: 14px;">{{table_style}}</td>
+                        </tr>
+                        {{/if}}
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">요청사항</th>
+                            <td style="padding: 10px 0px; line-height: 24px; font-size: 14px;">
+                                {{user_inquiry}}
+                            </td>
+                        </tr>
+                        <tr style="text-align: left;">
+                            <th style="padding: 10px 0px; vertical-align: top; text-align: left; font-size: 14px;">{{res_title}}</th>
+                            <td style="padding: 10px 0px; line-height: 24px; font-size: 14px;">
+                                {{res_date}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

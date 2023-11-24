@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOG-IN RedTie Analysis</title>
+    <link rel="stylesheet" type="text/css" href="resources/css/font.css">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <style>
+        body {width: 100%; min-width: 320px; height: 100%; margin: 0px; padding: 0px; text-align: center; background: url(/resources/images/loginBg.png) 0 0 no-repeat; background-size: 100% 100vh; font-family: 'Spoqa Han Sans','Noto Sans KR', sans-serif;}
+        body:before {content: ''; display: block; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4);}
+        div, em, span, button, input {box-sizing: border-box;}
+        em {font-style: normal;}
+        input {border: none; appearance: none; outline: none;}
+        button {border: none; outline: none; background: none;}
+
+        #wrap {display: inline-block; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 740px;}
+
+        .login_box {display: table; width: 100%; min-width: 300px; border-radius: 8px; background-color: #fff;}
+        .login_box > div {width: 50%; padding: 120px 16px; vertical-align: middle;}
+        .design_div {display: table-cell; position: relative;}
+        .design_div:after {content: ''; display: block; position: absolute; top: 40px; right: 0%; width: 1px; height: 333px; background-color: #999;}
+        .design_div em {font-size: 50px; font-weight: bold; color: #3b445b;}
+
+        #input_div {display: table-cell; overflow: hidden;}
+        #input_div .box {display: inline-block; width: 70%;}
+
+        #input_div input[type="text"], #input_div input[type="password"] {width: 100%; height: 36px; padding: 2px 0px 0px 12px; border-radius: 6px; background: #e0e9f6; border: 2px solid #fff; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1); transition: all 0.3s ease-out;}
+        #input_div input[type="text"]:focus, #input_div input[type="password"]:focus {border: 2px solid #8ab6f3;}
+        #input_div input[type="password"] {margin: 4px 0px 0px 0px;}
+        #input_div label {cursor: pointer;}
+
+        #input_div input[type="checkbox"] {position: absolute; left: -999px; vertical-align: middle;}
+        #input_div input[type="checkbox"]:checked + label:before {background: #444 url(/resources/images/ico_success_74x.png) top 3px left 2px no-repeat; background-size: 10px auto;}
+
+        #input_div .input_checkbox {display: none; margin: 6px 0px 0px 0px; text-align: left;}
+        #input_div .input_checkbox label {vertical-align: top; font-size: 11px; color: #444;}
+        #input_div .input_checkbox label:before {content: ''; display: inline-block; width: 14px; height: 14px; margin: 0px 6px 0px 2px; vertical-align: bottom; border-radius: 3px; border: 1px solid #888; background: #fff; }
+
+        #input_div #login {width: 100%; margin-top: 20px; padding: 10px 0px; border-radius: 6px; background-color: #c72127; color: #fff;}
+        #input_div img {display: block; width: 80px; margin: 20px auto 0px;}
+
+        #footer {position: fixed; bottom: 30px; left: calc(50% - 160px); width: 320px; font-size: 14px;}
+        #footer .copyright {color: #fff;}
+
+        @media screen and (max-width: 760px) {
+            body {background: url(/resources/images/loginBg.png) 50% 0 no-repeat; background-size: auto 100vh;}
+            #wrap {width: 80%;}
+            .design_div {display: none;}
+            .login_box > div {padding: 50px 0px;}
+            #input_div input[type="text"], #input_div input[type="password"] {font-size: 16px;}
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div class="login_box">
+            <div class="design_div">
+                <em>LOGIN</em>
+            </div>
+            <div id="input_div">
+                <div class="box">
+                    <input type="text" id="id" placeholder="Id"><br>
+                    <input type="password" id="password" placeholder="Password"><br>
+                    <div class="input_checkbox">
+                        <input type="checkbox" id="save_id"><label for="save_id">아이디 저장</label>
+                    </div>
+                    <button id="login">Login</button>
+                    <img src="/resources/images/img_tit_redtie.svg" alt="레드타이 버틀러 로고"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 200227 AMR footer -->
+    <script>
+      $("#password").keyup(function(e){
+        if(e.keyCode == 13)  login();
+      });
+
+      $("#login").click(function(){
+        login();
+      });
+
+      function login() {
+        $.ajax({
+          url:"/login",
+          data:{
+            id: $("#id").val(),
+            password: $("#password").val()
+          }
+        }).done(function(e){
+          // console.dir(e);
+          if (e !== 'Success') {
+            alert("LogIn Fail");
+            return;
+          }
+          window.location.href = "/";
+        })
+      }
+    </script>
+</body>
+</html>
