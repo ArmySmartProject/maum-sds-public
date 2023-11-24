@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package maum.brain.ner;
+
+service NamedEntityRecognition {
+    rpc GetNamedEntities(NerRequest) returns (NerResponse);
+}
+
+message NerRequest {
+    string text = 1;
+}
+
+message NerResponse {
+    repeated Entity entities = 1;
+}
+
+message Entity {
+    string text = 1;
+    string category = 2;
+}

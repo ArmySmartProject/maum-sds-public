@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package maum.brain.bert.intent;
+
+message Utterance {
+    string utter = 1;
+}
+
+message Intent {
+    string intent = 1;
+    float prob = 2;
+}
+
+service BertIntentFinder {
+    rpc GetIntentSimple(Utterance) returns (Intent);
+}

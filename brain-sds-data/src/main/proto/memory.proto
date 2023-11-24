@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_package="maum.brain.sds.memory";
+
+message MemMessage {
+    int32 status = 1;
+    string message = 2;
+}
+
+message MemUserInfo {
+    string host = 1;
+    string session = 2;
+}
+
+message MemIntent {
+    string intent = 1;
+    int32 hierachy = 2;
+    bool entities = 3;
+}
+
+message MemEntity {
+    string entity_name = 1;
+    string entity_value = 2;
+}
+
+message MemTurn {
+    string utter = 1;
+    MemIntent intent = 2;
+    repeated MemEntity entities = 3;
+    int32 lifespan = 4;
+    MemUserInfo user = 5;
+    map<string, string> entitySet = 6;
+}
+
+service SdsMemory {
+    rpc UserInit (MemUserInfo) returns (MemMessage);
+    rpc UserEnd (MemUserInfo) returns (MemMessage);
+    rpc PassTurn (MemUserInfo) returns (MemMessage);
+    rpc AddMemory (MemTurn) returns (MemMessage);
+    rpc GetLastMemory (MemUserInfo) returns (MemTurn);
+    rpc GetAllMemory (MemUserInfo) returns (stream MemTurn);
+    rpc GetMemoryByIntent (MemIntent) returns (stream MemTurn);
+    rpc GetMemoryByEntity (MemEntity) returns (stream MemTurn);
+    rpc ClearMemory(MemUserInfo) returns (MemMessage);
+}
