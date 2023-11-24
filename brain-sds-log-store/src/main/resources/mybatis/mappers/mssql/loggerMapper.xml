@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.logdb.components.LoggerMapper">
+    <insert id="logIntent" parameterType="maum.brain.sds.logdb.data.LogIntentDto">
+        insert into IntentLog (utter, intent) values (#{utter}, #{intent})
+    </insert>
+    <insert id="logEntity" useGeneratedKeys="true" keyProperty="id" parameterType="maum.brain.sds.logdb.data.LogEntityDto">
+        insert into EntityLog (utter) values (#{utter})
+    </insert>
+    <insert id="logEntityDetail" parameterType="maum.brain.sds.logdb.data.LogEntityDetailDto">
+        insert into EntityDetailLog(entityLogId, entityName, entityValue) values (#{entityLogId}, #{entityName}, #{entityValue})
+    </insert>
+    <insert id="logAnswer" parameterType="maum.brain.sds.logdb.data.LogAnswerDto">
+        insert into AnswerLog(utter, answer) values (#{utter}, #{answer})
+    </insert>
+    <insert id="logMessage" parameterType="maum.brain.sds.logdb.data.LogMessageDto">
+        insert into DebugLog(session, level, message) values ('test', #{level}, #{msg})
+    </insert>
+    <insert id="logIntentHost" parameterType="maum.brain.sds.logdb.data.LogIntentDto">
+        insert into IntentLog (utter, intent, host) values (#{utter}, #{intent}, #{host})
+    </insert>
+    <insert id="logEntityHost" useGeneratedKeys="true" keyProperty="id" parameterType="maum.brain.sds.logdb.data.LogEntityDto">
+        insert into EntityLog (utter, host) values (#{utter}, #{host})
+    </insert>
+    <insert id="logEntityDetailHost" parameterType="maum.brain.sds.logdb.data.LogEntityDetailDto">
+        insert into EntityDetailLog(entityLogId, entityName, entityValue, host) values (#{entityLogId}, #{entityName}, #{entityValue}, #{host})
+    </insert>
+    <insert id="logAnswerHost" parameterType="maum.brain.sds.logdb.data.LogAnswerDto">
+        insert into AnswerLog(utter, answer, host) values (#{utter}, #{answer}, #{host})
+    </insert>
+    <insert id="logIntentHostSession" parameterType="maum.brain.sds.logdb.data.LogIntentDto">
+        insert into IntentLog(utter, intent, host, session, lang) values (#{utter}, #{intent}, #{host}, #{session}, #{lang})
+    </insert>
+    <insert id="logIntentWProb" parameterType="maum.brain.sds.logdb.data.LogIntentDto">
+          insert into IntentLog (utter, intent, host, session, lang, prob, channel, prevIntentUtter, answer, debugJson, sessionId)
+        values (#{utter}, #{intent}, #{host}, #{session}, #{lang}, #{prob}, #{jsonData}, #{prevIntentUtter}, #{answer}, #{jsonDebugData}, ${sessionID})
+    </insert>
+    <insert id="logEntityHostSession" parameterType="maum.brain.sds.logdb.data.LogEntityDto">
+        insert into EntityLog(utter, createDate, host, session, lang) values (#{utter}, #{entity}, #{host}, #{session}, #{lang})
+    </insert>
+    <insert id="logStats" parameterType="maum.brain.sds.data.dto.log.SdsLogStatsRequest">
+        insert into StatsLog(host, session, utter) values (#{host}, #{session}, #{utter})
+    </insert>
+    <select id="selectAnswer" parameterType="maum.brain.sds.logdb.data.LogIntentDto" resultType="string">
+        select a.answer from Chatbot.dbo.answer a
+        where a.no in
+        (select answer from chatbot.dbo.intent where Main = #{intent} and Language = #{lang} and Account =#{host})
+    </select>
+    <select id="sessionLogCheck" parameterType="string" resultType="map">
+        SELECT Top 1 * from SessionLog where session=#{sessionID}
+    </select>
+    <insert id="sessionLogCountInsert" parameterType="maum.brain.sds.logdb.data.LogSessionDto">
+        insert into SessionLog(id, createdAt, host, session, channel, updatedAt, botCnt, consultantCnt, lang1Cnt, lang2Cnt, lang3Cnt, lang4Cnt) values (#{newSessionID}, getdate(), #{host}, #{session}, #{channel}, getdate(), #{botCnt}, #{consultantCnt}, #{lang1Cnt}, #{lang2Cnt}, #{lang3Cnt}, #{lang4Cnt})
+    </insert>
+
+    <update id="sessionLogCountUpdate" parameterType="maum.brain.sds.logdb.data.LogSessionCntDto">
+        update SessionLog
+        set updatedAt = getdate(), botCnt = #{botCnt}, lang1Cnt = #{lang1Cnt}, lang2Cnt = #{lang2Cnt}, lang3Cnt = #{lang3Cnt}, lang4Cnt = #{lang4Cnt}
+        WHERE id = #{id}
+    </update>
+
+    <select id="sessionMaxIDCheck" resultType="integer">
+        SELECT MAX(id) AS max_id FROM SessionLog
+    </select>
+
+    <update id="updateCounselor" parameterType="maum.brain.sds.util.logger.LogSessionCounselorRequest">
+        update SessionLog
+        set consultantCnt = #{counselorsCnt}, consultantId = #{counselorID}
+        WHERE session = #{sessionID}
+    </update>
+</mapper>
