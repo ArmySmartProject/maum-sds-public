@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.collector.component.SdsCollectorMapper">
+    <select id="getReqEntity" parameterType="maum.brain.sds.data.dto.db.SdsReqEntityDto" resultType="java.lang.String">
+        <![CDATA[
+            select IFNULL(MAX(entity), 'N') as entity
+              from Intent
+             where main = #{intent}
+               and Language = #{lang}
+               and Account = #{host}
+        ]]>
+    </select>
+    <select id="getEntityName" parameterType="int" resultType="java.lang.String">
+        <![CDATA[
+            select name from Entities where No=#{num}
+        ]]>
+    </select>
+    <select id="getBackendDestination" parameterType="java.lang.String" resultType="maum.brain.sds.collector.data.SdsBackendDto">
+        <![CDATA[
+            select id, ip, port from BackendInfo where host=#{host} and service=#{service}
+        ]]>
+    </select>
+    <select id="checkIntent" parameterType="java.lang.String" resultType="Integer">
+        select count(*) from Intent where Main=#{intent} and Account=#{host} and language=#{lang}
+    </select>
+    <select id="getIntentNum" parameterType="java.lang.String" resultType="Integer">
+        <![CDATA[
+            select IFNULL(MAX(no), 0) as no from Intent where Main=#{intent} and language=#{lang} and Account=#{host}
+        ]]>
+    </select>
+    <select id="getBertIntentNum" parameterType="hashmap" resultType="Integer">
+        <![CDATA[
+            select no from BertIntent where name=#{intent} and language=#{lang} and bertItfId=#{bertItfId}
+        ]]>
+    </select>
+    <select id="getDestIntent" parameterType="hashmap" resultType="Map">
+          select a.main as destIntent, b.srcIntent as srcIntentNum, b.bertIntent as bertIntentNum, IFNULL(b.metaData, '') as metaData
+          from Intent a, IntentRel b
+          where a.No = b.destIntent and b.bertIntent=#{bertIntentNum}
+    </select>
+    <select id="getFallbackIntent" parameterType="hashmap" resultType="java.lang.String">
+        <![CDATA[
+            select main from Intent a, Fallback b where a.No = b.intent and b.host=#{host} and b.language=#{lang}
+        ]]>
+    </select>
+    <select id="getRegexList" parameterType="map" resultType="map">
+            select a.Regex, b.Task, b.Name as Intent, a.No from RegexIntent a, BertIntent b
+            where a.BertIntentNo = b.No
+            and a.Host=#{host} and a.Language=#{lang} and
+            <if test='taskNum != 0'>
+              (b.Task like concat ('%', #{taskNum}, '%') OR b.Task = '0')
+            </if>
+            <if test='taskNum == 0'>
+              b.Task = '0'
+            </if>
+            order by a.No desc
+    </select>
+    <select id="getReplaceDict" parameterType="map" resultType="map">
+        <![CDATA[
+            select `Before`, After, StringCode, IntCode1, IntCode2, IntCode3, IntCode4, IntCode5
+            from ReplaceDict
+            where Host=#{host} and Lang=#{lang}
+            ORDER BY Length(RTRIM(`Before`)) desc
+        ]]>
+    </select>
+  <select id="getDestByBertName" parameterType="map" resultType="java.lang.String">
+        <![CDATA[
+              select I.Main
+              from Intent I
+              Where I.Name = #{BIName} and I.Account=#{host} and I.Language=#{lang} LIMIT 1
+        ]]>
+    </select>
+
+
+    <select id="getEntitiesDefault" parameterType="map" resultType="maum.brain.sds.data.vo.SdsEntity">
+        <![CDATA[
+              select E.name as entityName, E.val as entityValue
+              from Entities E
+              Where E.intent = #{intentNo} and E.Account=#{host} and E.Language=#{lang}
+        ]]>
+    </select>
+</mapper>
