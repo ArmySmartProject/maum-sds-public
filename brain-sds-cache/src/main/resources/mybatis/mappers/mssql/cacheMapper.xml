@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.cache.component.SdsCacheMapper">
+  <insert id="addCache" parameterType="maum.brain.cache.data.ChatbotCache">
+    insert into ChatbotCache (Host, PrevIntent, BertIntent, Answer, IsUtter, Lang)
+    values (#{host},#{prevIntent},#{bertIntent},#{answer},#{isUtter},#{lang})
+  </insert>
+
+  <delete id="delCache" parameterType="Integer">
+		delete from ChatbotCache
+		where Host=#{num}
+	</delete>
+
+  <select id="getCache" parameterType="maum.brain.cache.data.ChatbotCache" resultType="maum.brain.sds.data.dto.cache.SdsGetCacheResponse">
+    Select TOP 1 * From ChatbotCache
+    where Host=${host} and PrevIntent=#{prevIntent} and BertIntent=#{bertIntent} and Lang=#{lang}
+  </select>
+
+  <select id="getCacheEntityCheck" parameterType="maum.brain.cache.data.ChatbotCache" resultType="String">
+    SELECT ISNULL(B.Answer, '') AS Answer
+    FROM Intent A
+    LEFT JOIN Answer B ON A.Answer = B.No AND A.Language = B.Language
+    WHERE A.Language = #{lang}
+    <choose>
+      <when test='isCommonIntent == "Y"'>
+        AND A.NO = (SELECT DestIntent FROM IntentRel C
+                WHERE C.BertIntent = (SELECT a.No FROM BertIntent a
+                                      LEFT JOIN backendinfo b ON a.BertItfId = b.id AND b.service = 'ITF'
+                                      WHERE b.host = #{host} AND a.Name = #{bertIntent}))
+      </when>
+      <otherwise>
+        AND A.NO = (SELECT DestIntent FROM IntentRel C
+                    where SrcIntent = (SELECT no FROM intent
+                              where account = #{host} and Language = #{lang} and name = #{prevIntent})
+                    AND BertIntent = (SELECT a.No FROM BertIntent a
+                                      LEFT JOIN backendinfo b ON a.BertItfId = b.id AND b.service = 'ITF'
+                                      WHERE b.host = #{host} AND a.Name = #{bertIntent}))
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="getBertIntentCommonCheck" parameterType="maum.brain.cache.data.ChatbotCache" resultType="String">
+      SELECT
+            a.Task
+      FROM BertIntent a
+      LEFT JOIN backendinfo b ON a.BertItfId = b.id AND b.service = 'ITF'
+      WHERE b.host = #{host} AND a.Name = #{bertIntent}
+  </select>
+
+  <select id="getBotTypeCheck" parameterType="maum.brain.cache.data.ChatbotCache" resultType="Integer">
+      SELECT
+            COUNT(*) as cnt
+      FROM BertIntent a
+      LEFT JOIN backendinfo b ON a.BertItfId = b.id AND b.service = 'ITF'
+      WHERE b.host = #{host} AND a.Task != '0'
+  </select>
+</mapper>
