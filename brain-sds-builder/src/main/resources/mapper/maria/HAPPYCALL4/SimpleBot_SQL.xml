@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="simplebot">
+
+	<select id="selectSimpleBotById" parameterType="first.builder.vo.SimpleBotVO"
+		resultType="first.builder.vo.SimpleBotVO">
+		SELECT
+			S.ID AS id,
+			S.NAME AS name,
+			S.LANG AS lang,
+			S.SCENARIO_JSON AS scenarioJson,
+			S.CREATED_DTM AS createdAt,
+			S.UPDATED_DTM AS updatedAt,
+			S.HOST AS host,
+			S.APPLIED_YN AS appliedYn,
+			S.APPLIED_DTM AS appliedAt,
+			S.USER_ID AS userId,
+			S.COMPANY_ID AS companyId,
+			S.TEST_CONTRACT_NO AS testContractNo,
+			S.TEST_CUST_DATA AS testCustData,
+    	CC.TEL_NO AS testTelNo
+		 FROM SIMPLEBOT S
+         LEFT JOIN CM_CONTRACT CC
+         ON CC.CONTRACT_NO = S.TEST_CONTRACT_NO AND CC.CAMPAIGN_ID = 116
+		 WHERE ID = #{id}
+	</select>
+
+	<insert id="insertSimpleBot" parameterType="hashmap"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into SIMPLEBOT
+		(NAME, LANG, SCENARIO_JSON, CREATED_DTM, USER_ID, COMPANY_ID)
+		values(#{name}, #{lang}, #{scenarioJson}, #{createdAt}, #{userId}, #{companyId})
+	</insert>
+
+	<update id="updateScenarioJson" parameterType="first.builder.vo.SimpleBotVO">
+		update SIMPLEBOT
+		set SCENARIO_JSON = #{scenarioJson},
+		UPDATED_DTM = #{updatedAt},
+		APPLIED_YN = 'N'
+		where ID = #{id}
+	</update>
+
+	<update id="updateApplied" parameterType="first.builder.vo.SimpleBotVO">
+		update SIMPLEBOT
+		set APPLIED_YN = 'Y', APPLIED_DTM = #{appliedAt}
+		where ID = #{id}
+	</update>
+
+	<update id="updateHostForSimpleBot" parameterType="first.builder.vo.SimpleBotVO">
+		update SIMPLEBOT
+		set HOST = #{host}
+		where ID = #{id}
+	</update>
+
+	<select id="selectSimpleBotListFromUserId" parameterType="hashmap" resultType="map">
+		select
+			ID AS id,
+			NAME as name,
+			LANG as lang,
+			host as host,
+			USER_ID as userId,
+			COMPANY_ID as companyId
+		from SIMPLEBOT
+		where USER_ID=#{userId} and NAME like concat('%', #{keyword},'%')
+		order by UPDATED_DTM desc, CREATED_DTM desc;
+	</select>
+
+	<select id="selectSimpleBotListFromCompanyId" parameterType="hashmap" resultType="map">
+		select
+			ID AS id,
+			NAME as name,
+			LANG as lang,
+			host as host,
+			USER_ID as userId,
+			COMPANY_ID as companyId
+		from SIMPLEBOT
+		where COMPANY_ID=#{companyId} and NAME like concat('%', #{keyword},'%')
+		order by UPDATED_DTM desc, CREATED_DTM desc;
+	</select>
+
+	<delete id="deleteSimpleBotFromId" parameterType="hashmap">
+		delete from SIMPLEBOT
+		where ID=#{simplebotId}
+	</delete>
+
+	<select id="selectTestCustData" parameterType="hashmap" resultType="string">
+		select
+			TEST_CUST_DATA
+		from SIMPLEBOT
+		where ID = #{simplebotId}
+		limit 1;
+	</select>
+
+	<update id="updateTestCustData" parameterType="hashmap">
+		update SIMPLEBOT
+		set TEST_CUST_DATA = #{custDataJson}
+		where ID = #{simplebotId}
+	</update>
+
+	<update id="updateTestContractNo" parameterType="hashmap">
+		update SIMPLEBOT
+		set TEST_CONTRACT_NO = #{contractNo}
+		where ID = #{simplebotId}
+	</update>
+
+	<!-- CALL META (SPB_CALL_META, SPB_CALL_TASK_META) -->
+	<delete id="deleteCallTaskMetaFromId" parameterType="hashmap">
+		delete from SPB_CALL_TASK_META
+		where SIMPLEBOT_ID=#{simplebotId}
+	</delete>
+
+	<insert id="insertCallTaskMeta" parameterType="list">
+		insert into SPB_CALL_TASK_META
+		(SIMPLEBOT_ID, TASK, ACCEPT_STT_STC_IDX, MAX_TURN, TASK_OVER_MAX, DTMF)
+		values
+		<foreach collection="list" item="item" separator=", " >
+			(#{item.simplebotId}, #{item.task}, #{item.acceptSttStcIdx}, #{item.maxTurn}, #{item.taskOverMax}, #{item.dtmf})
+		</foreach>
+	</insert>
+
+
+	<!-- CALL 쪽 DB (CM_CONTRACT) -->
+	<select id="selectContractNo" parameterType="hashmap" resultType="int">
+		select
+			CONTRACT_NO
+		from CM_CONTRACT
+		where TEL_NO = #{telNo} AND CAMPAIGN_ID = #{campaignId} AND IS_INBOUND = 'N'
+		limit 1;
+	</select>
+
+	<insert id="insertContract" parameterType="hashmap"
+		useGeneratedKeys="true" keyProperty="contractNo">
+		insert into CM_CONTRACT
+		(CAMPAIGN_ID, TEL_NO, IS_INBOUND, USE_YN)
+		values(#{campaignId}, #{telNo}, 'N', 'Y')
+	</insert>
+	
+	<select id="getWaitingCustomer" parameterType="hashmap" resultType="int">
+     SELECT COUNT(*)
+	   FROM OB_CALL_QUEUE 
+	  WHERE 1=1
+		AND campaign_id = #{campaignId}
+		AND OB_CALL_QUEUE_ID <![CDATA[ < ]]> (SELECT OB_CALL_QUEUE_ID FROM OB_CALL_QUEUE WHERE contract_no = #{contractNo});
+    </select>
+
+	<select id="checkScenarioName" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) from SIMPLEBOT
+		WHERE Name=#{checkName} and ${checkP}=#{checkId}
+	</select>
+
+	<update id="updateScenarioName" parameterType="hashmap">
+		UPDATE SIMPLEBOT
+		SET Name=#{newName}
+		WHERE ID=#{simplebotId}
+	</update>
+
+	<select id="getCampaignList" parameterType="int" resultType="string">
+		SELECT CAMPAIGN_ID FROM CM_CAMPAIGN WHERE SIMPLEBOT_ID = #{simpleBotId}
+	</select>
+
+	<select id="getCampaignInfoTask" parameterType="string" resultType="string">
+		SELECT CATEGORY FROM CM_CAMPAIGN_INFO WHERE CAMPAIGN_ID = #{campaignId}
+	</select>
+
+	<insert id="insertCampaignInfo" parameterType="hashmap">
+		INSERT INTO CM_CAMPAIGN_INFO
+		(SEQ, CAMPAIGN_ID, CATEGORY, TASK, TASK_TYPE, TASK_ANSWER, TASK_INFO, SUCCESS_YN, USE_YN, SORT_ORDR)
+		VALUES
+		(#{seq}, #{campaignId}, #{category}, #{task}, #{taskType}, #{taskAnswer}, #{taskInfo}, #{successYn}, #{useYn}, #{sortOrdr})
+	</insert>
+
+	<update id="updateCampaignInfo" parameterType="hashmap">
+		UPDATE CM_CAMPAIGN_INFO
+		   SET USE_YN = #{useYn}, SORT_ORDR = #{sortOrdr}
+         WHERE CAMPAIGN_ID = #{campaignId}
+	</update>
+
+	<update id="updateCampaignInfoTask" parameterType="hashmap">
+		UPDATE CM_CAMPAIGN_INFO
+  		   SET SUCCESS_YN = #{successYn}, USE_YN = #{useYn}, SORT_ORDR = #{sortOrdr}
+         WHERE CATEGORY = #{category}
+	</update>
+
+	<update id="updateOldCampaignInfoTask" parameterType="hashmap">
+		UPDATE CM_CAMPAIGN_INFO
+  		   SET SUCCESS_YN = #{successYn}, CATEGORY = #{newTaskName}, TASK_INFO = #{newTaskName}
+         WHERE CATEGORY = #{oldTaskName}
+	</update>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nqa">
+
+	<select id="selectLastHistory" parameterType="hashmap" resultType="first.builder.vo.IndexingHistoryEntity">
+		select *
+		from NQA_INDEX_HISTORY
+		order by CREATED_AT desc
+		limit 1
+	</select>
+
+	<select id="selectHistoryByAddress" parameterType="hashmap" resultType="first.builder.vo.IndexingHistoryEntity">
+		select *
+		from NQA_INDEX_HISTORY
+		where CHANNEL_ID=#{channelId} and CATEGORY_ID=#{categoryId}
+		order by CREATED_AT desc
+		limit 1
+	</select>
+
+	<insert id="insertIndexingHistory" parameterType="first.builder.vo.IndexingHistoryEntity"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into NQA_INDEX_HISTORY (
+		    ADDRESS, CHANNEL_ID, CATEGORY_ID, CREATED_AT, CREATOR_ID,
+		    FETCHED, MESSAGE, PROCESSED, STATUS, STOP_YN, TOTAL, TYPE, UPDATED_AT, UPDATER_ID)
+		values (
+		    #{address}, #{channel_id}, #{category_id}, #{created_at}, #{creator_id},
+		    #{fetched}, #{message}, #{processed}, #{status}, #{stop_yn}, #{total}, #{type}, #{updated_at}, #{updater_id})
+	</insert>
+
+	<update id="updateIndexingHistory" parameterType="first.builder.vo.IndexingHistoryEntity">
+		update NQA_INDEX_HISTORY
+		set SCENARIO_JSON = #{scenarioJson},
+		UPDATED_DTM = #{updatedAt},
+		APPLIED_YN = 'N'
+		where ID = #{id}
+	</update>
+
+</mapper>

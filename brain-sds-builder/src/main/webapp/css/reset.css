@@ -1,0 +1,49 @@
+@charset "utf-8";
+/* MINDsLab. YMJ. 20190830 */
+
+/* [reset css] */
+* {font-family:"Noto Sans KR", sans-serif; -webkit-font-smoothing:antialiased; font-smooth:antialiased;}
+html,body {margin:0; padding:0; width:100%; height:100%; font-family:"Noto Sans KR", sans-serif; font-size:12px; color:#35384d; line-height:18px; background:none; -webkit-font-smoothing:antialiased; font-smooth:antialiased;}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td,legend,em,span {margin:0; padding:0; font-family:"Noto Sans KR", sans-serif;}
+table {border-spacing:0; border-collapse:collapse; font-family:"Noto Sans KR", sans-serif;}
+th, td {word-break:break-all;}
+form,fieldset {display:block;}
+form,fieldset,img {border:none;}
+address,caption,cite,code,dfn,em,th,var {font-style:normal; font-weight:normal;}
+.warn-em {color: #f34040}
+ol,ul,li {list-style:none;}
+abbr,acronym {border:none;}
+hr {display:none;}
+a {text-decoration:none; color:#333; cursor:pointer; font-family:"Noto Sans KR", sans-serif;}
+a:link,a:visited {text-decoration:none;}
+a:hover,a:active,a:focus {color:#000; text-decoration:none;}
+textarea {overflow:auto; resize: none;}
+option {padding-right:6px;} /* firefox fix */
+legend {position:absolute; top:0; left:0; width:0; height:0; overflow:hidden; visibility:hidden; font-size:0; line-height:0;} /* for screen reader */
+pre {word-wrap:break-word;}
+label {font-family:"Noto Sans KR", sans-serif;}
+h1,h2,h3,h4,h5,h6 {font-family:"Noto Sans KR", sans-serif;}
+br {background:none !important;}
+img {vertical-align:top;}
+a:focus, input:focus, textarea:focus, button:focus {outline:none !important;}
+button {cursor:pointer;}
+template {display: none;}
+
+/* input 기본 스타일 초기화 */
+input {-webkit-appearance:none; -moz-appearance:none; appearance:none;}
+
+/* input type number 에서 화살표 제거 */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {margin:0; -webkit-appearance:none; -moz-appearance:none; appearance:none;}
+input[type=number] {-moz-appearance:textfield;}
+input[type=text]::-ms-clear {display:none;}
+input[type=text]::-ms-clear {display:none;}
+input {filter:none;}
+input:-webkit-autofill{box-shadow: 0 0 0 30px inset; -webkit-text-fill-color:#000;}
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active{transition:background-color 5000s ease-in-out 0s; }
+input:focus{outline:none;}
+select:focus{outline:none;}
+
+/* Select box 스타일 초기화 */
+select {-webkit-appearance:none; -moz-appearance:none; appearance:none;}
+select::-ms-expand {display: none;}

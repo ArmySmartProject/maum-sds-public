@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* MINDsLab. AMR. 20210427 */
+html,body {height: 100%; margin: 0; padding: 0;}
+div,dl,dt,dd,ul,ol,li,form,fieldset,h1,h2,h3,h4,h5,h6,p {margin: 0; padding: 0;}
+h1,h2,h3,h4,h5,h6,p,em,span,pre,label,input,select,textarea,blockquote,li,dt,dd,th,td,legend,a,button {user-select: none;}
+em,i {font-style: normal;}
+img {border: none; vertical-align: top;}
+a {color: initial; text-decoration: none; box-sizing: border-box; cursor: pointer; /*a href가 없을 때*/ }
+button {padding: 0; border: none; background: none; font: inherit; appearance: none; cursor: pointer;}
+button:disabled {color: initial; cursor: default;}
+table {width: 100%; table-layout: fixed; border-collapse: collapse;}
+th {font-weight: normal;}
+th,td,li {cursor: default;}
+ol,ul {list-style: none;}
+label {user-select: none;}
+textarea {overflow: auto; resize: none;}
+input {appearance: none; -moz-appearance: none;}
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {appearance: none; -moz-appearance: none;} /* 화살표(위,아래) */
+input::-ms-clear {display: none;} /* x버튼 */
+select::-ms-expand {display: none;} /* 드롭다운 화살표 */
+pre {word-wrap: break-word;}
+template {display: none;}
+/* div,h1,h2,h3,h4,h5,h6,p,em,span,pre,label,input,select,textarea,blockquote,li,dt,dd,th,td,legend,a,button {} **font custom** */
+/* a:focus, input:focus, textarea:focus, button:focus, select:focus,
+a:active, input:active, textarea:active, button:active, select:active {outline-color: #717688;} **focus, active outline custom** */

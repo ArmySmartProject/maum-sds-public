@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maumsds">
+
+	<insert id="insertAccount" parameterType="hashmap"
+		useGeneratedKeys="true" keyProperty="no">
+		insert into Account(Name, Host)
+		values(#{name}, #{host})
+	</insert>
+
+	<insert id="insertBackendInfo" parameterType="hashmap">
+		insert into BackendInfo(host, ip, port, service)
+		select #{host}, ip, port, service from BackendInfo
+		where host = #{defaultHost}
+	</insert>
+
+	<insert id="insertBertIntent" parameterType="hashmap">
+		insert into BertIntent (Name, Language, BertItfId)
+		values (#{namePar},#{langPar},#{itfid})
+	</insert>
+
+	<select id="selectBertIntent" parameterType="hashmap" resultType="int">
+		select No
+		 from BertIntent
+		 where Name = #{bertIntentName} and LANGUAGE=#{langPar} and BertItfId=#{BertItfIDPar}
+	</select>
+
+	<delete id="deleteIntent" parameterType="hashmap">
+		delete from Intent
+		 where Account = #{userAccount} and Language = #{langPar}
+	</delete>
+
+	<delete id="deleteAnswer" parameterType="hashmap">
+		delete from Answer
+		 where Account = #{userAccount} and Language = #{langPar}
+	</delete>
+
+	<delete id="deleteBertIntentAll" parameterType="hashmap">
+		DELETE FROM BertIntent
+		WHERE BertIntent.BertItfId
+		in (SELECT BackendInfo.id FROM BackendInfo WHERE BackendInfo.host = #{host} AND BackendInfo.service = 'ITF')
+	</delete>
+
+	<delete id="deleteBertRegexIntentAll" parameterType="hashmap">
+		DELETE FROM RegexIntent
+		WHERE RegexIntent.Host = #{host}
+	</delete>
+
+	<delete id="deleteBertRegexRuleAll" parameterType="hashmap">
+		DELETE FROM RegexRule
+		WHERE RegexRule.RegexIntentNo
+			in (SELECT RegexRule.RegexIntentNo FROM RegexIntent
+			WHERE RegexIntent.Host = #{host}
+		)
+	</delete>
+
+	<delete id="deleteBertIntentAnswer" parameterType="hashmap">
+		 DELETE FROM Answer
+		 WHERE Account = #{host} AND Language = #{lang} AND
+		 No IN (SELECT IR.ConditionAnswer FROM IntentRel IR
+				WHERE IR.BertIntent = #{no}
+		 	 )
+	</delete>
+
+	<delete id="deleteIntentRelByIntentNo" parameterType="hashmap">
+		 DELETE FROM IntentRel
+		 WHERE IntentRel.BertIntent = #{no}
+	</delete>
+
+	<delete id="deleteBertIntentRegexRule" parameterType="hashmap">
+		DELETE FROM RegexRule
+		WHERE RegexIntentNo IN (SELECT RI.No FROM RegexIntent RI
+			WHERE RI.Host = #{host} AND RI.Language = #{lang} AND RI.BertIntentNo = #{no}
+		)
+	</delete>
+
+	<delete id="deleteBertRegexIntent" parameterType="hashmap">
+		DELETE FROM RegexIntent
+		WHERE RegexIntent.Host = #{host} AND RegexIntent.BertIntentNo = #{no}
+	</delete>
+
+	<delete id="deleteBertIntent" parameterType="hashmap">
+		DELETE FROM BertIntent
+		WHERE BertIntent.BertItfId IN (SELECT BackendInfo.id FROM BackendInfo WHERE BackendInfo.host = #{host} AND BackendInfo.service = 'ITF' AND BertIntent.No = #{no})
+	</delete>
+
+	<insert id="insertAnswer" parameterType="hashmap">
+		insert into Answer (Answer, Account, Language)
+		values (#{answerStr}, #{accountPar}, #{langPar})
+		<selectKey keyProperty="No" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Answer') as No
+		</selectKey>
+	</insert>
+
+	<insert id="insertTask" parameterType="hashmap">
+		insert into Intent (Language, Main, Name, Entity, Answer, Account)
+		values (#{langPar}, #{mainPar}, #{namePar}, #{entityPar}, #{answerPar}, #{accountPar})
+		<selectKey keyProperty="No" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Intent') as No
+		</selectKey>
+	</insert>
+
+	<insert id="insertTaskV2" parameterType="hashmap">
+		insert into Intent (Language, Main, Name, Entity, Answer, Account, Description)
+		values (#{langPar}, #{mainPar}, #{namePar}, #{entityPar}, #{answerPar}, #{accountPar}, #{taskGroupPar})
+		<selectKey keyProperty="No" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Intent') as No
+		</selectKey>
+	</insert>
+
+	<insert id="insertIntentRel" parameterType="hashmap">
+		insert into IntentRel (SrcIntent, BertIntent, DestIntent, ConditionAnswer, DestAnswerScope, MetaData)
+		values (#{srcPar}, #{bertPar}, #{destPar}, #{condPar}, #{destScopePar}, #{metaPar})
+	</insert>
+
+
+	<select id="selectBertIntentCheck" parameterType="hashmap" resultType="int">
+		select No
+		 from BertIntent
+		 where Name = #{BIName} and BertItfId = #{ItfIDPar} and Language = #{langPar}
+	</select>
+
+	<select id="selectIntentRelCheck" parameterType="hashmap" resultType="int">
+		select SrcIntent
+		from IntentRel
+		where SrcIntent=#{srcPar} and BertIntent=#{bertPar} and DestIntent=#{destPar}
+	</select>
+
+	<delete id="deleteOldIntentRELwithSrc" parameterType="hashmap">
+		DELETE FROM IntentRel
+			WHERE DestIntent=ANY(
+			SELECT No FROM Intent
+			WHERE Account=#{hostID} and Language=#{langPar})
+	</delete>
+
+	<select id="checkMyBackendInfo" parameterType="hashmap" resultType="int">
+		select id
+		from BackendInfo
+		where host=#{hostPar} and service=#{servicePar}
+	</select>
+
+	<insert id="insertNewBackendInfo" parameterType="hashmap">
+		insert into BackendInfo (host, service, ip, port)
+		values (#{host},#{service},#{ip},#{port})
+	</insert>
+
+	<select id="selectSrcList" parameterType="int" resultType="hashmap">
+		select a.No, (select convert(varchar, srcIntent) + ',' from IntentRel where bertIntent = a.No for xml path('')) as Task
+		from (select No from BertIntent where BertItfId = #{bertItfId}) a;
+	</select>
+
+	<update id="updateIntentTask" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update BertIntent
+			set Task = #{item.Task}
+			where No = #{item.No}
+		</foreach>
+	</update>
+
+	<select id="getForceTask" parameterType="int" resultType="hashmap">
+		select SrcIntent from IntentRel a, Intent b
+		where a.SrcIntent = b.no
+		and b.Account = #{host} and a.bertIntent = 0;
+	</select>
+
+	<update id="updateTaskType" parameterType="hashmap">
+		update IntentRel
+		set type = '강제'
+		WHERE DestIntent in
+		<foreach collection="list" item="list" index="index" open="(" close=")" separator=",">
+			#{list.SrcIntent}
+		</foreach>
+	</update>
+
+  <delete id="deleteRegex" parameterType="hashmap">
+		delete from RegexIntent
+		 where Host = #{host} and Language = #{lang}
+	</delete>
+
+  <insert id="insertRegex" parameterType="hashmap">
+    insert into RegexIntent (Host, Language, Intent, Regex, BertIntentNo) values
+		<foreach collection="regexList" item="item" index="index" close=";" separator=",">
+			(#{host}, #{lang}, #{item.intent}, #{item.regex}, (select no from BertIntent where name = #{item.intent} and BertItfId = #{bertItfId}))
+		</foreach>
+  </insert>
+
+	<update id="updateIntentOfTask" parameterType="hashmap">
+		update BertIntent set Task = 0 where BertItfId = #{bertItfId} and Name in
+		<foreach collection="intent" item="item" index="index" separator="," open="(" close=");">
+			#{item}
+		</foreach>
+	</update>
+
+	<delete id="deleteChatbotCache" parameterType="int">
+		delete from ChatbotCache where host = #{host}
+	</delete>
+	
+</mapper>

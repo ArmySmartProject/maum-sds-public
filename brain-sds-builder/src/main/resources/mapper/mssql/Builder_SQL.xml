@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="builder">
+
+  <select id="accountCheck" parameterType="hashmap" resultType="hashmap">
+		select * from account where 1=1
+		<if test="account != null and account != ''">
+			and name = #{account}
+		</if>
+		<if test="host != null and host != ''">
+			and no = #{host}
+		</if>
+	</select>
+
+  <insert id="insertAccount" parameterType="hashmap">
+    insert into account(name) values(#{account})
+  </insert>
+
+  <insert id="backupIntent" parameterType="hashmap">
+    select * into intent_bak_${date} from intent
+  </insert>
+
+  <insert id="backupAnswer" parameterType="hashmap">
+    select * into answer_bak_${date} from answer
+  </insert>
+
+  <insert id="insertAnswer" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index" separator=";">
+		IF not EXISTS(
+				SELECT answer FROM answer
+				WHERE Account = #{item.account} and Language = #{item.language} and Answer = #{item.answer}
+			)
+			BEGIN
+				insert into answer
+				(Answer, Account, Language, TmpNo, Url)
+				values(#{item.answer}, #{item.account}, #{item.language}, #{item.num}, #{item.serverUrl})
+			END
+		</foreach>
+	</insert>
+
+  <select id="countAnswer" parameterType="first.builder.vo.AnswerVO" resultType="int">
+		select count(*) from answer where account = #{account} and language = #{language}
+	</select>
+
+  <select id="checkAnswerNum" parameterType="hashmap" resultType="int">
+		select TmpNo from answer where Answer = #{answer} and Language = #{language}
+		and Account = #{account}
+	</select>
+
+  <insert id="insertIntent" parameterType="java.util.ArrayList">
+		insert into intent (Language,Main,Name,Entity,Answer,URL,Description,Account,TmpNo,TmpNextIntent)
+		values
+		<foreach collection="list" item="item" index="index" close=";" separator=",">
+		(#{item.language}, #{item.intent}, #{item.display}, #{item.entity},
+		(select TmpNo from answer where Answer = #{item.answer} and Language = #{item.language}
+		and Account = #{item.account}), #{item.image}, #{item.description}, #{item.account},
+		#{item.num}, #{item.nextIntent})
+		</foreach>
+	</insert>
+
+  <delete id="deleteIntent" parameterType="first.builder.vo.IntentVO">
+		delete from Intent where account = #{account} and language = #{language}
+	</delete>
+
+  <delete id="deleteAnswer" parameterType="first.builder.vo.AnswerVO">
+		delete from Answer where account = #{account} and language = #{language}
+	</delete>
+
+  <update id="updateScenario" parameterType="hashmap">
+		update a
+		set a.answer = b.no
+		from intent a inner join answer b on a.account = b.account and a.answer = b.TmpNo and a.Language = b.Language
+		where a.account = #{account} and a.Language = #{language}
+	</update>
+
+  <select id="selectBeforeData" parameterType="hashmap" resultType="hashmap">
+		select a.No,a.TmpNo,a.TmpNextIntent,''as'보정다음인텐트',a.main,a.name,a.next,b.answer
+		from intent a inner join answer b on a.account = b.account and a.answer = b.no
+		where a.account = #{account}
+		and a.Language = #{language}
+		order by TmpNo
+	</select>
+
+  <select id="checkIntentNum" parameterType="hashmap" resultType="int">
+		select a.No
+		from intent a inner join answer b on a.account = b.account and a.answer = b.no
+		where a.account = #{account}
+		and a.Language = #{language }
+		and a.TmpNo = #{num}
+	</select>
+
+  <update id="updateIntent" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index" separator=";">
+		update Intent
+		set next = #{item.next}
+		where no = #{item.no}
+		</foreach>
+	</update>
+
+  <insert id="insertBackendInfo" parameterType="hashmap">
+		insert into BackendInfo(host, service, ip, port) values (#{host}, #{service}, #{ip}, #{port})
+	</insert>
+
+  <select id="countChatLog" resultType="int">
+        select count(*) from ChatbotLog.dbo.intentLog
+	</select>
+
+  <select id="selectChatLogList" resultType="first.builder.vo.LogVO">
+		select * from ( select row_number() over(order by createDate desc) rownum, a.id, utter, intent, createDate, host, session, lang, prob, channel, prevIntentUtter, answer, b.Name
+		from ChatbotLog.dbo.IntentLog a, Account b
+    where a.host = b.No and createDate is not null and host is not null and session is not null and prob is not null and utter is not null)
+    IntentLog where rownum between #{pageStart} and #{pageEnd}
+	</select>
+
+  <select id="selectChatLogListExcel" fetchSize="100" resultType="first.builder.vo.LogVO">
+		select a.id, utter, intent, createDate, host, session, lang, prob, channel, prevIntentUtter, answer, b.Name
+		from ChatbotLog.dbo.IntentLog a, Account b
+		where a.host = b.No and createDate is not null and host is not null and session is not null and prob is not null and utter is not null
+		order by session, createDate
+	</select>
+
+  <select id="selectFlowNo" parameterType="string" resultType="first.builder.vo.LogVO">
+		select * from ChatbotLog.dbo.IntentLog
+    where session = #{session} order by createDate
+	</select>
+
+	<insert id="insertBertIntent" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index" separator=";">
+		IF not EXISTS(
+				select no from BertIntent
+				WHERE name = #{item.intent} and language = #{item.lang} and bertItfId = #{item.bertItfId}
+			)
+			BEGIN
+				insert into BertIntent
+				(name, language, bertItfId)
+				values(#{item.intent}, #{item.lang}, #{item.bertItfId})
+			END
+		</foreach>
+	</insert>
+
+	<insert id="insertIntentRel" parameterType="java.util.ArrayList">
+		insert into IntentRel(srcIntent, bertIntent, destIntent)
+		values
+		<foreach collection="list" item="item" index="index" close=";" separator=",">
+		(#{item.srcIntent},
+		ISNULL((select no from BertIntent where name = #{item.bertIntent} and language = #{item.lang} and bertItfId = #{item.bertItfId}),'-'),
+		ISNULL((select no from Intent where Main = #{item.intent} and language = #{item.lang} and Account = #{item.host}),'-'))
+		</foreach>
+	</insert>
+
+	<select id="getIntentNum" parameterType="hashmap" resultType="int">
+		select no from Intent where Main = #{intent} and language = #{lang} and Account = #{host}
+	</select>
+
+	<select id="getBertIntentNum" parameterType="hashmap" resultType="int">
+		select no from BertIntent where name = #{intent} and language = #{lang} and bertItfId = #{bertItfId}
+	</select>
+
+	<select id="getHostIdBackEndId" parameterType="hashmap" resultType="hashmap">
+		select a.no, b.id from account a, backendInfo b where a.no = b.host and b.service = 'itf'
+		<if test="account != null and account != ''">
+			and a.name = #{account}
+		</if>
+		<if test="host != null and host != ''">
+			and a.no = #{host}
+		</if>
+	</select>
+
+	<insert id="delInsertFallback" parameterType="hashmap">
+		<foreach collection="list" item="item" index="index" separator=";">
+		delete from Fallback where host = #{item.host} and language = #{item.lang};
+		insert into Fallback(host, intent, language) values (#{item.host}, (select no from intent where main = #{item.intent} and Account = #{item.host} and language = #{item.lang}), #{item.lang})
+		</foreach>
+	</insert>
+
+  <delete id="bakDelBertIntent" parameterType="hashmap">
+    select * into BertIntent_bak_${date} from BertIntent;
+		delete from BertIntent where bertItfId = #{bertItfId}
+	</delete>
+
+  <delete id="bakDelIntentRel" parameterType="hashmap">
+    select * into IntentRel_bak_${date} from IntentRel;
+		delete from IntentRel from IntentRel a, BertIntent b where a.bertIntent = b.no and b.bertItfId = #{bertItfId}
+	</delete>
+
+	<select id="getChatbotList" parameterType="hashmap" resultType="hashmap">
+		SELECT No, Name, Host, Language from Account WHERE 1=1
+			AND No IN
+			<foreach collection="chatList" item="item" index="index" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		<if test="searchChatbot != null and searchChatbot != ''">
+			AND (Name LIKE CONCAT('%', #{searchChatbot}, '%') OR Host LIKE CONCAT('%', #{searchChatbot},
+			'%'))
+		</if>
+		ORDER BY No
+	</select>
+
+	<select id="getIntentStcList" parameterType="hashmap" resultType="hashmap">
+		SELECT f.No, f.Name, f.host, f.BertIntentNo,
+		<!--ISNULL(SUBSTRING((SELECT '|' + sentence AS [text()] FROM-->
+		<!--BertSentence-->
+		<!--WHERE BertIntentNo = f.No-->
+		<!--<if test="searchIntent != null and searchIntent != ''">-->
+			<!--AND Sentence LIKE CONCAT('%', #{searchIntent}, '%')-->
+		<!--</if>-->
+		<!--FOR XML PATH ('')), 2, 1000), SUBSTRING((SELECT '|' + sentence AS [text()] FROM BertSentence-->
+		<!--WHERE BertIntentNo = f.No-->
+		<!--FOR XML PATH ('')), 2, 1000)) AS sentences,-->
+		ISNULL(SUBSTRING((SELECT '@' + Regex AS [text()] FROM RegexIntent
+		WHERE BertIntentNo = f.BertIntentNo FOR XML PATH ('')), 2, 1000), SUBSTRING((SELECT '@' + Regex AS [text()] FROM RegexIntent
+		WHERE BertIntentNo = f.BertIntentNo FOR XML PATH ('')), 2, 1000)) AS regex
+		FROM (
+		SELECT a.No, a.Name, b.host, d.BertIntentNo
+		FROM BertIntent a
+		INNER JOIN BackendInfo b
+		ON a.BertItfId = b.id
+-- 		LEFT OUTER JOIN BertSentence c
+-- 		ON a.No = c.BertIntentNo
+		LEFT OUTER JOIN RegexIntent d
+		ON a.No = d.BertIntentNo
+		LEFT OUTER JOIN RegexRule e
+		ON d.No = e.RegexIntentNo
+		WHERE b.host = #{host} and a.Language= #{lang}
+		<if test="searchIntent != null and searchIntent != ''">
+			AND (a.name LIKE CONCAT('%', #{searchIntent}, '%')
+			<!-- OR c.Sentence LIKE CONCAT('%',#{searchIntent}, '%') -->
+			OR d.Regex Like CONCAT('%', #{searchIntent}, '%') OR e.RuleValue LIKE CONCAT('%', #{searchIntent}, '%'))
+		</if>
+		GROUP BY a.No, a.Name, b.host, d.BertIntentNo
+		ORDER BY a.No
+		OFFSET #{startRow} ROWS FETCH NEXT ${endRow} ROWS ONLY
+		) f
+	</select>
+
+	<select id="getIntentStcListV2" parameterType="hashmap" resultType="hashmap">
+		SELECT f.No, f.Name, f.host, f.BertIntentNo, f.Task,
+
+		ISNULL(SUBSTRING((SELECT '@' + Regex AS [text()] FROM RegexIntent
+		WHERE BertIntentNo = f.BertIntentNo FOR XML PATH ('')), 2, 1000), SUBSTRING((SELECT '@' + Regex AS [text()] FROM RegexIntent
+		WHERE BertIntentNo = f.BertIntentNo FOR XML PATH ('')), 2, 1000)) AS regex
+
+		FROM (
+		SELECT a.No, a.Name, b.host, d.BertIntentNo, a.Task
+		FROM BertIntent a
+		INNER JOIN BackendInfo b
+		ON a.BertItfId = b.id
+		LEFT OUTER JOIN RegexIntent d
+		ON a.No = d.BertIntentNo
+		LEFT OUTER JOIN RegexRule e
+		ON d.No = e.RegexIntentNo
+		WHERE b.host = #{host} and a.Language= #{lang}
+		<if test="searchIntent != null and searchIntent != ''">
+			AND (a.name LIKE CONCAT('%', #{searchIntent}, '%')
+			OR d.Regex Like CONCAT('%', #{searchIntent}, '%') OR e.RuleValue LIKE CONCAT('%', #{searchIntent}, '%'))
+	    </if>
+		GROUP BY a.No, a.Name, b.host, d.BertIntentNo, a.Task
+		) f
+		ORDER BY f.No
+	</select>
+
+	<select id="getIntentCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(DISTINCT a.name) FROM BertIntent a
+		INNER JOIN BackendInfo b
+		ON a.BertItfId = b.id
+ 		<!-- LEFT OUTER JOIN BertSentence c -->
+ 		<!-- ON a.No = c.BertIntentNo -->
+		LEFT OUTER JOIN RegexIntent d
+		ON a.No = d.BertIntentNo
+		LEFT OUTER JOIN RegexRule e
+		ON d.No = e.RegexIntentNo
+		WHERE b.host = #{host} and a.Language= #{lang}
+		<if test="searchIntent != null and searchIntent != ''">
+			AND (a.name LIKE CONCAT('%', #{searchIntent}, '%')
+			<!-- OR c.Sentence LIKE CONCAT('%',#{searchIntent}, '%') -->
+			OR d.Regex Like CONCAT('%', #{searchIntent}, '%') OR e.RuleValue LIKE CONCAT('%', #{searchIntent}, '%'))
+		</if>
+	</select>
+
+	<select id="getSentenceList" parameterType="hashmap" resultType="hashmap">
+		SELECT a.No, a.Name, b.Sentence FROM BertIntent a LEFT OUTER
+		JOIN BertSentence b
+		ON a.No = b.BertIntentNo
+		WHERE 1=1
+		AND a.No = (SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host})
+		AND a.Language = #{lang}
+		<if test="searchSentence != null and searchSentence != ''">
+			AND b.Sentence like CONCAT('%', #{searchSentence}, '%')
+		</if>
+		ORDER BY b.Sentence OFFSET #{startRow} ROWS FETCH NEXT ${endRow} ROWS ONLY
+	</select>
+
+	<insert id="insertIntention" parameterType="hashmap">
+		INSERT INTO BertIntent
+		(Name, Language, BertItfId)
+		VALUES
+		<foreach collection="langList" item="item" index="index" close=";" separator=",">
+			(#{bertIntent}, #{item}, (SELECT id FROM BackendInfo WHERE service = 'ITF' AND host = #{host}))
+		</foreach>
+	</insert>
+
+	<insert id="insertIntentionV2" parameterType="hashmap" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO BertIntent (Name, Language, BertItfId)
+		VALUES (#{bertIntent}, #{lang}, (SELECT id FROM BackendInfo WHERE service = 'ITF' AND host = #{host}))
+		<selectKey keyProperty="BertIntentNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('BertIntent') as BertIntentNo
+		</selectKey>
+	</insert>
+
+	<select id="checkBertIntent" parameterType="hashmap" resultType="int">
+		SELECT COUNT(a.No) FROM BertIntent a INNER JOIN BackendInfo b ON
+		a.BertItfId = b.id WHERE b.host = #{host} AND a.Name = #{bertIntent} AND a.Language = #{lang}
+	</select>
+
+	<select id="getRegexList" parameterType="hashmap" resultType="hashmap">
+		SELECT f.BertIntentNo, f.Name, f.RegexIntentNo, f.Regex AS Regex, SUBSTRING((SELECT '@' + a.RuleValue + '#', b.RuleType AS [text()] FROM
+    RegexRule a, RegexRuleType b WHERE a.RuleTypeNo = b.No AND a.RegexIntentNo = f.RegexIntentNo
+    ORDER BY a.No FOR XML PATH ('')), 2, 1000) AS RegexRule
+		FROM (
+		SELECT a.No As BertIntentNo, a.Name, b.No As RegexIntentNo, b.Regex
+		FROM BertIntent a LEFT OUTER JOIN RegexIntent b
+		ON a.No = b.BertIntentNo LEFT OUTER JOIN RegexRule c
+		ON b.No = c.RegexIntentNo
+		WHERE 1=1
+		<choose>
+			<when test="bertIntentNo != null and bertIntentNo != ''">
+				AND a.No = #{bertIntentNo}
+			</when>
+			<otherwise>
+				AND a.No = (SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host})
+			</otherwise>
+		</choose>
+		AND a.Language = #{lang}
+		<if test="searchSentence != null and searchSentence != ''">
+			AND (b.Regex like CONCAT('%', #{searchSentence}, '%') OR c.RuleValue like CONCAT('%', #{searchSentence}, '%'))
+		</if>
+		GROUP BY a.No, a.Name, b.No, b.Regex
+		ORDER BY b.No OFFSET #{startRow} ROWS FETCH NEXT ${endRow} ROWS ONLY) f
+	</select>
+
+	<select id="getRegexListV2" parameterType="hashmap" resultType="hashmap">
+		SELECT f.BertIntentNo, f.Name, f.RegexIntentNo, f.Regex AS Regex, SUBSTRING((SELECT '@' + a.RuleValue + '#', b.RuleType AS [text()] FROM
+		RegexRule a, RegexRuleType b WHERE a.RuleTypeNo = b.No AND a.RegexIntentNo = f.RegexIntentNo
+		ORDER BY a.No FOR XML PATH ('')), 2, 1000) AS RegexRule
+		FROM (
+		SELECT a.No As BertIntentNo, a.Name, b.No As RegexIntentNo, b.Regex
+		FROM BertIntent a LEFT OUTER JOIN RegexIntent b
+		ON a.No = b.BertIntentNo LEFT OUTER JOIN RegexRule c
+		ON b.No = c.RegexIntentNo
+		WHERE 1=1
+		<choose>
+			<when test="bertIntentNo != null and bertIntentNo != ''">
+				AND a.No = #{bertIntentNo}
+			</when>
+			<otherwise>
+				AND a.No = (SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host})
+			</otherwise>
+		</choose>
+		AND a.Language = #{lang}
+		GROUP BY a.No, a.Name, b.No, b.Regex
+		) f
+	</select>
+
+	<select id="getRegexListAll" parameterType="hashmap" resultType="hashmap">
+		SELECT f.IntentName, f.IntentNo, f.Host, f.Language, f.Regex AS Regex, f.RegexIntentNo, SUBSTRING(
+			(SELECT '@' + a.RuleValue + '#', b.RuleType AS [text()]
+			FROM RegexRule a, RegexRuleType b
+			WHERE a.RuleTypeNo = b.No AND a.RegexIntentNo = f.RegexIntentNo
+			ORDER BY a.No FOR XML PATH ('')), 2, 1000)
+			AS RegexRuleAndType
+		FROM (
+			 SELECT c.Intent AS IntentName, c.BertIntentNo AS IntentNo, c.Host, c.Language, c.Regex, c.No As RegexIntentNo
+			 FROM RegexIntent c
+			  inner join (select no from BertIntent where BertItfId = (select id from BackendInfo where service = 'ITF' and host = #{host})) d
+				on c.BertIntentNo = d.No
+			 WHERE c.Language = #{lang}
+		) f
+		ORDER BY f.RegexIntentNo
+	</select>
+
+	<select id="getSentenceCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM BertSentence
+		WHERE BertIntentNo = (SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id
+		AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host})
+		<if test="searchSentence != null and searchSentence != ''">
+			AND Sentence like CONCAT('%', #{searchSentence}, '%')
+		</if>
+	</select>
+
+	<delete id="deleteIntention" parameterType="hashmap">
+		DELETE FROM BertIntent
+		FROM BertIntent a INNER JOIN BackendInfo b ON a.BertItfId = b.id
+		WHERE a.Name = #{bertIntentName} AND b.host = #{host} AND b.service = 'ITF'
+		AND a.Language IN
+    <foreach collection="langList" item="item" index="index" separator="," open="(" close=");">
+      #{item}
+    </foreach>
+    DELETE FROM IntentRel
+    FROM IntentRel a INNER JOIN BertIntent b ON a.BertIntent = b.No INNER JOIN BackendInfo c
+    ON b.BertItfId = c.id WHERE b.Name = #{bertIntentName} AND c.host = #{host} AND c.service = 'ITF'
+    AND b.Language IN
+    <foreach collection="langList" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+	</delete>
+
+	<select id="getIntentNo" parameterType="hashmap" resultType="int">
+		SELECT I.No FROM BertIntent I
+		INNER JOIN BackendInfo B
+		ON I.BertItfId = B.id and B.host = #{host} AND B.service = 'ITF'
+		WHERE I.Name = #{bertIntentName}
+	</select>
+
+	<select id="selectIntention" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			a.SrcIntent,
+			(SELECT name FROM Intent WHERE no = a.SrcIntent AND Account = #{host}) AS srcName,
+			a.DestIntent,
+			(SELECT name FROM Intent WHERE no = a.DestIntent AND Account = #{host}) AS destName
+		FROM IntentRel a
+		INNER JOIN BertIntent b
+		ON a.BertIntent = b.No
+		INNER JOIN BackendInfo c
+		ON b.BertItfId = c.id
+		WHERE b.Name = #{bertIntentName} AND c.host = #{host} AND c.service = 'ITF'
+		AND b.Language IN
+		<foreach collection="langList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<select id="getRegexCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(DISTINCT b.No) FROM BertIntent a LEFT OUTER JOIN RegexIntent b
+		ON a.No = b.BertIntentNo LEFT OUTER JOIN RegexRule c
+		ON b.No = c.RegexIntentNo
+		WHERE 1=1
+		<choose>
+			<when test="bertIntentNo != null and bertIntentNo != ''">
+				AND a.No = #{bertIntentNo}
+			</when>
+			<otherwise>
+				AND a.No = (SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host})
+			</otherwise>
+		</choose>
+		AND a.Language = #{lang}
+		<if test="searchSentence != null and searchSentence != ''">
+			AND (b.Regex like CONCAT('%', #{searchSentence}, '%') OR c.RuleValue like CONCAT('%', #{searchSentence}, '%'))
+		</if>
+	</select>
+
+	<select id="getRegexDetail" parameterType="hashmap" resultType="hashmap">
+		SELECT a.Regex, b.RuleValue, c.RuleType
+		FROM RegexIntent a LEFT OUTER JOIN RegexRule b ON a.No = b.RegexIntentNo
+		LEFT OUTER JOIN RegexRuleType c ON b.RuleTypeNo = c.No
+		WHERE a.No = #{regexIntentNo} ORDER BY b.No
+	</select>
+
+	<insert id="insertRegex" parameterType="hashmap" useGeneratedKeys="true" keyProperty="no">
+		INSERT INTO RegexIntent
+		(host, language, intent, regex, BertIntentNo)
+		VALUES ((SELECT a.host FROM BackendInfo a, BertIntent b WHERE a.id = b.BertItfId and b.no = #{bertIntentNo}),
+		#{lang},
+		<choose>
+			<when test="bertIntentName != null and bertIntentName != ''">
+				#{bertIntentName},
+			</when>
+			<otherwise>
+				'',
+			</otherwise>
+		</choose>
+		#{regex},
+		(SELECT a.No FROM BertIntent a, BackendInfo b WHERE a.BertItfId = b.id AND a.Name = #{bertIntentName} AND a.Language = #{lang} AND b.host = #{host}))
+	</insert>
+
+	<delete id="deleteRegexRuleAll" parameterType="hashmap">
+		DELETE FROM RegexRule
+		WHERE RegexRule.RegexIntentNo
+		  in (SELECT RegexRule.RegexIntentNo FROM RegexIntent
+			  WHERE RegexIntent.Host = #{host}
+		)
+	</delete>
+
+	<delete id="deleteRegexIntentAll" parameterType="hashmap">
+		DELETE FROM RegexIntent WHERE Host = #{host}
+	</delete>
+
+	<delete id="deleteRegexRule" parameterType="hashmap">
+		DELETE FROM RegexRule WHERE RegexIntentNo = #{regexIntentNo};
+		<if test="update == null">
+			DELETE FROM RegexIntent WHERE No = #{regexIntentNo};
+		</if>
+	</delete>
+
+	<insert id="insertRegexRule" parameterType="hashmap">
+		INSERT INTO RegexRule
+		(RegexIntentNo, RuleTypeNo, RuleValue)
+		VALUES
+		<foreach collection="list" item="item" index="index" close=";" separator=",">
+		(#{item.regexIntentNo}, (SELECT No FROM RegexRuleType WHERE RuleType = #{item.ruleType}), #{item.ruleValue})
+		</foreach>
+	</insert>
+
+	<update id="updateRegex" parameterType="hashmap">
+		UPDATE RegexIntent
+		SET Regex = #{regex}
+		WHERE No = #{regexIntentNo}
+	</update>
+
+	<select id="getAnswerList" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No, I.Main, I.Name, A.answer, I.Account
+		FROM Intent I LEFT OUTER JOIN Answer A
+		ON I.Answer = A.No
+		WHERE I.Account=#{host} and I.Language=#{lang}
+		ORDER BY I.No
+		OFFSET #{startRow} ROWS
+		FETCH NEXT #{endRow} ROWS ONLY
+	</select>
+
+	<select id="getTaskCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM Intent WHERE Account=#{host} and Language=#{lang}
+	</select>
+
+	<select id="getAnswerDetail" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No, I.Name, A.answer, I.URL, I.Description, I.Next, I.Language, I.Main, I.ResponseOrder, A.Url as A_URL
+		FROM Intent I LEFT OUTER JOIN Answer A ON I.Answer = A.No
+		WHERE I.No=#{intentNum}
+		ORDER BY I.No
+	</select>
+
+	<select id="getAnswerDetailByMain" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No, I.Name, I.Main, A.answer, I.URL, I.Description, I.Next, I.Language, A.Url as A_URL
+		FROM Intent I LEFT OUTER JOIN Answer A ON I.Answer = A.No
+		WHERE I.Main = #{mainPara} AND I.Language != #{langPara} AND I.Account = #{accountPara}
+		ORDER BY I.No
+	</select>
+
+	<select id="getAllIntents" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No, I.Main, I.Name,I.Next, I.URL, I.Language
+		FROM Intent I
+		WHERE I.Account=#{host}
+		ORDER BY I.No
+	</select>
+
+	<select id="getAllBertIntents" parameterType="hashmap" resultType="hashmap">
+		SELECT B.No, B.Name, B.Language
+		FROM BertIntent B LEFT OUTER JOIN BackendInfo BI
+		ON B.BertItfId = BI.id
+		WHERE BI.host=#{host}
+		ORDER BY B.No
+	</select>
+
+	<select id="getImageCarousel" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No, I.Main, I.Name, I.URL, I.Description
+		FROM Intent I
+		WHERE ${carStr}
+		ORDER BY I.No
+	</select>
+
+	<select id="getIntentRelInAnsDetail" parameterType="hashmap" resultType="hashmap">
+		SELECT IR.SrcIntent, IR.BertIntent, IR.DestIntent
+		FROM IntentRel IR
+		WHERE DestIntent=#{destPar}
+		ORDER By SrcIntent
+	</select>
+
+	<select id="getSettingVal" parameterType="hashmap" resultType="hashmap">
+		SELECT AC.Name, AC.Email, AC.HOST, AC.Description
+		FROM Account AC
+		WHERE No=#{host}
+	</select>
+
+	<select id="getStyleCSS" parameterType="hashmap" resultType="hashmap">
+		SELECT *
+		FROM style_css SC
+		WHERE host=#{host}
+	</select>
+
+	<select id="getTaskCheck" parameterType="hashmap" resultType="hashmap">
+		SELECT IT.No, IT.Main
+		FROM Intent IT
+		WHERE Main=#{Main} and Language=1 and Account=#{account}
+	</select>
+
+	<insert id="insertStyleCSS" parameterType="hashmap">
+		insert into style_css
+		(host, textColor, mainColor, logoSize, posX, posY)
+		values(#{host}, #{textColor}, #{mainColor}, #{logoSize}, #{posX}, #{posY})
+	</insert>
+
+	<update id="updateStyleCSS" parameterType="hashmap">
+		update style_css
+		set textColor = #{textColor}, mainColor = #{mainColor}, logoSize = #{logoSize}, posX = #{posX}, posY = #{posY}
+		WHERE host = #{host}
+	</update>
+
+	<update id="updateAccountSetting" parameterType="hashmap">
+		update Account
+		set Name = #{name} , Email = #{email}, Host=#{hostName}, Description=#{description}
+		WHERE No = #{host}
+	</update>
+
+
+
+	<insert id="insertAnswerNew" parameterType="hashmap">
+		insert into Answer (Answer, Account, Language, Url)
+		values (#{answerText},#{host},#{lang}, #{customServerUrl})
+		<selectKey keyProperty="AnswerNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Answer') as AnswerNo
+		</selectKey>
+	</insert>
+
+
+	<insert id="insertIntentNew" parameterType="hashmap">
+		insert into Intent
+		(Language, Main, Name, Answer, Next, URL, Description, Account, Entity)
+		values(#{lang}, #{taskName}, #{taskName}, #{answerNoNew}, #{nextText}, #{imgCardImg}, #{description}, #{host}, 'N')
+		<selectKey keyProperty="IntentNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Intent') as IntentNo
+		</selectKey>
+	</insert>
+
+
+	<insert id="insertIntentNewAll" parameterType="hashmap">
+		insert into Intent
+		(Language, Main, Name, Answer, Next, URL, Description, Account, Entity, greetyn, TmpNo, TmpNextIntent, ResponseOrder)
+		values(#{lang}, #{taskMain}, #{taskName}, #{answerNoNew}, #{nextText}, #{imgCardImg}, #{description}, #{host}, #{Entity}, #{greetyn}, #{TmpNo}, #{TmpNextIntent}, #{nowResponseOrder})
+		<selectKey keyProperty="IntentNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Intent') as IntentNo
+		</selectKey>
+	</insert>
+
+	<insert id="insertIntentRelNew" parameterType="hashmap">
+		insert into IntentRel
+		(SrcIntent, BertIntent, DestIntent)
+		values(#{SrcIntent},#{BertIntent},#{DestIntent})
+	</insert>
+
+
+	<select id="selectIntentNoAnswer" parameterType="hashmap" resultType="hashmap">
+		SELECT Answer, URL
+		FROM Intent
+		WHERE No=#{nowModifyingPK}
+	</select>
+
+	<delete id="deleteAnswerByNo" parameterType="first.builder.vo.AnswerVO">
+		delete from Answer where No = #{delNo}
+	</delete>
+
+	<update id="updateOldIntent" parameterType="hashmap">
+		update Intent
+		set Main = #{taskMain}, Name = #{taskName}, Answer = #{answerNoNew}, Next = #{nextText}, URL = #{URLNew}, Description = #{description}, ResponseOrder = #{nowResponseOrder}
+		WHERE No = #{nowModifyingPK}
+	</update>
+
+	<delete id="deleteOldIntentRel" parameterType="first.builder.vo.AnswerVO">
+		delete from IntentRel where DestIntent = #{nowModifyingPK}
+	</delete>
+
+	<delete id="deleteOldIntentByLang" parameterType="first.builder.vo.AnswerVO">
+		delete from Intent where No = #{nowModifyingPK} and Account=#{host}
+	</delete>
+
+	<select id="selectIntentBeforeDel" parameterType="hashmap" resultType="hashmap">
+		SELECT No
+		FROM Intent
+		WHERE Main=#{intentName} AND ACCOUNT=#{host}
+	</select>
+
+	<select id="checkBertItfID" parameterType="hashmap" resultType="hashmap">
+		SELECT id
+		FROM BackendInfo
+		WHERE host=#{host} AND service='ITF'
+	</select>
+
+	<insert id="insertBertIntentNow" parameterType="hashmap">
+		insert into BertIntent
+		(Name, Language, BertItfId)
+		values(#{Name},#{Language},#{BertItfId})
+		<selectKey keyProperty="BertNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('BertIntent') as BertNo
+		</selectKey>
+	</insert>
+
+	<delete id="deleteIntentByNo" parameterType="first.builder.vo.AnswerVO">
+		delete from Intent where No = #{intentPK}
+		delete from IntentRel where SrcIntent = #{intentPK} or DestIntent = #{intentPK}
+	</delete>
+
+
+	<select id="getTaskCountSearch" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM Intent I
+		LEFT OUTER JOIN Answer A
+		ON I.Answer = A.No
+		WHERE I.Account=#{host} and I.Language=1
+		and(A.Answer LIKE CONCAT('%', #{searchTaskSentence}, '%') OR I.Main LIKE CONCAT('%', #{searchTaskSentence}, '%') OR I.Name LIKE CONCAT('%', #{searchTaskSentence}, '%'))
+	</select>
+
+	<select id="getAnswerDetailSearch" parameterType="hashmap" resultType="hashmap">
+		SELECT I.Main, I.No, I.Name, A.answer, I.Account
+		FROM Intent I LEFT OUTER JOIN Answer A
+		ON I.Answer = A.No
+		WHERE I.Account=#{host} and I.Language=1
+		and(A.Answer LIKE CONCAT('%', #{searchTaskSentence}, '%') OR I.Main LIKE CONCAT('%', #{searchTaskSentence}, '%') OR I.Name LIKE CONCAT('%', #{searchTaskSentence}, '%'))
+		ORDER BY I.No
+		OFFSET #{startRow} ROWS
+		FETCH NEXT #{endRow} ROWS ONLY
+	</select>
+
+	<select id="getHostByAccount" parameterType="hashmap" resultType="hashmap">
+		SELECT Host
+		From Account
+		Where No=#{hostNum}
+	</select>
+
+
+	<select id="getHostName" parameterType="hashmap" resultType="hashmap">
+		SELECT No, Host
+		From Account
+		Where Host=#{hostName} and No!=#{nowNum}
+	</select>
+
+	<select id="getNewHostName" parameterType="hashmap" resultType="hashmap">
+		SELECT No, Host
+		From Account
+		Where Host=#{hostName}
+	</select>
+
+
+	<select id="getDomain" parameterType="hashmap" resultType="hashmap">
+		SELECT Name, DefaultHost
+		From Domain
+	</select>
+
+
+	<select id="getIntentNameByNo" parameterType="hashmap" resultType="hashmap">
+		SELECT *
+		From Intent
+		Where No=#{intentNo}
+	</select>
+
+
+
+
+
+	<insert id="addChatbot" parameterType="hashmap">
+		insert into Account (Name, Email, Host, Description,Language)
+		values (#{Name},#{email},#{host}, #{description}, #{langStr})
+		<selectKey keyProperty="AccountNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Account') as AccountNo
+		</selectKey>
+	</insert>
+
+	<insert id="insertBackendInfos" parameterType="hashmap">
+		insert into BackendInfo
+		(host, service, ip, port)
+		values(#{host},#{service},#{ip}, #{port})
+		<selectKey keyProperty="backendInfoNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('BackendInfo') as backendInfoNo
+		</selectKey>
+	</insert>
+
+	<insert id="insertBertIntentNew" parameterType="hashmap">
+		insert into BertIntent
+		(Name, Language, BertItfId)
+		values(#{Name},#{Language},#{BertItfId})
+		<selectKey keyProperty="BertIntentNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('BertIntent') as BertIntentNo
+		</selectKey>
+	</insert>
+
+	<select id="getBackendInfo" parameterType="hashmap" resultType="hashmap">
+		SELECT *
+		From BackendInfo
+		WHERE host=#{host}
+	</select>
+
+	<select id="getIntentAnswer" parameterType="hashmap" resultType="hashmap">
+		SELECT I.No as I_No, I.Language as I_Language, I.Answer as I_Answer, I.Account as I_Account, I.TmpNo as I_TmpNo, A.No as A_NO, A.Answer as A_Answer, A.Account as A_Account, A.TmpNo as A_TmpNo, A.Language as A_Language,
+				I.Main as Main, I.Name as Name, I.Entity as Entity, I.Next as Next, I.URL as URL, I.Description as Description, I.greetyn as greetyn, I.greet as greet, I.TmpNextIntent as TmpNextIntent
+		FROM Intent I LEFT OUTER JOIN Answer A
+		ON I.Answer = A.No
+		WHERE I.Account=#{host} AND(${langStr})
+	</select>
+
+	<select id="getIntentRelByAll" parameterType="hashmap" resultType="hashmap">
+		SELECT *
+		From IntentRel
+		WHERE ${whereStr}
+	</select>
+
+
+	<select id="getBertIntentByNo" parameterType="hashmap" resultType="hashmap">
+		select *
+		from BertIntent
+		where ${whereStr}
+	</select>
+
+
+	<insert id="insertIntentRelByAll" parameterType="hashmap">
+		insert into IntentRel
+		(SrcIntent, BertIntent, DestIntent, ConditionAnswer, DestAnswerScope)
+		values ${valStr}
+	</insert>
+
+
+	<insert id="insertAnswerByAll" parameterType="hashmap">
+		insert into Answer (Answer, Account, Language,TmpNo)
+		values (#{answerText},#{host},#{lang},#{TmpNo})
+		<selectKey keyProperty="AnswerNo" resultType="Integer" order="AFTER">
+			SELECT IDENT_CURRENT('Answer') as AnswerNo
+		</selectKey>
+	</insert>
+
+	<select id="getChatInfo" fetchSize="100" parameterType="hashmap" resultType="hashmap">
+		select
+			ROW_NUMBER() OVER (ORDER BY a.No) AS Row, ISNULL(a.No,'') as No,
+			a.Main, ISNULL(a.URL,'') as URL, ISNULL(a.Next,'') as TmpNextIntent,
+			ISNULL(string_agg(IIF(b.Language = 1, b.Main, ''),''),'') as intentKr, ISNULL(string_agg(IIF(b.Language = 1, b.Name, ''),''),'') as intentNmKr,
+			ISNULL(string_agg(IIF(b.Language = 1, b.Description, ''),''),'') as intentDescKr, ISNULL(string_agg(IIF(b.Language = 1, c.Answer, ''),''),'') as answerKr,
+			ISNULL(string_agg(IIF(b.Language = 2, b.Main, ''),''),'') as intentEn, ISNULL(string_agg(IIF(b.Language = 2, b.Name, ''),''),'') as intentNmEn,
+			ISNULL(string_agg(IIF(b.Language = 2, b.Description, ''),''),'') as intentDescEn, ISNULL(string_agg(IIF(b.Language = 2, c.Answer, ''),''),'') as answerEn,
+			ISNULL(string_agg(IIF(b.Language = 3, b.Main, ''),''),'') as intentJp, ISNULL(string_agg(IIF(b.Language = 3, b.Name, ''),''),'') as intentNmJp,
+			ISNULL(string_agg(IIF(b.Language = 3, b.Description, ''),''),'') as intentDescJp, ISNULL(string_agg(IIF(b.Language = 3, c.Answer, ''),''),'') as answerJp,
+			ISNULL(string_agg(IIF(b.Language = 4, b.Main, ''),''),'') as intentCh, ISNULL(string_agg(IIF(b.Language = 4, b.Name, ''),''),'') as intentNmCh,
+			ISNULL(string_agg(IIF(b.Language = 4, b.Description, ''),''),'') as intentDescCh, ISNULL(string_agg(IIF(b.Language = 4, c.Answer, ''),''),'') as answerCh
+		from (
+				SELECT no, language, main, name, answer, next, url, description, account
+				FROM Intent WHERE Account = #{host} AND Language = #{lang}
+			) a
+		left join Intent b on b.Account = #{host} and a.Main = b.Main
+		left join Answer c on b.Answer = c.No
+		group by a.Main, a.No, a.URL, a.Next
+		order by a.No
+	</select>
+
+	<select id="getBertIntent" fetchSize="100" parameterType="hashmap" resultType="hashmap">
+		SELECT ISNULL((SELECT Name FROM BertIntent WHERE Name = a.Name AND BertItfId = a.BertItfId AND Language = 1), '') AS bertIntentKr,
+		 ISNULL((SELECT Name FROM BertIntent WHERE Name = a.Name AND BertItfId = a.BertItfId AND Language = 2), '') AS bertIntentEn,
+		 ISNULL((SELECT Name FROM BertIntent WHERE Name = a.Name AND BertItfId = a.BertItfId AND Language = 3), '') AS bertIntentJp,
+		 ISNULL((SELECT Name FROM BertIntent WHERE Name = a.Name AND BertItfId = a.BertItfId AND Language = 4), '') AS bertIntentCh
+		FROM BertIntent a INNER JOIN BackendInfo b ON a.BertItfId = b.id AND b.host = #{host} GROUP BY a.Name, a.BertItfId
+	</select>
+
+	<select id="getIntentRel" fetchSize="100" parameterType="hashmap" resultType="hashmap">
+		SELECT ISNULL((SELECT Main FROM Intent WHERE No = a.SrcIntent), '*') AS Src_Task,
+    (SELECT Main FROM Intent WHERE No = a.DestIntent) AS Dest_Task,
+    (SELECT Name FROM BertIntent WHERE No = a.BertIntent) AS Bert_Intent
+		FROM IntentRel a LEFT OUTER JOIN Intent b ON a.DestIntent = b.No AND a.SrcIntent = b.No
+		LEFT OUTER JOIN BertIntent c ON a.BertIntent = c.No LEFT OUTER JOIN BackendInfo d ON c.BertItfId = d.id where c.Language = #{lang} AND d.host = #{host}
+	</select>
+
+	<select id="getFallback" parameterType="hashmap" resultType="hashmap">
+		SELECT (SELECT Main FROM Intent WHERE No = b.Intent) AS Intent
+		FROM Intent a INNER JOIN Fallback b ON a.No = b.Intent AND b.Host = #{host} ORDER BY b.Language
+	</select>
+
+	<update id="updateRegexIntent">
+		update a
+		set a.Intent = b.Name
+		from RegexIntent a, BertIntent b
+		where a.BertIntentNo = b.No
+	</update>
+
+	<update id="updateRegexBertNo" parameterType="hashmap">
+		update a
+		set a.BertIntentNo = b.No
+		from regexIntent a, bertIntent b
+		where a.Intent = b.Name and b.BertItfId = #{bertItfId} and a.Host = #{host}
+	</update>
+
+
+	<update id="updateStyleCSSSupplier" parameterType="hashmap">
+		update style_css
+		set supplier = #{supplier}
+		WHERE host = #{host}
+	</update>
+
+	<update id="changeAccountLang" parameterType="hashmap">
+		update Account
+		set Language = #{lang}
+		WHERE No = #{host}
+	</update>
+
+	<select id="getChatLang" parameterType="hashmap" resultType="hashmap">
+		SELECT Language FROM Account WHERE No = #{host}
+	</select>
+
+	<select id="checkRegex" parameterType="hashmap" resultType="int">
+		SELECT COUNT(Regex) FROM RegexIntent
+		WHERE Host = #{host} AND Regex = #{regex}
+	</select>
+
+	<select id="logDebug" parameterType="hashmap" resultType="hashmap">
+        SELECT TOP 1 A.*
+ 		  FROM ChatbotLog.dbo.intentLog A
+ 		  LEFT OUTER JOIN ChatbotLog.dbo.sessionLog B
+   			ON A.sessionId = B.id
+ 		 WHERE B.session=#{roomSession}
+		   AND A.utter = #{utter}
+      ORDER BY id DESC;
+    </select>
+
+	<delete id="deleteAccountByHost" parameterType="hashmap">
+		delete from Account where No = #{nowDelHost}
+		delete from Intent where Account = #{nowDelHost}
+		delete from Answer where Account = #{nowDelHost}
+		delete from BackendInfo where host = #{nowDelHost}
+		delete from style_css where host = #{nowDelHost}
+		delete from RegexIntent where Host = #{nowDelHost}
+		delete from ReplaceDict where Host = #{nowDelHost}
+	</delete>
+
+	<delete id="deleteAccountByHostV2" parameterType="hashmap">
+		delete from Account where No = #{host}
+		delete from BackendInfo where host = #{host}
+		delete from style_css where host = #{host}
+		delete from ReplaceDict where Host = #{host}
+	</delete>
+
+	<delete id="deleteIntentRelByHost" parameterType="hashmap">
+		delete from IntentRel
+		where ${delWhereStr}
+	</delete>
+
+	<delete id="deleteBertIntentByHost" parameterType="hashmap">
+		delete from BertIntent
+		where ${delWhereStr}
+	</delete>
+
+	<delete id="deleteRegexRuleByHost" parameterType="hashmap">
+		delete from RegexRule
+		where ${delWhereStr}
+	</delete>
+
+
+	<delete id="deleteBertSentenceByHost" parameterType="hashmap">
+		delete from BertSentence
+		where ${delWhereStr}
+	</delete>
+
+	<select id="selectIntentForDelete" parameterType="hashmap" resultType="hashmap">
+		SELECT No, Answer
+		FROM Intent
+		WHERE Account=#{nowDelHost}
+	</select>
+
+	<select id="selectBackendInfoForDelete" parameterType="hashmap" resultType="hashmap">
+		SELECT id
+		FROM BackendInfo
+		WHERE host=#{nowDelHost}
+	</select>
+
+	<select id="selectBertIntentForDelete" parameterType="hashmap" resultType="hashmap">
+		SELECT No
+		FROM BertIntent
+		WHERE ${backendInfoStr}
+	</select>
+
+	<select id="selectRegexIntentForDelete" parameterType="hashmap" resultType="hashmap">
+		SELECT No
+		FROM RegexIntent
+		WHERE Host = #{nowDelHost}
+	</select>
+
+	<select id="selectReplaceDict" parameterType="hashmap" resultType="hashmap">
+		SELECT *
+		FROM ReplaceDict
+		WHERE Host = #{nowHost}
+		ORDER BY Len(Before) desc
+	</select>
+
+	<insert id="insertReplaceDict" parameterType="hashmap">
+		INSERT ReplaceDict
+		values ${valStr}
+	</insert>
+
+	<select id="getReplaceDictCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) 
+		  FROM ReplaceDict 
+		 WHERE Host = ${host} 
+		   AND Lang = #{lang}
+		<if test="searchReplaceDict != null and searchReplaceDict != ''">
+		   AND (Before LIKE CONCAT('%', #{searchReplaceDict}, '%')
+			OR After LIKE CONCAT('%', #{searchReplaceDict}, '%'))
+		</if>
+	</select>
+
+	<select id="getReplaceDictLst" parameterType="hashmap" resultType="hashmap">
+		SELECT ROW_NUMBER() OVER(<choose>
+					              	 <when test="orderCol != null and orderCol != '' and orderSort != null and orderSort != ''">
+									 	 ORDER BY ${orderCol} ${orderSort}
+									 </when>
+									 <otherwise>
+										 ORDER BY No desc
+									 </otherwise>
+								 </choose> ) AS RNUM
+			 , No
+			 , Host
+			 , Lang
+			 , Before
+			 , After
+		  FROM ReplaceDict
+		 WHERE Host = #{host}
+		   AND Lang = #{lang}
+		<if test="searchReplaceDict != null and searchReplaceDict != ''">
+		   AND (Before LIKE CONCAT('%', #{searchReplaceDict}, '%')
+			OR After LIKE CONCAT('%', #{searchReplaceDict}, '%'))
+		</if>
+		<choose>
+			<when test="orderCol != null and orderCol != '' and orderSort != null and orderSort != ''">
+				ORDER BY ${orderCol} ${orderSort}
+			</when>
+			<otherwise>
+				ORDER BY No desc
+			</otherwise>
+		</choose>
+		OFFSET #{startRow} ROWS
+		FETCH NEXT #{endRow} ROWS ONLY
+	</select>
+
+	<insert id="addReplaceDict" parameterType="hashmap">
+		INSERT INTO ReplaceDict(host, lang, before, after)
+		values(#{host}, #{lang}, #{replaceDictBefore}, #{replaceDictAfter})
+	</insert>
+
+	<update id="updateReplaceDict" parameterType="hashmap">
+		UPDATE ReplaceDict SET
+		After = #{replaceDictAfter},
+		Before = #{replaceDictBefore}
+		WHERE Host = #{host} AND Lang = #{lang} AND No = #{no}
+	</update>
+
+	<delete id="deleteReplaceDict" parameterType="hashmap">
+		DELETE FROM ReplaceDict WHERE Host = #{host} AND Lang = #{lang} AND No = #{no}
+	</delete>
+
+	<delete id="deleteReplaceDictAll" parameterType="hashmap">
+		DELETE FROM ReplaceDict WHERE Host = #{host} AND Lang = #{lang}
+	</delete>
+
+	<insert id="addReplaceDictLst" parameterType="java.util.List">
+		INSERT INTO ReplaceDict(host, lang, before, after)
+		values
+		<foreach item="item" collection="list" separator=" , ">
+			(#{item.host}, #{item.lang}, #{item.replaceDictBefore}, #{item.replaceDictAfter})
+		</foreach>
+	</insert>
+	
+	<select id="replaceDictCnt" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM ReplaceDict
+		WHERE Host = #{host}
+		AND Lang = #{lang}
+		AND Before = #{utter}
+	</select>
+	<select id="replaceDictgetAfter" parameterType="hashmap" resultType="hashmap">
+		SELECT distinct After
+		FROM ReplaceDict
+		WHERE Host = #{host}
+		AND Lang = #{lang}
+		AND Before = #{utter}
+	</select>
+	
+	<select id="getIntentTaskDetail" parameterType="hashmap" resultType="hashmap">
+		SELECT A.No
+     		 , A.Main
+     		 , A.Name
+     		 , B.SrcIntent
+     	     , B.BertIntent
+     		 , B.DestIntent
+     		 , IIF(C.No IS NULL , 0, C.No) AS BertIntentNo
+     		 , IIF(B.BertIntent = 0 , 'always', C.Name) AS BertIntentName
+     		 , (SELECT Name FROM Intent WHERE No = B.DestIntent) AS nextTask
+  		  FROM Intent A 
+  		  LEFT OUTER JOIN IntentRel B
+    		ON A.No = B.SrcIntent
+  		  LEFT OUTER JOIN BertIntent C
+    		ON B.BertIntent = C.No
+  		 WHERE 1=1
+    	  AND A.Account = #{host}
+    	  AND B.BertIntent = #{bertIntentNo}
+	</select>
+	
+	<select id="getRegexInfoList" parameterType="string" resultType="hashmap">
+		SELECT No
+			 , Intent
+		     , Regex
+		  FROM RegexIntent
+		 WHERE host = #{host}
+		   AND BertIntentNo IS NOT NULL
+		   ORDER BY No asc
+	</select>
+	
+	<select id="getIntentList" parameterType="string" resultType="hashmap">
+		SELECT A.Name, A.No, A.Language
+		  FROM BertIntent A 
+ 		  LEFT OUTER JOIN BackendInfo B
+			ON A.BertItfId = B.id
+		 WHERE B.host = #{host}
+	</select>
+
+	<insert id="insertRegexIntentList" parameterType="java.util.ArrayList">
+		insert into RegexIntent (Host, Language, Intent, Regex, BertIntentNo)
+		values
+		<foreach collection="list" item="item" separator=",">
+		(#{item.host}, #{item.lang},#{item.intentNm},#{item.regex}, #{item.bertIntentNo})
+		</foreach>
+	</insert>
+
+	<select id="getNqaStatusChatbotList" parameterType="hashmap" resultType="hashmap">
+		SELECT No as host, Name, 'preparation' as nqaUploadStatus from Account
+		ORDER BY No
+	</select>
+
+</mapper>

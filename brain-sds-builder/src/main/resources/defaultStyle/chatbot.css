@@ -1,0 +1,713 @@
+/* chatbot_.html css */
+/* MINDsLab. UX/UI Team. AMR. 200206 */
+/* 200305 AMR 공통 css 생성 */
+/* 페이지 랜딩 로딩 */
+#chatUI_wrap .page_ldWrap {position:fixed; left:0; top:0; width:100%; height:100%; background:#fff; z-index:999;}
+#chatUI_wrap .page_ldBg {background-color:#ed184f!important; background-image:linear-gradient(90deg, #fd5581, #fd8b55);}
+#chatUI_wrap .intro-banner-vdo-play-btn{position:absolute; top:50%; left:50%; width:100px; height:100px; margin:-30px 0 0 -30px; text-align:center; border-radius:100px; z-index:1;}
+#chatUI_wrap .intro-banner-vdo-play-btn em {font-size:30px; line-height:56px;}
+#chatUI_wrap .intro-banner-vdo-play-btn .ripple{position:absolute; top:50%; left:50%; width:260px; height:260px; margin:-130px 0 0 -130px; border-radius:200px; opacity:0; -webkit-animation:ripple 1.8s infinite; animation:ripple 1.8s infinite; z-index:-1;}
+/* page 애니메이션 삭제(사용안함) */
+#btn_goChat {display:block; overflow:hidden; position:fixed; right:0; bottom:0; width:72px; height:0; margin:0 15px 0 0; padding:66px 0 0 0; border-radius:70px;opacity:1; z-index:8888; cursor:pointer; -webkit-animation-duration:1.2s; animation-duration:1.2s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:goChat; animation-name:goChat; transition:all 0.3s ease-out;}
+/* 200310 AMR animation 경량화 */
+@-webkit-keyframes goChat {
+    0%   {opacity:0; display:none; transform: translateX(-50px);}
+    50%   {opacity:0; display:none; transform: translateX(-50px);}
+    100% {opacity:1; display:block; transform: translateX(0);}
+}
+@keyframes goChat {
+    0%   {opacity:0; display:none; transform: translateX(-50px);}
+    50%   {opacity:0; display:none; transform: translateX(-50px);}
+    100% {opacity:1; display:block; transform: translateX(0);}
+}
+#btn_goChat.goChat_hide {-webkit-animation-duration:0s; animation-duration:0s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:goChat_hide; animation-name:goChat_hide; }
+@-webkit-keyframes goChat_hide {
+    0%   {opacity:1; display:block; transform: translateX(0);}
+    50%   {opacity:1; display:block; transform: translateX(0);}
+    100% {opacity:0; display:none; transform: translateX(-50px);}
+}
+@keyframes goChat_hide {
+    0% {opacity:1; display:block; transform: translateX(0);}
+    50% {opacity:1; display:block; transform: translateX(0);}
+    100% {opacity:0; display:none; transform: translateX(-50px);}
+}
+/* 공통 */
+/* 수정 AMR 200327 */
+#chatUI_wrap {display:none; overflow:hidden; float:right; position:absolute; right:15px; bottom:55px; width:350px; min-width:320px; height:calc(100% - 57px); vertical-align:bottom; border:1px solid #ececfa; border-radius:10px; background:rgba(238, 238, 238, 0.95); z-index:9999; transition:all 0.3s ease-out;}
+#chatUI_wrap.chatUI_show {display:block; -webkit-animation-duration:1.2s; animation-duration:1.2s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chat_show; animation-name:chat_show;}
+/* 200310 AMR animation 경량화 */
+@-webkit-keyframes chat_show {
+    0%   {opacity:0; display:none; transform: translateX(-50px);}
+    50%  {opacity:0; display:none; transform: translateX(-50px);}
+    100% {opacity:1; display:block; transform: translateX(0);}
+}
+@keyframes chat_show {
+    0%   {opacity:0; display:none; transform: translateX(-50px);}
+    50%  {opacity:0; display:block; transform: translateX(-50px);}
+    100% {opacity:1; display:block; transform: translateX(0);}
+}
+#chatUI_wrap.chatUI_hide {display:block; min-width:320px; height:calc(100% - 2px); -webkit-animation-duration:0.5s; animation-duration:0.5s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chat_hide; animation-name:chat_hide;}
+@-webkit-keyframes chat_hide {
+    0%   {opacity:1; display:block; transform: translateX(0);}
+    100% {opacity:0; display:none; transform: translateX(-50px);}
+}
+@keyframes chat_hide {
+    0%   {opacity:1; display:block; transform: translateX(0);}
+    100% {opacity:0; display:none; transform: translateX(-50px);}
+}
+/* chatUI_top */
+#chatUI_wrap .chatUI_top {position:relative; top:0; left:0; width:100%; height:50px; text-align:center; border-bottom:1px solid #ebeaef; background:#fff; z-index:5555;}
+/* 200205 AMR h1 */
+#chatUI_wrap .chatUI_top h1 {position:relative; display:inline-block; width: 100%; height:50px; font-size:18px; font-weight:500; line-height:50px; letter-spacing:-1px;}
+#chatUI_wrap .chatUI_top h1 img {opacity: 0;}
+/* 200205 AMR langBox */
+#chatUI_wrap .chatUI_top .langBox{float:right; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox:before {content:''; position: absolute; top:0; right:0; width:1px; height:20px; margin:0 0 0 10px; background:rgba(0,0,0,0.09);}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang {position:absolute; top:16px; right:53px; overflow:hidden; width:20px; height:20px; text-indent:-99px; border:1px solid rgba(0,0,0,0.15); border-radius:30px; background:url("../images/ico_lang.png") 50% 50% no-repeat; background-size:cover; opacity:0.4; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang:hover,.chatUI_top .langBox p .btn_lang:focus {opacity:0.7; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang.active {background:url("../images/ico_lang_on.png") 50% 50% no-repeat; background-size:cover; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang.ico_ko {background:url("../images/ico_lang_ko.png") 50% 50% no-repeat; background-size:cover; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang.ico_en {background:url("../images/ico_lang_en.png") 50% 50% no-repeat; background-size:cover; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang.ico_zh_cn {background:url("../images/ico_lang_zh-cn.png") 50% 50% no-repeat; background-size:cover; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox p .btn_lang.ico_ja {background:url("../images/ico_lang_ja.png") 50% 50% no-repeat; background-size:cover; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang {display:none; position:absolute; top:45px; left:0; width:100%; padding:7px 0; text-align:center; border-bottom:1px solid rgba(0,0,0,0.1); background:#ebeaef; box-shadow:0 3px 3px rgba(0,0,0,0.15); opacity:0;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang.show {display:block; -webkit-animation-duration:0.3s; animation-duration:0.3s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chat_lang_show; animation-name:chat_lang_show;}
+/* 200310 AMR animation 경량화 */
+@-webkit-keyframes chat_lang_show {
+    0%   {opacity:0; transform: translateY(0px); display:none;}
+    100% {opacity:1; transform: translateY(6px); display:block;}
+}
+@keyframes chat_lang_show {
+    0%   {opacity:0; transform: translateY(0px); display:none;}
+    100% {opacity:1; transform: translateY(6px); display:block;}
+}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li {display:inline-block; margin:0;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button {padding:0 10px 0 5px; color:#403738; font-size:12px; line-height:28px; border:1px solid rgba(0,0,0,0.1); border-radius:25px; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,0.15); transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button:hover,.chatUI_top .langBox .lst_lang li button:focus {transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button:before {content:''; display:inline-block; width:18px; height:18px; margin:-3px 3px 0 0; vertical-align:middle;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.ico_ko:before {background:url("../images/ico_lang_ko.png") 0 0 no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.ico_en:before {background:url("../images/ico_lang_en.png") 0 0 no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.ico_zh_cn:before {background:url("../images/ico_lang_zh-cn.png") 0 0 no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.ico_ja:before {background:url("../images/ico_lang_ja.png") 0 0 no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top .btn_chatClose {overflow:hidden; position:absolute; top:50%; right:10px; width:25px; height:25px; margin:-13px 0 0 0; text-indent:-99px; border:none; cursor:pointer; background:none; opacity:0.5; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .btn_chatClose:hover {opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_top .btn_chatClose:before,
+.chatUI_top .btn_chatClose:after {content:''; position:absolute; top:50%; left:0; width:100%; height:1px; background:#000;}
+#chatUI_wrap .chatUI_top .btn_chatClose:before {transform:rotate(-45deg);}
+#chatUI_wrap .chatUI_top .btn_chatClose:after {transform:rotate(45deg);}
+/* chatUI_mid */
+#chatUI_wrap .chatUI_mid {display:block; overflow:auto; position:relative; width:100%; height:calc(100% - 106px); vertical-align:top; background:#f7f8fa;}
+/* 대화_공통 */
+#chatUI_wrap .chatUI_mid .lst_talk {display:block; clear:both; overflow:hidden; padding:0;}
+#chatUI_wrap .chatUI_mid .lst_talk li {clear:both; overflow:hidden; margin:0 0 7px 0; padding:7px 0;}
+/* 시스템 msg */
+#chatUI_wrap .chatUI_mid .lst_talk li.stmMessage {position:relative; margin:5px 0; text-align:center;}
+#chatUI_wrap .chatUI_mid .lst_talk li.stmMessage:before {content:''; position:absolute; top:16px; left:0; width:100%; height:1px; background:rgba(0,0,0,0.1);}
+#chatUI_wrap .chatUI_mid .lst_talk li.stmMessage span {display:inline-block; position:relative; padding:0 15px; color:#969bad; font-size:11px; background:#eff1f7;}
+/* 대화_공통_시작일 */
+#chatUI_wrap .chatUI_mid .lst_talk li.newDate {position:relative; margin:5px 0; text-align:center;}
+#chatUI_wrap .chatUI_mid .lst_talk li.newDate:before {content:''; position:absolute; top:16px; left:0; width:100%; height:1px; background:#ececfa;}
+#chatUI_wrap .chatUI_mid .lst_talk li.newDate span {display:inline-block; position:relative; padding:0 15px; color:#a3a5b3; background:#f7f8fa;}
+/* 대화_공통_링크 */
+#chatUI_wrap .chatUI_mid .lst_talk li a {color:blue; text-decoration:underline;}
+/* 대화_사용자_말풍선 */
+#chatUI_wrap .chatUI_mid .lst_talk li.user {text-align:right; vertical-align:bottom; padding:0 10px 0 60px;}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .bot_msg {float:right;}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .bot_msg .txt {position:relative; display:inline-block; margin:0; padding:7px 10px; color:#fff; font-size:14px; font-style:normal; text-align:left; word-break:normal; border:none; border-radius:7px 7px 0 7px;}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .date {display:block; margin:0; padding:0; color:#a3a5b3; font-size:11px; text-align:right; vertical-align:bottom;}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .date strong {display:inline-block; margin:0 5px 0 0; color:#a3a5b3; font-size:11px; font-weight:normal;}
+/* 대화_chatbot_말풍선 */
+#chatUI_wrap .chatUI_mid .lst_talk li.bot {display:block; position:relative; padding:0 40px 0 55px; text-align:left; vertical-align:top;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot:first-child:before {content:''; position:absolute; top:0; left:10px; width:36px; height:36px; border:1px solid #ebeaef; border-radius:30px;}
+#chatUI_wrap li.user + li.bot:before {content:''; position:absolute; top:0; left:10px; width:36px; height:36px; border:1px solid #ebeaef; border-radius:30px;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot .bot_msg {display:block; margin:0 0 10px 0;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot .bot_msg:last-child {margin:0;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot .bot_msg .name {display:block; padding:0 0 5px 10px; color:#999; font-size:12px; line-height:14px; font-style:normal;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot .date {display:inline-block; color:#a3a5b3; font-size:11px; vertical-align:bottom;}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot .date strong {display:inline-block; color:#a3a5b3; font-size:11px; font-weight:normal;}
+/* 대화_chatbot_로딩*/
+#chatUI_wrap .chatLoading {margin:100px auto 0; width:70px; max-width:300px; text-align:center;}
+#chatUI_wrap .chatLoading > em {width:10px; height:10px; border-radius:100%; display:inline-block; -webkit-animation:chat-bouncedelay 1.2s infinite ease-in-out both; animation:chat-bouncedelay 1.2s infinite ease-in-out both;}
+#chatUI_wrap .chatLoading .chatLoading_item01 {-webkit-animation-delay:-0.32s; animation-delay:-0.32s;}
+#chatUI_wrap .chatLoading .chatLoading_item02 {-webkit-animation-delay:-0.16s; animation-delay:-0.16s;}
+/* 대화_chatbot_텍스트 */
+/* 수정 200331 AMR */
+#chatUI_wrap .chatUI_mid .lst_talk .txt {display:inline-block; position:relative; max-width:300px; margin:0; padding:7px 10px; color:#403738; font-size:14px; font-style:normal; text-align:left; word-break:break-all; line-height:22px; border:1px solid #ebeaef; border-radius:7px 7px 7px 0; background:#fff;}
+#chatUI_wrap .chatUI_mid .lst_talk .txt img {width: 100%;}
+/* 대화_chatbot_제네릭 */
+#chatUI_wrap .chatUI_mid .lst_talk .generic {display:inline-block; overflow:hidden; position:relative; width:100%; max-width:300px; margin:0; padding:0; text-align:left; vertical-align:bottom; border-radius:7px; border:1px solid #ebeaef; background:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .thumb {position:absolute; top:0; left:-50px; overflow:hidden; width:41px; height:50px; margin:3px 0 0 0; vertical-align:top;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .thumb img {overflow:hidden; width:100%; border-radius:50px; background:#f6f6ff;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_img {display:block; overflow:hidden; position:relative; width:100%; max-height:120px; vertical-align:middle; border-radius:7px 7px 0 0;  background:#353c4f;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_img img {width:100%; border:none;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit {display:block; padding:10px 12px 3px 12px;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a {position:relative; padding:0 12px 0 0; font-size:14px; line-height:22px; text-decoration:none;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:before {content:''; position:absolute; top:50%; right:0; width:7px; height:2px; margin-top:-3px; border-radius:5px; transform:rotate(45deg);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:after {content:''; position:absolute; top:50%; right:0; width:7px; height:2px; margin-top:1px; border-radius:5px; transform:rotate(-45deg);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:hover {text-decoration:underline;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url {display:block; padding:10px 12px;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a {position:relative; padding:0 12px 0 0; font-size:14px; line-height:22px; text-decoration:none;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:before {content:''; position:absolute; top:50%; right:0; width:7px; height:2px; margin-top:-3px; border-radius:5px;transform:rotate(45deg);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:after {content:''; position:absolute; top:50%; right:0; width:7px; height:2px; margin-top:1px; border-radius:5px;transform:rotate(-45deg);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:hover {text-decoration:underline;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_des {display:block; padding:0 12px 15px 12px; color:#403738; font-size:14px; line-height:18px; word-break:normal;}
+#chatUI_wrap .chatUI_mid .lst_talk .generic:hover {transition:all 0.3s ease-out;}
+/* 대화_chatbot_버튼_리스트 */
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst {display:block; overflow:hidden; max-width:300px; margin:0; padding:0; text-align:left; vertical-align:bottom; border:1px solid #ebeaef; border-radius:7px; background:#fff; cursor:pointer; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .txt {display:block; padding:13px; color:#5e5c68; font-size:14px; border-bottom:1px solid #ebeaef; word-break:normal; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul {display:block;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li {display:block; margin:0; padding:0; border-bottom:1px solid #ececfa;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li:last-child {border:none;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a {display:block; position:relative; padding:10px 0; font-size:13px; text-align:center; text-decoration:none; line-height:22px; transition:all 0.2s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a:hover {color:#fff; transition:all 0.2s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a.active {color:#fff; transition:all 0.2s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox {display:block; padding:13px; border-bottom:1px solid #ebeaef; background:#f7f8fa;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt {display:block; margin:0 0 10px 0;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt:last-child {margin:0;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt dt {display:block; margin:0 0 5px 0; color:#403738; font-size:13px;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt dd {display:block;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt dd .select {display:block; width:100%;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .iptBox .dl_ipt dd .selboxDirect {display:none; margin:5px 0 0 0;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .btnBox {display:block; padding:5px;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .btnBox button {display:block; width:100%; height:40px; margin:0; color:#fff; font-size:13px; text-align:center; line-height:16px; border:none; border-radius:3px; background:#b0b0b0}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .btnBox button.btn_point {display:block; width:100%; height:40px; color:#fff; font-size:13px; text-align:center; border:none; border-radius:3px;}
+/* 대화_chatbot_버튼_아이템 */
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem {display:block; max-width:300px; margin:0; padding:0; text-align:left; vertical-align:bottom; }
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem .txt {display:block; padding:13px; color:#5e5c68; font-size:12px; border-bottom:1px solid #ececfa;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul {display:block;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li {display:inline-block; overflow:hidden; margin:0 4px 0 0; padding:0; border:1px solid #ebeaef; border-radius:30px;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a {display:block; padding:5px 14px; font-size:13px; text-align:center; text-decoration:none; line-height:22px; background:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a:hover {color:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.btnStart {color:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.active {color:#fff; transition:all 0.2s ease-out;}
+/* 대화_chatbot_이미지 */
+#chatUI_wrap .chatUI_mid .lst_talk .img {display:block; overflow:hidden; max-width:300px; margin:0; padding:0; text-align:left; vertical-align:bottom; border-radius:7px;}
+#chatUI_wrap .chatUI_mid .lst_talk .img img {max-width:100%;}
+/* 200214 AMR 대화_프로모션UI */
+#chatUI_wrap li.bot_promotion:before {content: ''; position: absolute; top: 0; left: 10px; width: 36px; height: 36px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 30px;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic {max-width: 250px;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .bot_msg > .txt {display: block; max-width: 300px; margin: 8px 0 0 0;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic .generic_img {max-height: 166px;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic .generic_tit {font-size: 14px;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic > .txt {padding: 10px 12px 16px 12px; line-height: 18px; border: none;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic > .txt .txt_btn {padding: 15px 0 0 0;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .btnItem {margin: 8px 0 0 0;}
+/* 대화_chatbot_swiper */
+#chatUI_wrap .chatUI_mid li.botMsg_swiper.position_target {position:relative;}
+#chatUI_wrap .chatUI_mid li.botMsg_swiper {margin:0; padding:0 55px 10px 55px;}
+#chatUI_wrap .chatUI_mid li.botMsg_swiper a.swiper_item {display:block; border:1px solid #ebeaef; border-radius:7px; background:#fff; box-shadow:0 0 3px rgba(0,0,0,0); text-decoration:none; transition:all 0.3s ease-out;}
+/* 200310 AMR height */
+#chatUI_wrap .chatUI_mid li.botMsg_swiper a.swiper_item .item_img {display:block; overflow:hidden; position:relative; width:100%; height: 100px; text-align:center; vertical-align:middle; border-radius:7px 7px 0 0; background:#353c4f;}
+#chatUI_wrap .chatUI_mid li.botMsg_swiper a.swiper_item .item_img img {width:100%; min-height: 100%;}
+#chatUI_wrap .chatUI_mid li.botMsg_swiper a.swiper_item .item_tit {display:table-cell; overflow:hidden; height:35px; padding:7px; color:#403738; font-size:13px; vertical-align:top; letter-spacing:-1px;}
+#chatUI_wrap .chatUI_mid li.botMsg_swiper a.swiper_item .item_txt {display:block; overflow:hidden; height:62px; padding:0 7px 13px 7px; color:#a3a5b3; font-size:11px; line-height:16px;}
+#chatUI_wrap .chatUI_mid .lst_talk li.botMsg_swiper a.swiper_item:hover {box-shadow:0 0 3px rgba(0,0,0,0.3); transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_mid .lst_talk li.botMsg_swiper .swiper-pagination {position:relative; bottom:0;}
+/* 200310 AMR bullet */
+#chatUI_wrap .swiper-pagination-bullet {width: 7px; height: 7px; margin: 0 2px; background:#ced0db; opacity:1.0;  cursor:pointer;}
+#chatUI_wrap .swiper-pagination-bullet:first-child:nth-last-child(1) {display:none;}
+#chatUI_wrap .swiper-pagination-bullets .swiper-pagination-bullet {border: none;}
+/* 200214 AMR image swiper pagenation style */
+#chatUI_wrap .full_preview .swiper-pagination-bullet {margin: 0 5px; background: #fff;}
+#chatUI_wrap .swiper-wrapper {margin:0 0 5px 0;}
+#chatUI_wrap .swiper-button-next, .swiper-button-prev {margin-top:-33px; z-index:1;}
+#chatUI_wrap .swiper-button-prev, .swiper-container-rtl .swiper-button-next {left:0; color:#fff; border-radius:0 7px 7px 0; box-shadow:0 0 3px rgba(0,0,0,0.3);}
+#chatUI_wrap .swiper-button-next, .swiper-container-rtl .swiper-button-prev {right:0; border-radius:7px 0 0 7px; box-shadow:0 0 3px rgba(0,0,0,0.3);}
+/* 200214 AMR 대화_chatbot_swiper only images */
+#chatUI_wrap .chatUI_mid li.bot .botMsg_swiper {margin: 10px 0 0 0;}
+#chatUI_wrap .chatUI_mid li.bot .botMsg_swiper .swiper-slide {overflow: hidden; border-radius: 7px;}
+#chatUI_wrap .chatUI_mid li.bot .botMsg_swiper .swiper-slide .item_img img {width: 100%;}
+#chatUI_wrap .chatUI_mid li.bot .botMsg_swiper .swiper-pagination {position: relative; bottom: -4px;}
+#chatUI_wrap .chatUI_mid li.bot .botMsg_swiper ~ .btnItem {margin: 10px 0 0 0;}
+/* 200214 대화_chatbot_swiper popup */
+#chatUI_wrap .popup_swipe_backdrop {display: none;}
+#chatUI_wrap .popup_swipe_backdrop.popup_active {display: block;}
+#chatUI_wrap .popup_swipe_backdrop.popup_active .popup_swipe_preview {display: block;}
+#chatUI_wrap .popup_swipe_backdrop:before {content: ''; display: block; position: absolute; top:0; left:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9100;}
+#chatUI_wrap .popup_swipe_preview {display: none; position: absolute; top: calc(50% - 125px); left: 15px; width: calc(100% - 30px); z-index: 9200;}
+#chatUI_wrap .popup_swipe_preview .swiper-slide .item_img img {width: 100%;}
+#chatUI_wrap .popup_swipe_preview .swiper-pagination {position: relative; bottom: auto;}
+#chatUI_wrap .popup_swipe_preview .swiper-button-prev, #chatUI_wrap .popup_swipe_preview .swiper-container-rtl .swiper-button-next {left: -15px;}
+#chatUI_wrap .popup_swipe_preview .swiper-button-next, #chatUI_wrap .popup_swipe_preview .swiper-container-rtl .swiper-button-prev {right: -15px;}
+.btn_popupClose {position: absolute; top: 4px; right: 4px; width: 40px; height: 40px; background-color: rgba(255, 255, 255, 0.8); border: none; z-index: 9300;}
+.btn_popupClose em {font-size:0;}
+.btn_popupClose:before, .btn_popupClose:after {content: ''; position: absolute; top: 50%; left: 50%; width: 16px; margin: 0 0 0 -8px; height: 1px; background: black;}
+.btn_popupClose:before {-webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
+.btn_popupClose:after {-webkit-transform: rotate(45deg); transform: rotate(45deg);}
+/* AMR 201021 chatUI_mid svc_area */
+.svc_area {display: none; position: relative; top:0; padding: 15px 0 0 0; border-radius: 4px 4px 0 0; background: rgba(0,113,143,1.0) url("../images/arw_top_w.png") no-repeat 50% 4px; background-size: 10px; transform: translate(0, 0); transition: transform .2s;}
+.svc_area:hover {transform: translate(0, -100%);}
+.svc_area .lst_svc_btn {overflow: auto; max-height: 205px; background: #ebeaef;}
+.svc_area .lst_svc_btn li {height: 40px; padding: 0 10px; line-height: 40px; border-bottom: 1px solid #fff; cursor: pointer;}
+.chatUI_mid.counseling_mode .svc_area {display: block;}
+#chatUI_wrap .chatUI_mid.counseling_mode {height: calc(100% - 121px);}
+#chatUI_wrap .chatUI_mid.counseling_mode + .svc_area {display: block;}
+#chatUI_wrap .chatUI_mid.counseling_mode + .svc_area + .chatUI_btm {position: absolute; left: 0; bottom: 0; width: calc(100% - 20px);}
+/* chatUI_btm */
+/* AMR 200514 z-index 수정  */
+#chatUI_wrap .chatUI_btm {display:block; clear:both; overflow:hidden; position:relative; bottom:0; padding:7px 10px; vertical-align:top;border-top:1px solid #ececfa; background:#fff; z-index:4444;}
+#chatUI_wrap .chatUI_btm .textArea {float:right; overflow:hidden; width:calc(100% - 45px); min-height:20px; height:20px; margin:0; padding:9px 33px 9px 10px; color:#5e5c68; font-size:13px; line-height:20px; border:1px solid #ebeaef; border-radius:5px; resize:none;}
+#chatUI_wrap .chatUI_btm .textArea:focus {border:1px solid #fff;}
+#chatUI_wrap .chatUI_btm .btn_chat {overflow:hidden; position:absolute; top:15px; right:15px; width:25px; height:25px; margin:0; padding:0; color:#9c9c9c; font-size:14px; text-indent:-999px; border:none; background:url(../images/ico_send_trans.png) 50% 50% no-repeat; background-size:cover; cursor:pointer; transition:all 0.3s ease-out;}
+#chatUI_wrap .chatUI_btm .btn_chat.disabled {background:url(../images/ico_send_trans.png) 50% 50% no-repeat; background-color:#a8a8a8; cursor:default;}
+/* chatAside */
+/* 200327 AMR left */
+.chatAside {display:none; overflow:hidden; position:absolute; left:50px; bottom:55px; width:0; height: calc(100% - 57px); vertical-align:bottom; border:1px solid #ececfa; border-radius:10px; background:rgba(238, 238, 238, 0.95); z-index:9999; transition:all 0.3s ease-out;}
+.chatAside.aside_show {display:block; width:335px;}
+.chatAside.aside_hide {display:block; min-width:0; height:calc(100% - 2px); margin-left:50px;}
+.chatAside .chat_inquiry .chatAside_bd {overflow-y: scroll;}
+.chatAside .chat_inquiry .form_event_type {height: 50px;}
+.chatAside .chat_inquiry .form_table_style {height: 50px;}
+.chatAside .chat_inquiry .form_event_type .radioBox input[type="radio"] + label{display:inline-block; position:relative; margin:5px 10px 0 0; padding-left:25px; color:#403738; font-size:13px; cursor:pointer; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;}
+.chatAside .chat_inquiry .form_table_style .radioBox input[type="radio"] + label{display:inline-block; position:relative; margin:5px 10px 0 0; padding-left:25px; color:#403738; font-size:13px; cursor:pointer; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;}
+/* 200214 애니메이션 삭제 */
+/* 200414 AMR chatAside 속성과 동일하게 해야함 (fixed제외) */
+.chatAside > div {position: fixed; left: 51px; bottom: 57px; width: 335px; height: calc(100% - 58px);}
+/* 200214 AMR ipt_txt */
+.ipt_txt{display:block; width: 100%; height:32px; padding:0 5px; color:#403738; font-size:13px; border:1px solid rgba(0,0,0,0.2); border-radius:5px; background:#fff; transition:all 0.3s ease-out;}
+.ipt_txt:focus{border:1px solid rgba(0,0,0,0.3); box-shadow:none; background:#fff; transition:all 0.3s ease-out;}
+textarea.ipt_txt {height: 76px; padding: 5px;}
+#chatUI_wrap .select{display:inline-block; min-width:100px; padding:5px 20px 5px 5px; font-family:inherit; color:#403738; border:1px solid rgba(0,0,0,0.2); border-radius:5px; background:#fff url("../images/arw_bottom_bk.png") right 7px top 50% no-repeat; -webkit-appearance:none; -moz-appearance:none; appearance:none; transition:all 0.3s ease-out;}
+#chatUI_wrap .select:focus{border:1px solid rgba(0,0,0,0.3); box-shadow:none; background-color:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .select:disabled{background-color:rgba(0,0,0,0.1); opacity:0.6;}
+/* checkBox */
+.chatAside .checkBox{display:inline-block; position:relative; min-height:20px; margin:0 15px 0 0;}
+.chatAside .checkBox input[type="checkbox"]{position:absolute; overflow:hidden; width:1px; height:1px; padding:0; margin:-1px; clip:rect(0,0,0,0); border:0;}
+.chatAside .checkBox input[type="checkbox"] + label{display:inline-block; position:relative; margin:0 10px 0 0; padding-left:25px; color:#403738; font-size:13px; cursor:pointer; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;}
+.chatAside .checkBox input[type="checkbox"] + label:before{content:''; position:absolute; top:-1px; left:0; width:19px; height:19px; line-height:17px; text-align:center; border:1px solid rgba(0,0,0,0.2); border-radius:3px; background:#fff;}
+.chatAside .checkBox input[type="checkbox"] + label:active:before, .checkBox input[type="checkbox"]:checked + label:active:before{}
+.chatAside .checkBox input[type="checkbox"]:focus + label {text-decoration:underline;}
+.chatAside .checkBox input[type="checkbox"]:focus + label:before {border-color:#008ad8;}
+.chatAside .checkBox input[type="checkbox"]:checked + label:before{content:'\2714\fe0e'; color:#fff;}
+.chatAside .checkBox input[type="checkbox"]:disabled + label:before{background:rgba(0,0,0,0.1);}
+.chatAside .radioBox input[type="checkbox"] + label:last-child{margin:0;}
+/* 200207 AMR radioBox */
+.chatAside .radioBox input[type="radio"]{position:absolute; overflow:hidden; width:1px; height:1px; padding:0; margin:-1px; clip:rect(0,0,0,0); border:0;}
+.chatAside .radioBox input[type="radio"] + label{display:inline-block; position:relative; margin:0 10px 0 0; padding-left:25px; color:#403738; font-size:13px; cursor:pointer; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;}
+.chatAside .radioBox input[type="radio"] + label:before{content:''; position:absolute; top:-1px; left:0; width:19px; height:19px; line-height:17px; text-align:center; border:1px solid rgba(0,0,0,0.2); border-radius:3px; background:#fff;}
+.chatAside .radioBox input[type="radio"]:focus + label {text-decoration:underline;}
+.chatAside .radioBox input[type="radio"]:focus + label:before {border-color:#008ad8;}
+.chatAside .radioBox input[type="radio"]:checked + label:before{content:'\2714\fe0e'; color:#fff;}
+.chatAside .radioBox input[type="radio"]:checked + label:before{content:'\2714\fe0e'; color:#fff;}
+.chatAside .radioBox input[type="radio"]:disabled + label:before{background:rgba(0,0,0,0.1);}
+/* 추가 200414 AMR border-radius */
+.chatAside .chatAside_hd {position:relative; top:0; left:0; width:100%; height:50px; border-bottom:1px solid #ebeaef; border-radius: 10px 10px 0 0; background:#fff; z-index:5555;}
+.chatAside .chatAside_hd h3 {position:relative; float:left; height:50px; padding:0 0 0 15px; font-size:18px; font-weight:500; line-height:50px; letter-spacing:-1px;}
+.chatAside .chatAside_hd .btn_chatAside_close {overflow:hidden; position:absolute; top:50%; right:10px; width:25px; height:25px; margin:-13px 0 0 0; text-indent:-99px; border:none; cursor:pointer; background:none; opacity:0.5; transition:all 0.3s ease-out;}
+.chatAside .chatAside_hd .btn_chatAside_close:hover {opacity:1.0; transition:all 0.3s ease-out;}
+.chatAside .chatAside_hd .btn_chatAside_close:before,
+.chatAside .chatAside_hd .btn_chatAside_close:after {content:''; position:absolute; top:50%; left:0; width:100%; height:1px; background:#000;}
+.chatAside .chatAside_hd .btn_chatAside_close:before {transform:rotate(-45deg);}
+.chatAside .chatAside_hd .btn_chatAside_close:after {transform:rotate(45deg);}
+/* 추가 200414 AMR border-radius */
+.chatAside .chatAside_bd {display:block; position:relative; width:calc(100% - 20px); height: calc(100% - 70px); padding:10px; border-radius: 0 0 10px 10px; vertical-align:top; background:#f7f8fa;}
+/* 200304 AMR stn_area */
+.chatAside .chatAside_bd .stn_area {overflow: auto; height: calc(100% - 50px); margin: 0 0 10px 0;}
+.chatAside .chatAside_bd .stnBox {display:block; overflow:hidden; margin:0 0 15px 0; border-radius:5px; box-shadow:0 1px 2px rgba(0,0,0,0.2); background:#fff;}
+/* 200224 AMR scroll */
+.chatAside .chatAside_bd .stnBox p.txt{padding:10px; color:#fff; font-size:13px; background:#4d4747;}
+.chatAside .chatAside_bd .stnBox .iptBox {display:block; overflow:hidden; padding:10px;}
+.chatAside .chatAside_bd .stnBox .checkBox {height:30px;}
+.chatAside .chatAside_bd .stnBox .checkBox input[type="checkbox"] + label {height:30px; line-height:30px;}
+.chatAside .chatAside_bd .stnBox .checkBox input[type="checkbox"] + label:before {top:6px;}
+.chatAside .chatAside_bd .stnBox .btn_terms {float:right; height:30px; padding:0 15px; border:none; border-radius:3px; background:#ffdc4e;}
+.chatAside .chatAside_bd .stnBox dl.dlBox {display:block; overflow:hidden; margin:0 0 15px 0; padding:0 10px;}
+.chatAside .chatAside_bd .stnBox p.txt + dl.dlBox {margin:15px 0;}
+/* 200304 AMR dt, dd */
+.chatAside .chatAside_bd .stnBox dl.dlBox dt {display:inline-block; width: 50px; padding:0 0 5px 0; vertical-align: middle; font-size:13px;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd {display:inline-block; width: calc(100% - 76px); margin: 0 0 0 10px; vertical-align: middle;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.block_target {display: block; width: calc(100% - 12px); margin:0;}
+.chatAside .chatAside_bd .btnBox {display:block;}
+.chatAside .chatAside_bd .btnBox button {display:block; width:100%; height:40px; margin:0 0 10px 0; color:#fff; font-size:13px; text-align:center; line-height:16px; border:none; border-radius:3px; background:#b0b0b0}
+.chatAside .chatAside_bd .btnBox button.btn_point {display:block; width:100%; height:40px; color:#fff; font-size:13px; text-align:center; border:none; border-radius:3px; }
+/* 추가 200408 AMR chat_order */
+.chatAside .chat_order .chatAside_bd .stnBox dl.dlBox dt {width: 56px;}
+.chatAside .chat_order .chatAside_bd .stnBox dl.dlBox dd {position: relative; width: calc(100% - 82px);}
+.chatAside .chat_order .chatAside_bd .stn_area {height: calc(100% - 80px)}
+.chatAside .chat_order .chatAside_bd .stnBox dl.dlBox.order_menu {}
+.chatAside .chat_order .chatAside_bd .stnBox dl.dlBox.order_menu dd.block_target {width: 100%; height: auto; margin:0;}
+.dd_description {position: absolute; right:0; bottom: calc(100% + 2px); color: red; font-size: 11px;}
+.chat_order .order_menu .menu {}
+.chat_order .order_menu .menu li + li {margin: 2px 0 0 0;}
+.chat_order .order_menu .menu li .category {width: 100%; padding: 14px 10px; font-size: 14px; background-color: #F0F0F0; text-align: left;}
+.chatAside .chat_order .chatAside_bd .category_menu {display: none; height: auto; margin: 10px;}
+.chatAside .chat_order .chatAside_bd .category_menu.on {display: block;}
+.chatAside .chat_order .chatAside_bd .category_menu input[type="checkbox"] + label {display: block; float: left; width: calc(100% - 135px); min-height: 26px; height: auto; line-height: normal; margin:0; padding-top: 6px;}
+.chatAside .chat_order .chatAside_bd .category_menu .each_menu {overflow: hidden;}
+.chatAside .chat_order .chatAside_bd .stnBox dl.dlBox dd.block_target {width: calc(100% - 12px);}
+.chatAside .chat_order .category_menu .how_many {float:right; padding: 3px 0 0 0;}
+.chatAside .chat_order .category_menu .how_many .count {display: inline-block; width: 22px; height: 100%; margin: 0 3px 0 8px; padding: 5px 3px;}
+.chat_order .total_price {height: 30px; padding: 0 4px 0 0; font-size: 18px; letter-spacing: 1px; text-align: right; color: #000;}
+.chat_order .total_price em {letter-spacing:0; font-weight: bold;}
+/* 주문확인 팝업 */
+.chatAside .chat_order .chatAside_bd .stnBox.popup .popup_content {width: calc(100% - 80px); margin: 20px; text-align: left;}
+.chat_order .check_order {padding: 20px; background-color: #fff;}
+.chat_order .check_order .title {font-size: 16px; font-weight: bold;}
+.chat_order .check_order .title em {display: block; font-size: 11px;}
+.chat_order .check_order ul li {margin: 16px 0; font-size: 15px;}
+.chat_order .check_order ul li > span {display: inline-block; min-width: 100px; padding: 0 5px 0 0; vertical-align: top; text-align: right;}
+.chat_order .check_order ul li > em {color: #000;}
+.chat_order .check_order ul li > p {display: inline-block; width: calc(100% - 120px); vertical-align: top; color: #000;}
+.chat_order .check_order ul li > p > em {display: block;}
+.chat_order .check_order .btnBox .btn_point {margin: 30px 0 0 0;}
+/* 200214 AMR 폼 입력 완료 팝업 */
+.chatAside .chatAside_bd.success_screen {overflow: hidden;}
+.chatAside .chatAside_bd.success_screen > .stnBox.popup {display: block;}
+.chatAside .chatAside_bd .stnBox.popup {display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; background-color: #f7f8fa; text-align: center;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content {display: inline-block; width: 250px; margin: 100px 0 0 0; text-align: center;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .ico_circle {position: relative; display: inline-block; width: 100px; height: 100px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, 0.1); text-align: center;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .ico_circle img {position: absolute; top: 24px; left: 12px; width: 75%;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .popup_txt {margin: 16px 0 0 0;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .popup_txt em {font-size: 18px; color: #222;}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .popup_txt p {margin: 16px 0 0 0; line-height: 20px; font-size: 14px; color: #333;}
+/* 200306 AMR text 팝업 (약관보기) */
+.chatAside .chatAside_bd.info_screen {overflow: hidden;}
+.chatAside .chatAside_bd.info_screen > .stnBox.info_text {display: block;}
+.chatAside .chatAside_bd .stnBox.info_text {display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; background-color: #f7f8fa; text-align: center;}
+.chatAside .chatAside_bd .stnBox.info_text .content {display: inline-block; width: calc(100% - 32px); height: 100%; margin: 16px; text-align: left;}
+.chatAside .chatAside_bd .stnBox.info_text .content .txt_box {height: calc(100% - 72px);}
+.chatAside .chatAside_bd .stnBox.info_text .content .txt_box em {font-size: 16px;}
+.chatAside .chatAside_bd .stnBox.info_text .content .txt_box .txt {overflow: auto; width: calc(100% - 24px); max-height: calc(100% - 90px); margin: 10px 0 0 0; padding: 20px 12px; border: 1px solid #ebeaef; border-radius: 7px; line-height: 18px; font-size: 13px; color: #333; background: #fff;}
+#chatUI_wrap .txt .txt_btn {display:block; padding:10px 0 0 0; text-align:center;}
+#chatUI_wrap .txt .txt_btn a {display:inline-block; height:30px; padding:0 15px; font-size:13px; text-align:center; text-decoration:none !important; line-height:28px; border:1px solid #ebeaef; border-radius:50px; background:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .txt .txt_btn a:hover {color:#fff !important; transition:all 0.3s ease-out;}
+#chatUI_wrap .txt .txt_btns {display:block; padding:5px 0 0 0; text-align:center;}
+#chatUI_wrap .txt .txt_btns a {display:inline-block; height:30px; margin:5px 10px 0 0; padding:0 15px; font-size:13px; text-align:center; text-decoration:none !important; line-height:28px; border:1px solid #ebeaef; border-radius:50px; background:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .txt .txt_btns a:last-child {margin-right:0;}
+#chatUI_wrap .txt .txt_btns a:hover {color:#fff !important; transition:all 0.3s ease-out;}
+/*#chatUI_wrap .txt .txt_btns a + a {width:calc(50% - 15px);}*/
+/* 200302 AMR map 효과 */
+#chatUI_wrap .mapWrap {display:block; position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9900; opacity:1; transition: left 0.5s, opacity 0.5s;}
+/* map 애니메이션 삭제 */
+#chatUI_wrap .map_hide {left:100%; opacity:0;}
+#chatUI_wrap .mapWrap .mapWrap_tit {display:flex; position:relative; border-bottom:1px solid rgba(0,0,0,0.1);}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_back {display:none; overflow:hidden; position:absolute; top:5px; left:10px; width:30px; height:30px; text-indent:-99px; border:none; background:url("../images/arw_back_bk.png") 50% 50% no-repeat; opacity:0.3; z-index:9999; transition:all 0.3s ease-out; background-size:80%; cursor:pointer;}
+#chatUI_wrap .mapWrap .mapWrap_tit .iptBox {display:block; width:calc(100% - 60px); padding:5px 50px 5px 10px;}
+#chatUI_wrap .mapWrap .mapWrap_tit .iptBox .ipt_txt{border-radius:0 0 5px 5px;}
+#chatUI_wrap .mapWrap .mapWrap_tit .iptBox .ipt_txt:first-child {border-radius:5px 5px 0 0; border-bottom:none;}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_lctn_change { overflow:hidden; position:absolute; top:22px; right:35px; width:32px; height:32px; text-indent:-999px; border:1px solid rgba(0,0,0,0.2); border-radius:30px; background:#fff url("../images/arw_lctn_change.png") 50% 50% no-repeat; z-index:9999; transition:all 0.3s ease-out; background-size:60%; cursor:pointer;}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_close{position:absolute; top:5px; right:10px; overflow:hidden; width:25px; height:25px; margin:0 0 10px 10px; text-indent:-99px; border:none; background:none; opacity:0.3; z-index:9999; transition:all 0.3s ease-out; cursor:pointer;}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_close:hover, #chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_close:focus{opacity:0.7; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_close:before{content:''; position:absolute; top:50%; left:0; width:100%; height:2px; background:#000; border-radius:5px; transform:rotate(45deg);}
+#chatUI_wrap .mapWrap .mapWrap_tit .btn_mapWrap_close:after{content:''; position:absolute; top:50%; left:0; width:100%; height:2px; border-radius:5px; background:#000; transform:rotate(-45deg);}
+#chatUI_wrap .mapWrap .mapWrap_cont {display:block; overflow:auto; width:100%; height:calc(100% - 43px); background:url("../images/sample/map.png") 50% 50% no-repeat; background-size:cover;}
+/* 200214 AMR #map */
+#chatUI_wrap .mapWrap .mapWrap_cont #map {height: 100%;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detailBox {display:block; height:100%; opacity:0; background:#fff; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst {background:#fff;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li {display:block; position:relative; padding:15px; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li .infoBox {position:relative; padding:15px 20px 10px 50px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li:before {content:''; position:absolute; top:15px; left:15px; width:22px; height:22px; opacity:0.4;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li.ico_bus:before {background:url("../images/ico_bus_bk.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li.ico_subway:before {background:url("../images/ico_train_bk.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst>li span {display:block; margin:0 0 5px 0; }
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span:last-child {margin:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.time {clear:both; overflow:hidden; padding:0 0 3px 35px; line-height:22px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.time em{float:right; font-size:14px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.time em:first-child {float:left; color:#000; font-size:18px; font-weight:500;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation {clear:both; overflow:hidden; padding:0 0 0 35px; color:#000;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em {display:inline-block; position:relative; margin:0 10px 0 0; padding:0 13px 0 0; vertical-align:top; background:url("../images/arw_right_g.png") right 40% no-repeat; background-size:5px auto;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em:last-child {margin:0; padding:0; background:none;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_walk {position:relative;overflow:hidden; width:15px; text-indent:-99px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_walk:before {content:''; position:absolute; left:0; width:15px; height:15px; background:url("../images/ico_walk_g.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_bus {}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_bus:before {content:''; display:inline-block; width:15px; height:15px; background:url("../images/ico_bus_g.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_subway {}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span em.ico_subway:before {content:''; display:inline-block; width:15px; height:15px; background:url("../images/ico_train_g.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em strong {display:inline-block; height:15px; margin:0 0 0 3px; padding:0 5px; color:#fff; font-size:11px; font-weight:normal; line-height:13px; vertical-align:top; border-radius:3px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em strong.bg_red {background:#e24b50;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em strong.bg_green {background:#83c100;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em strong.bg_yGreen {background:#3cb44a;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.transportation em strong.bg_blue {background:#366ae1;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.txt {display:none; padding:0 0 0 35px; color:#666; font-size:13px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.direction {display:none; position:relative;clear:both; overflow:hidden; padding:0 0 0 35px; color:#999;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.direction em {display:inline-block; min-width:30px; margin:0 5px 0 0; vertical-align:top; line-height:15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.direction em strong {display:inline-block; margin:0 0 0 3px; font-weight:normal; vertical-align:top; line-height:15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.direction em.ico_walk {width:auto; text-indent:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li span.direction em.ico_walk:before {display:inline-block; position:relative;left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li .btn_timeline {display:none; margin:0 0 0 35px; padding:0; color:#4285F4; font-size:14px; border:none; background:none;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li .btn_timeline:hover, #chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li .btn_timeline:focus {opacity:0.8; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .btn_mapLoad_detail {position:absolute; left:15px; bottom:15px; width:calc(100% - 30px); height:40px; color:#fff; font-size:13px; text-align:center; border:none; border-radius:30px; box-shadow:0 0 3px rgba(0,0,0,0.05); opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.active {cursor:default; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.active .txt{display:block;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.active .direction {display:block;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.active .btn_timeline {display:inline-block;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline {display:none; margin:5px 0 0 0; padding:15px 0; border-radius:5px; background:#f7f8fa;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline li {display:table; position:relative; width:100%;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline li.ico_walk { background:url("../images/ico_walk_g.png") 60px 50% no-repeat; background-size:15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline li.ico_bus {background:url("../images/ico_bus_g.png") 60px 50% no-repeat; background-size:15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline li.ico_subway {background:url("../images/ico_train_g.png") 60px 50% no-repeat; background-size:15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span {display:table-cell; position:relative; padding:0 15px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span:nth-child(1) {width:65px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span>em {display:block; margin:0 0 15px 0; padding:0 0 15px 0; border-bottom:1px solid rgba(0,0,0,0.1);}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span>em>strong {font-size:13px; font-weight:normal;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span>em>strong.tit {color:#333; font-size:16px;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span>em>strong.txt {color:#999;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span.realTime {font-size:13px; font-weight:500; border-right:5px solid #666;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline li.ico_walk span.realTime {border-right:5px dotted #37a0ff;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li:last-child>span.realTime {border:none;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span.realTime:after {content:''; position:absolute; top:0; right:-9px; width:13px; height:13px; background: url("../images/dot_circle_bk.png") 50% 50% no-repeat;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li:first-child>span.realTime:after {content:''; position:absolute; top:-1px; right:-12px; width:20px; height:27px; background: url("../images/ico_point_start.png") 50% 50% no-repeat; background-size: cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li:last-child>span.realTime:after {content:''; position:absolute; top:-1px; right:-12px; width:20px; height:27px; background: url("../images/ico_point_end.png") 50% 50% no-repeat; background-size: cover;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline:before {width:0; height: 0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline span.time {padding-left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline span.transportation {padding-left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline span.txt {padding-left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline span.direction {padding-left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline .btn_timeline {margin-left:0;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_detail_lst li.timeline .mapLoad_timeline {display:block;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .btn_mapWrap_back {display:block; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .iptBox {position:relative; width:calc(100% - 100px); padding:5px 50px; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .iptBox:before {content:''; position:absolute; top:50%; left:50%; width:16px; height:16px; margin:-8px 0 0 -8px; background:url("../images/arw_next_bk.png") 50% 50% no-repeat; background-size:cover; opacity:0.4;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .iptBox .ipt_txt {float:right; width:40%; border:none; border-radius:5px; text-overflow:ellipsis; white-space:nowrap; word-wrap:normal; background:#f1f1f1; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .iptBox .ipt_txt:first-child {float:left;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_tit .iptBox .btn_lctn_change {display:none;}
+#chatUI_wrap .mapWrap.detailTransform .mapWrap_cont .mapLoad_detailBox {height:100%; opacity:1.0; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap.detailTransform .btn_mapLoad_detail {bottom:-70px; opacity:0; transition:all 0.3s ease-out;}
+#chatUI_wrap .mapWrap .mapWrap_cont .mapLoad_timeline>li>span+.realTime {position:absolute; left:0; bottom:17px; width:95px; padding:0; text-align:center; line-height:14px;}
+/* keyframes */
+@-webkit-keyframes chat-bouncedelay {
+    0%, 80%, 100% {transform:scale(0);}
+    40%           {transform:scale(1.0);}
+}
+@keyframes chat-bouncedelay {
+    0%, 80%, 100% {transform:scale(0);}
+    40%           {transform:scale(1.0);}
+}
+@-webkit-keyframes ripple{
+    0%  {opacity:1; -webkit-transform:scale(0); transform:scale(0);}
+    100%{opacity:0; -webkit-transform:scale(1); transform:scale(1);}
+}
+@keyframes ripple{
+    0%  {opacity:1; -webkit-transform:scale(0); transform:scale(0);}
+    100%{opacity:0; -webkit-transform:scale(1); transform:scale(1);}
+}
+.intro-banner-vdo-play-btn .ripple:nth-child(2){animation-delay:.3s; -webkit-animation-delay:.3s}
+.intro-banner-vdo-play-btn .ripple:nth-child(3){animation-delay:.6s; -webkit-animation-delay:.6s}
+@media all and (max-width: 768px) {
+    #chatUI_wrap {right:0; bottom:0; width:calc(100% - 2px); height:calc(100% - 2px);}
+    #chatUI_wrap.chatUI_show {border-radius:0;}
+    #btn_goChat {bottom:0; width:52px; padding:50px 0 0 0; }
+    .chatAside.aside_show {left:0; bottom:0; width:calc(100% - 2px); height:calc(100% - 2px);}
+    .chatAside > div {left:0; bottom:0; width:calc(100% - 2px); height:calc(100% - 2px);}
+    .chatAside .chat_order .category_menu .how_many .count {padding: 2px; font-size: 16px;}
+    .chatAside .chat_order .ipt_txt {font-size: 16px; color: #666;}
+    .chatAside .chat_order .ipt_txt::placeholder {font-size: 13px;}
+    .svc_area {background: rgba(0,113,143,1.0) url("../images/arw_top_w.png") no-repeat 50% 5px; background-size: 15px; }
+    .svc_area:hover {transform: none;}
+    .svc_area.active {background: rgba(0,113,143,1.0) url("../images/arw_bottom_w.png") no-repeat 50% 5px; background-size: 15px; transform: translate(0, -100%);}
+    .svc_area {top:0; padding: 20px 0 0 0;}
+    #chatUI_wrap .chatUI_mid.counseling_mode {height: calc(100% - 126px);}
+}
+/* 공통 */
+.text_hide {text-indent: -999px !important; line-height: 0 !important; font-size: 0 !important;}
+.box_hide {position: absolute !important; left:-999px !important; width: 0 !important; height: 0 !important;}
+/* AMR 200318 약관보기 */
+.pre_table {width: 100%; text-align: center;}
+.pre_table thead th {font-weight: bold; color: #333;}
+.pre_table th {border: 1px solid #666;}
+.pre_table td {border: 1px solid #666;}
+/* AMR 200512 챗봇 시작 popup */
+#chatUI_wrap.intro_open .intro {display: block;}
+.intro {display: none; position: absolute; top: 51px; left:0; width: 100%; height: calc(100% - 51px); z-index: 4444;}
+.intro .intro_wrap {height: calc(100% - 250px); padding: 100px 0 150px 0; background-color: #fff; text-align: center;}
+.intro_wrap .text {margin: 0 30px;}
+.intro_wrap .text p {line-height: 20px; font-size: 17px;}
+.intro_wrap .btn {margin: 60px 0 0 0;}
+.intro_wrap .btn button {padding: 6px 30px; border-radius: 20px; font-size: 18px; color: #fff;}
+.intro_wrap .btn button img {height: 15px; padding: 8px 0 0 8px;}
+.intro_wrap .sns_link {position: fixed; bottom: 80px; left:0; width: 100%;}
+.intro_wrap .sns_link li {overflow: hidden; display: inline-block; width: 55px; height: 55px; border-radius: 12px;}
+.intro_wrap .sns_link li + li {margin: 0 0 0 15px;}
+.intro_wrap .sns_link a {display: block; height: 100%; background-color: pink;}
+.intro_wrap .sns_link img {width: 100%;}
+/* datetimepicker css */
+.date_inaccessible {position: relative;}
+.date_inaccessible:after {content: ''; display: block; position: absolute; top:0; left:0; width: calc(100% + 12px); height: 35px; cursor: default;}
+.bootstrap-datetimepicker-widget {transform: translateZ(0);}
+.bootstrap-datetimepicker-widget table {margin: 10px 0 0 0;}
+.bootstrap-datetimepicker-widget table th {padding: 6px 0; font-size: 14px; font-weight: bold;}
+.bootstrap-datetimepicker-widget table th.dow {padding: 6px 0 10px 0;}
+.bootstrap-datetimepicker-widget table td {width: auto;}
+/* td max-width 안먹음 */
+.bootstrap-datetimepicker-widget table td.day {width: 14%; height: 36px;}
+.bootstrap-datetimepicker-widget table td.day.old,
+.bootstrap-datetimepicker-widget table td.day.new {opacity: 0.5;}
+.bootstrap-datetimepicker-widget table td em {display: inline-block; width: calc(100% - 6px); /*max-width: 30px;*/ height: calc(100% - 6px); line-height: 30px; vertical-align: middle; border-radius: 4px; border: 1px solid rgba(0,0,0,0.3);}
+.bootstrap-datetimepicker-widget table td.hour em {/*max-width: 54px;*/ line-height: 48px;}
+.bootstrap-datetimepicker-widget table td.minute em {/*width: calc(100% - 6px); max-width: none;*/ line-height: 48px;}
+.bootstrap-datetimepicker-widget table td.today:before {
+    content: '';
+    display: inline-block;
+    border: solid transparent;
+    border-width: 0 0 7px 7px;
+    border-bottom-color: #337ab7;
+    border-top-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    display: none;
+}
+.bootstrap-datetimepicker-widget table td.today em:before {
+    content: '';
+    display: inline-block;
+    border: solid transparent;
+    border-width: 0 0 7px 7px;
+    border-bottom-color: #337ab7;
+    border-bottom-color: rgba(245,222,178,1.0);
+    border-top-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+}
+.bootstrap-datetimepicker-widget table td.active.today em:before {
+    border-bottom-color: #fff;
+}
+.glyphicon-time {background: rgba(245,222,178,0.4);}
+/*.glyphicon-time:before {content: '시간을 선택해주세요 Click (다음선택)'; font-size: 13px;}*/
+.glyphicon-time:before {content: attr(time-data-before); font-size: 13px;}
+.glyphicon-calendar {background: rgba(245,222,178,0.4);}
+/*.glyphicon-calendar:before {content: '날짜를 선택해주세요 Click (이전선택)'; font-size: 13px;}*/
+.glyphicon-calendar:before {content: attr(date-data-before); font-size: 13px;}
+.glyphicon-chevron-up {display: block; height: 100%; background-image: url(../images/ico_chevron_up.png); background-repeat: no-repeat; background-position: center center; background-size: 16px auto;}
+.glyphicon-chevron-down {display: block; height: 100%; background-image: url(../images/ico_chevron_down.png); background-repeat: no-repeat; background-position: center center; background-size: 16px auto;}
+.glyphicon-chevron-left {display: block; height: 100%; background-image: url(../images/ico_chevron_left.png); background-repeat: no-repeat; background-position: center center; background-size: auto 12px;}
+.glyphicon-chevron-right {display: block; height: 100%; background-image: url(../images/ico_chevron_right.png); background-repeat: no-repeat; background-position: center center; background-size: auto 12px;}
+.glyphicon-chevron-up:before {display: none;}
+.glyphicon-chevron-down:before {display: none;}
+.glyphicon-chevron-left:before {display: none;}
+.glyphicon-chevron-right:before {display: none;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide {width: calc(100% - 16px); margin: 10px 0 0 0; text-align: right;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide > div {display: inline-block;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide > div > div {display: inline-block; position: relative; width: 18px; height: 18px; vertical-align: bottom; border: 1px solid rgba(0,0,0,0.3); border-radius: 4px;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide .pick_guide01:before {content: ''; display: inline-block; border: solid transparent; border-width: 0 0 7px 7px; border-bottom-color: #337ab7; border-bottom-color: rgba(245,222,178,1.0); border-top-color: rgba(0, 0, 0, 0.2); position: absolute; bottom: 2px; right: 2px;}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide .pick_guide03 {background: rgba(245,222,178,1.0);}
+.chatAside .chatAside_bd .stnBox dl.dlBox dd.pick_guide > div > span {font-size: 11px;}
+/* 마우스 이벤트, 디자인 효과 */
+.bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+    background: rgba(245,222,178,0.6);
+}
+.bootstrap-datetimepicker-widget table td span:hover {background-color: rgba(245,222,178,0.6);}
+.bootstrap-datetimepicker-widget table td .glyphicon-chevron-up:hover {background-image: url(../images/ico_chevron_up.png); background-repeat: no-repeat; background-position: center center; background-size: 16px auto;}
+.bootstrap-datetimepicker-widget table td .glyphicon-chevron-down:hover {background-image: url(../images/ico_chevron_down.png); background-repeat: no-repeat; background-position: center center; background-size: 16px auto;}
+.bootstrap-datetimepicker-widget table td.day.disabled {opacity: 0.4;}
+.bootstrap-datetimepicker-widget table td.day.disabled em {border: none;}
+.bootstrap-datetimepicker-widget table td.day.disabled.weekend {color: #ff0000;}
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+    /* background-color: wheat;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); */
+    background-color: transparent;
+}
+.bootstrap-datetimepicker-widget table td.active em,
+.bootstrap-datetimepicker-widget table td.active:hover em {
+    background-color: rgba(245,222,178,1.0);
+    color: #333;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.bootstrap-datetimepicker-widget table td span.active {
+    background-color: rgba(245,222,178,1.0);
+    color: #333;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.bootstrap-datetimepicker-widget table td.hour.disabled,
+.bootstrap-datetimepicker-widget table td.hour.disabled:hover {
+    background: none;
+    color: #777777;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+.bootstrap-datetimepicker-widget table td.hour.disabled em,
+.bootstrap-datetimepicker-widget table td.hour.disabled:hover em {
+    background: none;
+}
+.bootstrap-datetimepicker-widget table td.minute.disabled,
+.bootstrap-datetimepicker-widget table td.minute.disabled:hover {
+    background: none;
+    color: #777777;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+.bootstrap-datetimepicker-widget table td.minute.disabled em,
+.bootstrap-datetimepicker-widget table td.minute.disabled:hover em {
+    background: none;
+}
+.bootstrap-datetimepicker-widget button[data-action] {
+    width: 100%;
+    height: 100%;
+    padding:0;
+    background: rgba(245,222,178,1.0);
+}
+.bootstrap-datetimepicker-widget table td.day:hover,
+.bootstrap-datetimepicker-widget table td.hour:hover,
+.bootstrap-datetimepicker-widget table td.minute:hover,
+.bootstrap-datetimepicker-widget table td.second:hover {
+    /*background: #eeeeee;*/
+    cursor: pointer;
+    background: transparent;
+}
+.bootstrap-datetimepicker-widget table td.day:hover em,
+.bootstrap-datetimepicker-widget table td.hour:hover em,
+.bootstrap-datetimepicker-widget table td.minute:hover em,
+.bootstrap-datetimepicker-widget table td.second:hover em {
+    background: rgba(245,222,178,0.6);
+    cursor: pointer;
+}
+.bootstrap-datetimepicker-widget table td.disabled,
+.bootstrap-datetimepicker-widget table td.disabled:hover {
+    background: none;
+    color: #777777;
+    cursor: not-allowed;
+}
+.bootstrap-datetimepicker-widget table td.disabled em,
+.bootstrap-datetimepicker-widget table td.disabled:hover em {
+    background: none;
+    /* color: #777777; */
+    cursor: not-allowed;
+}
+/* MINDsLab. UX/UI Team. AMR. 20201223 defual 메인컬러 및 이미지 */
+#btn_goChat {border:2px solid rgba(0,113,143,1.0); background:url("../images/ico_testbot.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top h1 {color:rgba(0,113,143,1.0); background: url("../images/logo_testbot.png") no-repeat 50% 0; background-size: auto 34px; background-position: 50% 8px;}
+#chatUI_wrap .chatUI_top h1 img {height: 50px;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button:hover,.chatUI_top .langBox .lst_lang li button:focus {border:1px solid rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.active {background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .txt {background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot:first-child:before {background:#fff url("../images/ico_testbot.png") 50% 50% no-repeat; background-size:cover; }
+#chatUI_wrap li.user + li.bot:before {background:#fff url("../images/ico_testbot.png") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .chatLoading > em {background-color:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a {color:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:before {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:after {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a {color:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:before {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:after {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a {color:rgba(0,113,143,1.0); }
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a:hover {box-shadow:rgba(0,113,143,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a.active {background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .btnBox button.btn_point {background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a {color:rgba(0,113,143,1.0); box-shadow:rgba(0,113,143,0) 0 0 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a:hover {box-shadow:rgba(0,113,143,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.btnStart {box-shadow:rgba(0,113,143,1.0) 0 80px 0 2px inset; background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.active {background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+#chatUI_wrap li.bot_promotion:before {background: rgba(0,113,143,1.0) url("../images/ico_testbot.png") 50% 50% no-repeat; background-size: cover;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic .generic_tit {color: rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.botMsg_swiper a.swiper_item:hover {border:1px solid rgba(0,113,143,1.0);}
+#chatUI_wrap .full_preview .swiper-pagination-bullet-active {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .swiper-button-prev, .swiper-container-rtl .swiper-button-next {background:rgba(0,113,143,0.9) url("../images/arw_left_w.png") center center no-repeat;}
+#chatUI_wrap .swiper-button-next, .swiper-container-rtl .swiper-button-prev {background:rgba(0,113,143,0.9) url("../images/arw_right_w.png") center center no-repeat;}
+#chatUI_wrap .swiper-pagination-bullet-active {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .full_preview .swiper-pagination-bullets .swiper-pagination-bullet {border: 1px solid rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_btm .textArea:focus {border:1px solid rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_btm .btn_chat {background-color:rgba(0,113,143,1.0);}
+.chatAside .checkBox input[type="checkbox"]:checked + label:before{border-color:rgba(0,113,143,1.0); background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+.chatAside .radioBox input[type="radio"]:checked + label:before{border-color:rgba(0,113,143,1.0); background:rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}
+.chatAside .chatAside_hd h3 {color:rgba(0,113,143,1.0);}
+.chatAside .chatAside_bd .btnBox button.btn_point {background:rgba(0,113,143,1.0);}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .ico_circle {background: rgba(0,113,143,1.0);}
+#chatUI_wrap .txt .txt_btn a {color:rgba(0,113,143,1.0) !important; box-shadow:rgba(0,113,143,0) 0 0 0 2px inset;}
+#chatUI_wrap .txt .txt_btn a:hover {border:1px solid rgba(0,113,143,0) !important; box-shadow:rgba(0,113,143,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .txt .txt_btns a {color:rgba(0,113,143,1.0) !important; box-shadow:rgba(0,113,143,0) 0 0 0 2px inset;}
+#chatUI_wrap .txt .txt_btns a:hover {border:1px solid rgba(0,113,143,0) !important;  box-shadow:rgba(0,113,143,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .mapWrap .mapWrap_cont .btn_mapLoad_detail {background:rgba(0,113,143,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .txt.txt_radius {background: rgba(0,113,143,1.0); color:rgba(255,255,255,1.0);}

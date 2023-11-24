@@ -1,0 +1,50 @@
+/*--main-text-rgb, --main-color-rgb, --main-logo, --main-icon, --main-couselor-icon*/
+/* MINDsLab. UX/UI Team. AMR. 20201201 */
+#btn_goChat {border:2px solid rgba(--main-color-rgb,1.0); background:url("--main-icon") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap .chatUI_top h1 {color:rgba(--main-color-rgb,1.0); background: url("--main-logo") no-repeat 50% 0; background-size: auto --logo-size-px; background-position: --logo-left --logo-top;}
+#chatUI_wrap .chatUI_top h1 img {height: 50px;}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button:hover,.chatUI_top .langBox .lst_lang li button:focus {border:1px solid rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_top .langBox .lst_lang li button.active {background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.user .txt {background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.bot:first-child:before {background:#fff url("--main-icon") 50% 50% no-repeat; background-size:cover; }
+#chatUI_wrap li.user + li.bot:before {background:#fff url("--main-icon") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap li.stmMessage + li.bot:before {background:#fff url("--main-icon") 50% 50% no-repeat; background-size:cover;}
+#chatUI_wrap li.user + li.bot.counselor:before {background-image: url("--main-couselor-icon"); background-color: rgb(--main-color-rgb);}
+#chatUI_wrap li.stmMessage + li.bot.counselor:before {background-image: url("--main-couselor-icon"); background-color: rgb(--main-color-rgb);}
+#chatUI_wrap .chatLoading > em {background-color:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a {color:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:before {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_tit a:after {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a {color:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:before {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .generic .generic_url a:after {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a {color:rgba(--main-color-rgb,1.0); }
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a:hover {box-shadow:rgba(--main-color-rgb,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst ul li a.active {background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .btnBox button.btn_point {background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a {color:rgba(--main-color-rgb,1.0); box-shadow:rgba(--main-color-rgb,0) 0 0 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a:hover {box-shadow:rgba(--main-color-rgb,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.btnStart {box-shadow:rgba(--main-color-rgb,1.0) 0 80px 0 2px inset; background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnItem ul li a.active {background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+#chatUI_wrap li.bot_promotion:before {background: rgba(--main-color-rgb,1.0) url("--main-icon") 50% 50% no-repeat; background-size: cover;}
+#chatUI_wrap .chatUI_mid .lst_talk .bot_promotion .generic .generic_tit {color: rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk li.botMsg_swiper a.swiper_item:hover {border:1px solid rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .full_preview .swiper-pagination-bullet-active {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .swiper-button-prev, .swiper-container-rtl .swiper-button-next {background:rgba(--main-color-rgb,0.9) url("../resources/images/arw_left_w.png") center center no-repeat;}
+#chatUI_wrap .swiper-button-next, .swiper-container-rtl .swiper-button-prev {background:rgba(--main-color-rgb,0.9) url("../resources/images/arw_right_w.png") center center no-repeat;}
+#chatUI_wrap .swiper-pagination-bullet-active {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .full_preview .swiper-pagination-bullets .swiper-pagination-bullet {border: 1px solid rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_btm .textArea:focus {border:1px solid rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_btm .btn_chat {background-color:rgba(--main-color-rgb,1.0);}
+.chatAside .checkBox input[type="checkbox"]:checked + label:before{border-color:rgba(--main-color-rgb,1.0); background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+.chatAside .radioBox input[type="radio"]:checked + label:before{border-color:rgba(--main-color-rgb,1.0); background:rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+.chatAside .chatAside_hd h3 {color:rgba(--main-color-rgb,1.0);}
+.chatAside .chatAside_bd .btnBox button.btn_point {background:rgba(--main-color-rgb,1.0);}
+.chatAside .chatAside_bd .stnBox.popup .popup_content .ico_circle {background: rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .txt .txt_btn a {color:rgba(--main-color-rgb,1.0) !important; box-shadow:rgba(--main-color-rgb,0) 0 0 0 2px inset;}
+#chatUI_wrap .txt .txt_btn a:hover {border:1px solid rgba(--main-color-rgb,0) !important; box-shadow:rgba(--main-color-rgb,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .txt .txt_btns a {color:rgba(--main-color-rgb,1.0) !important; box-shadow:rgba(--main-color-rgb,0) 0 0 0 2px inset;}
+#chatUI_wrap .txt .txt_btns a:hover {border:1px solid rgba(--main-color-rgb,0) !important;  box-shadow:rgba(--main-color-rgb,1.0) 0 80px 0 2px inset;}
+#chatUI_wrap .mapWrap .mapWrap_cont .btn_mapLoad_detail {background:rgba(--main-color-rgb,1.0);}
+#chatUI_wrap .chatUI_mid .lst_talk .btnLst .txt.txt_radius {background: rgba(--main-color-rgb,1.0); color:rgba(--main-text-rgb,1.0);}
+.svc_btns {background-color:rgba(--main-color-rgb,1.0);}

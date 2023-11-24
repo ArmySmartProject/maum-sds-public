@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 기본 BackendInfo 설정 -->
+    <bean id="defaultBackendInfo" class="first.common.util.PropInfo">
+        <constructor-arg name="itfIP"       value="172.31.16.182"    />
+        <constructor-arg name="itfPort"     value="35000"              />
+        <constructor-arg name="nerIP"       value="114.108.173.112"    />
+        <constructor-arg name="nerPort"     value="35006"              />
+        <constructor-arg name="SimpleBotTTSIP"       value="http://183.110.62.66"    />
+        <constructor-arg name="SimpleBotTTSPort"     value="9998"              />
+        <!-- 현대해상용 설정 -->
+        <constructor-arg name="siteCustom"     value="mindslab"              />
+        <!-- NQA 학습 사용여부 -->
+        <constructor-arg name="nqaYN"     value="Y"              />
+        <!-- 심플봇-음성봇 테스트용 bl 외부용 ip, port -->
+        <constructor-arg name="env"       value="prod"    />
+        <constructor-arg name="blIP"       value="125.132.250.244"    />
+        <constructor-arg name="blPort1"     value="26001"              />
+        <constructor-arg name="blPort2"     value="26002"              />
+        <constructor-arg name="cmIP"       value="121.133.247.250"    />
+        <constructor-arg name="cmPort"     value="15000"              />
+        <constructor-arg name="m2uUrl"       value="https://fast-aicc.maum.ai:9990"    />
+
+
+        <!-- 심플봇-음성봇 테스트용 bl 내부 테스트용 ip, port -->
+        <!--<constructor-arg name="env"       value="dev"    />-->
+        <!--<constructor-arg name="blIP"       value="10.122.64.152"    />-->
+        <!--<constructor-arg name="blPort1"     value="6001"              />-->
+        <!--<constructor-arg name="blPort2"     value="6002"              />-->
+        <!--<constructor-arg name="cmIP"       value="10.122.64.152"    />-->
+        <!--<constructor-arg name="cmPort"     value="5000"              />-->
+        <!--<constructor-arg name="m2uUrl"       value="http://localhost:9990"    />-->
+    </bean>
+
+    <bean id="defaultStyleCssPath" class="first.common.util.StyleCssInfo">
+        <constructor-arg name="resourcesPath"       value="/home/minds/server/imgUpload"    />
+        <constructor-arg name="defaultStyle"        value="chatbot.css/chatbot_custom.css/chatbot_floating.css"/>
+        <constructor-arg name="supplier"            value="default/mindslab/redtie"/>
+        <constructor-arg name="logoiconMappingval"       value="https://sds.maum.ai:443/imagesLi/"    />
+    </bean>
+</beans>

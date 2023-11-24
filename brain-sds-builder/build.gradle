@@ -1,0 +1,104 @@
+group 'brain-sds-builder'
+version '1.0-SNAPSHOT'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.google.protobuf'
+compileJava.options.encoding = 'UTF-8'
+
+wrapper {
+    gradleVersion = '4.10.3'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:0.8.1"
+    }
+}
+war{
+    archiveName 'sds-builder.war'
+}
+
+def springVersion = '4.3.22.RELEASE' // org.springframework
+def aspectjVersion = '1.9.2' // org.aspectj
+def fasterxmlJacksonVersion = '2.9.8' // com.fasterxml.jackson.core
+def grpcVersion = '1.13.1'
+
+dependencies {
+    ["spring-web", "spring-webmvc", "spring-aop", "spring-beans",
+     "spring-context-support", "spring-core", "spring-jdbc", "spring-tx"].each {
+        compile group: "org.springframework", name: it, version: "${springVersion}"
+    }
+    implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.7.RELEASE'
+
+    compile("mysql:mysql-connector-java:5.1.48")
+    compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.30'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+    compile group: 'org.lazyluke', name: 'log4jdbc-remix', version: '0.2.6'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.1'
+    compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.0'
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.5.0'
+    compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre7'
+    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    compile 'com.google.guava:guava:22.0'
+    ['aspectjrt', 'aspectjweaver', 'aspectjtools'].each {
+        compile group: 'org.aspectj', name: it, version: "${aspectjVersion}"
+    }
+    ['jackson-core', 'jackson-databind'].each {
+        compile group: 'com.fasterxml.jackson.core', name: it, version: "${fasterxmlJacksonVersion}"
+    }
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.9.0'
+    compile "com.google.api.grpc:proto-google-common-protos:1.0.0"
+    compile "io.grpc:grpc-netty:${grpcVersion}"
+    compile "io.grpc:grpc-protobuf:${grpcVersion}"
+    compile "io.grpc:grpc-stub:${grpcVersion}"
+    compile "io.grpc:grpc-core:${grpcVersion}"
+    compile "io.grpc:grpc-okhttp:${grpcVersion}"
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.5.1-1'
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                option 'enable_deprecated=false'
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}

@@ -1,0 +1,179 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package maum.brain.qa.nqa;
+
+service NQaService {
+  // 질문을 기반으로 검색 결과를 가져온다.
+  rpc SearchQuestion (SearchQuestionRequest) returns (SearchQuestionResponse);
+  // 답변을 기반으로 검색 결과를 가져온다.
+  rpc SearchAnswer (SearchAnswerRequest) returns (SearchAnswerResponse);
+}
+
+//
+//
+message SearchQuestionRequest {
+  int32 ntop = 1; // 가져올 질문의 결과 갯수
+  string id = 2; // ID
+
+  // 옵션들
+  string src = 3; // 출처
+  string channel = 4; // 채널
+  repeated string category = 5; // 카테고리(여러개 가능)
+  float score = 6; // 점수 filter
+  float max_size = 7; // 사이즈 filter
+  float mm = 8; // 최소 매치
+  QueryType query_type = 20; // 쿼리 타입(ALL, AND, OR)
+  QueryTarget query_target = 21;  // 쿼리 타겟
+
+  // 쿼리 내용
+  QueryUnit user_query = 10; // 사용자 질문, 원문
+  AttributeQueryUnit attributes = 50; // 쿼리에 사용할 속성
+  repeated QueryUnit ner = 60; // 개체명
+  Filter filter = 70;
+  repeated QueryUnit tags = 80;
+  map<string, string> meta = 90; // 기타 메타값
+}
+
+
+message QueryUnit {
+  string phrase = 1;
+  // default 0이면 1로 계산한다. (가중치를 안주는 것이고)
+  // 0.5, 1.5 2 등은 가중치에 변경을 가하는 것이다.
+  float weight = 2;
+}
+
+//
+enum QueryType {
+  ALL = 0; // AND와 OR을 다 사용
+  AND = 1; // AND 색인
+  OR = 2; // OR 색인
+}
+
+enum QueryTarget {
+  Q = 0;
+  GRAMQ = 1;
+  AID = 2;
+  A = 3;
+  ATTRALL = 4;
+  LAYERALL = 5;
+  GRAMA = 6;
+  NER = 7;
+  TAG = 8;
+}
+
+//
+//
+message SearchQuestionResponse {
+  string user_query = 1; // 입력으로 들어온 질문
+  repeated string ids = 2; // 결과로 나온 answer의 id값
+  repeated Question questions = 3; // 결과로 나온 question 값
+
+  map<string, string> result_process = 4; // 결과 쿼리
+
+  google.protobuf.Struct all_result = 5;
+
+  message Question {
+    string id = 10; // ID
+    string answer_id = 20; // 해당하는 answer id
+    string src = 30; // 출처
+    string channel = 40; // 채널
+    string category = 50; // 카테고리
+    string question = 60; // 질문
+    string question_morp = 70; // 질문 형태소 분석 결과
+    float score = 80; // 점수
+    string ner = 90; // 개체명
+    Attribute attribute = 100; // 속성
+  }
+}
+
+
+message SearchAnswerRequest {
+  int32 ntop = 1; // 가져올 답변 갯수
+  repeated string ids = 2; // 질문 검색 결과 나온 답변 id들
+
+  string src = 3; // 출처
+  string channel = 4; // 채널
+  repeated string category = 5; // 카테고리
+  QueryUnit user_query = 6; // 사용자 질문
+  float mm = 8; // 최소 매치
+
+  QueryType query_type = 10; // 쿼리 타입(ALL, AND, OR)
+  QueryTarget query_target = 11; //  쿼리 타겟
+
+  AttributeQueryUnit attribute = 50; // 속성
+  LayerQueryUnit layer = 60; // 계층
+  repeated QueryUnit ner = 70; // 개체명
+  Filter filter = 80;
+  repeated QueryUnit tags = 90;
+
+  map<string, string> meta = 100; // 기타 메타값
+}
+
+
+message SearchAnswerResponse {
+  repeated Answer answerResult = 1; // 답변 결과
+  message Answer {
+    string id = 2; // ID
+    string src = 3; // 출처
+    string channel = 4; // 채널
+    string category = 5; // 카테고리
+    float score = 10; // 점수
+    string answer = 20; // 답변
+    string answer_view = 25; // code포함 답변
+    string summary = 30;
+    string ner = 40; // 개체명
+    Attribute attributes = 50; // 속성
+    Layer layers = 60; // 계층
+    repeated string tags = 70;
+  }
+  map<string, string> result_process = 4; // 결과 쿼리
+  google.protobuf.Struct all_result = 5;
+}
+
+message Attribute {
+  string attr1 = 1;
+  string attr2 = 2;
+  string attr3 = 3;
+  string attr4 = 4;
+  string attr5 = 5;
+  string attr6 = 6;
+}
+
+message Layer {
+  string layer1 = 1;
+  string layer2 = 2;
+  string layer3 = 3;
+  string layer4 = 4;
+  string layer5 = 5;
+  string layer6 = 6;
+}
+
+message AttributeQueryUnit {
+  QueryUnit attr1 = 1;
+  QueryUnit attr2 = 2;
+  QueryUnit attr3 = 3;
+  QueryUnit attr4 = 4;
+  QueryUnit attr5 = 5;
+  QueryUnit attr6 = 6;
+}
+
+message LayerQueryUnit {
+  QueryUnit layer1 = 1;
+  QueryUnit layer2 = 2;
+  QueryUnit layer3 = 3;
+  QueryUnit layer4 = 4;
+  QueryUnit layer5 = 5;
+  QueryUnit layer6 = 6;
+}
+
+message Filter {
+  string src = 2;
+  string user_query = 5;
+  repeated string ner = 6;
+  repeated string tags = 7;
+  Attribute attribute = 10;
+  Layer layer = 20;
+}
+

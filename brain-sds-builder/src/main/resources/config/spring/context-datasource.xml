@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <!-- 운영 DB 설정 START-->
+  <!-- SDS(Chatbot) -->
+  <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/Chatbot?useUnicode=true&amp;allowMultiQueries=true"/>
+    <property name="validationQuery" value="select 1"/>
+    <property name="testWhileIdle" value="true"/>
+    <property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+    <property name="username" value="minds"/>
+    <property name="password" value="msl1234~"/>
+  </bean>
+
+  <!-- SIMPLEBOT(HAPPYCALL4) -->
+  <bean id="dataSourceSpied2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/HAPPYCALL4?useUnicode=true&amp;allowMultiQueries=true"/>
+    <property name="validationQuery" value="select 1"/>
+    <property name="testWhileIdle" value="true"/>
+    <property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+    <property name="username" value="minds"/>
+    <property name="password" value="msl1234~"/>
+  </bean>
+
+  <!-- 운영 DB 설정 END-->
+
+
+  <!-- 개발  DB 설정 START -->
+<!--    &lt;!&ndash; SDS(Chatbot) &ndash;&gt;-->
+<!--    <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource"-->
+<!--      destroy-method="close">-->
+<!--      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
+<!--      &lt;!&ndash;  116번 디비가 아닐 경우 useSSL false 옵션 추가 &ndash;&gt;-->
+<!--      <property name="url" value="jdbc:mysql://10.122.64.116:3307/Chatbot?useUnicode=true&amp;allowMultiQueries=true"/>-->
+<!--      <property name="validationQuery" value="select 1"/>-->
+<!--      <property name="testWhileIdle" value="true"/>-->
+<!--      <property name="timeBetweenEvictionRunsMillis" value="7200000"/>-->
+<!--      <property name="username" value="minds"/>-->
+<!--      <property name="password" value="msl1234~"/>-->
+<!--    </bean>-->
+
+<!--    &lt;!&ndash; SIMPLEBOT(HAPPYCALL4 or fast_aicc) &ndash;&gt;-->
+<!--    <bean id="dataSourceSpied2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+<!--      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
+<!--      &lt;!&ndash;  116번 디비가 아닐 경우 useSSL false 옵션 추가 및 DB HAPPYCALL4 &ndash;&gt;-->
+<!--      <property name="url" value="jdbc:mysql://10.122.64.116:3307/fast_aicc?useUnicode=true&amp;allowMultiQueries=true"/>-->
+<!--      <property name="validationQuery" value="select 1"/>-->
+<!--      <property name="testWhileIdle" value="true"/>-->
+<!--      <property name="timeBetweenEvictionRunsMillis" value="7200000"/>-->
+<!--      <property name="username" value="minds"/>-->
+<!--      <property name="password" value="msl1234~"/>-->
+<!--    </bean>-->
+
+  <!-- 개발  DB 설정 END -->
+
+
+  <!-- sql 로그 설정 -->
+
+  <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+    <constructor-arg ref="dataSourceSpied"/>
+    <property name="logFormatter">
+      <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+        <property name="loggingType" value="MULTI_LINE"/>
+        <property name="sqlPrefix" value="SQL(maum-sds)        :  "/>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="dataSource2" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+    <constructor-arg ref="dataSourceSpied2"/>
+    <property name="logFormatter">
+      <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+        <property name="loggingType" value="MULTI_LINE"/>
+        <property name="sqlPrefix" value="SQL(simplebot)        :  "/>
+      </bean>
+    </property>
+  </bean>
+</beans>
+

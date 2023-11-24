@@ -1,0 +1,205 @@
+{
+  "nodes": [{
+    "id": "74a13f41-33ac-4a06-92ad-6fee852325ad",
+    "type": "start",
+    "label": "첫인사",
+    "left": 0,
+    "top": 0,
+    "attr": [{
+      "utter": "안녕하세요, \u003c계약자명\u003e님. 지금부터 진행하는 내용은 고객님의 권리보호를 위해 녹음됩니다. \u003c계약자명\u003e 고객님 본인이신가요?",
+      "conditionType": 0,
+      "utterY": "감사합니다, 회원님!\n몇 가지 질문과 안내 간단하게 해드리겠습니다.",
+      "utterN": "아, 그러시군요 회원님!\n그럼 제가 나중에 다시 전화드리겠습니다. \n즐거운 하루 되세요. ",
+      "utterU": "네, 아니오로 다시 한 번 말씀해주세요.",
+      "utterR": "다시 한 번 말씀드리겠습니다.",
+      "inputType": 0,
+      "maxTurn" : 3,
+      "taskOverMax": "비정상 통화 종료",
+      "acceptSttStcIdx": "0,1,2",
+      "repeatAnswerStcIdx": "1,2"
+    }]
+  }, {
+    "id": "5c32e959-db95-43e6-ba65-79a8d796f379",
+    "type": "task",
+    "label": "첫인사_부정",
+    "left": 0,
+    "top": 0,
+    "attr": [{
+      "utter": "고객님, 죄송합니다. 이 번호가 \u003c계약자명\u003e님 번호가 맞으십니까?",
+      "conditionType": 1,
+      "utterY": "",
+      "utterN": "고객님, 죄송합니다. 번호를 다시 확인하겠습니다. 안녕히 계십시오.",
+      "utterU": "네, 아니오로 다시 한 번 말씀해주세요.",
+      "utterR": "다시 한 번 말씀드리겠습니다.",
+      "inputType": 1,
+      "maxTurn" : 4,
+      "taskOverMax": "비정상 통화 종료",
+      "acceptSttStcIdx": "0,1",
+      "repeatAnswerStcIdx": "0"
+    }]
+  }, {
+    "id": "1ef514fd-cc0d-485d-b2cd-4b23040591c4",
+    "type": "end",
+    "label": "종료",
+    "left": 0,
+    "top": 0,
+    "attr": []
+  }, {
+    "id": "88f75c33-a0ec-43d8-af2b-b1c3e37a19e3",
+    "type": "task",
+    "label": "생년월일 확인",
+    "left": 0,
+    "top": 0,
+    "attr": [{
+      "utter": "\u003c계약자명\u003e님의 생년월일을 말씀해주세요. 93년 1월 11월과 같이 말씀해주세요.",
+      "conditionType": 0,
+      "utterY": "",
+      "utterN": "",
+      "utterU": "네, 아니오로 다시 한 번 말씀해주세요.",
+      "utterR": "다시 한 번 말씀드리겠습니다.",
+      "inputType": 2,
+      "maxTurn" : 5,
+      "taskOverMax": "비정상 통화 종료",
+      "acceptSttStcIdx": "0",
+      "repeatAnswerStcIdx": ""
+    }]
+  }, {
+    "id": "c68c29fd-a3af-46c0-8203-d833e58aac9a",
+    "type": "task",
+    "label": "해피콜 증거력 사전고지",
+    "left": 0,
+    "top": 0,
+    "attr": [{
+      "utter": "지금부터 제가 확인해드리는 내용은 향후 보험계약의 효력여부와 분쟁발생시 근거자료로 사용될 수 있으니 신중하게 답변해 주시기 바랍니다. 지금부터 진행하는 질문은 예, 아니오로 답변 바랍니다.",
+      "conditionType": 1,
+      "utterY": "",
+      "utterN": "",
+      "utterU": "",
+      "utterR": "",
+      "inputType": 0,
+      "maxTurn" : 1,
+      "taskOverMax": "호전환",
+      "acceptSttStcIdx": "",
+      "repeatAnswerStcIdx": ""
+    }]
+  }, {
+    "id": "9688419c-2985-43d0-856f-2b1b98bd4449",
+    "type": "task",
+    "label": "청약사항확인",
+    "left": 0,
+    "top": 0,
+    "attr": [{
+      "utter": "가입하신 상품은 100만원 거치형 상품으로 계약자 \u003c계약자명\u003e님, 피보험자 \u003c피보험자명\u003e님으로 확인되는데 맞으십니까?",
+      "conditionType": 1,
+      "utterY": "",
+      "utterN": "",
+      "utterU": "네, 아니오로 다시 한 번 말씀해주세요.",
+      "utterR": "다시 한 번 말씀드리겠습니다.",
+      "inputType": 1,
+      "maxTurn" : 2,
+      "taskOverMax": "호전환",
+      "acceptSttStcIdx": "0",
+      "repeatAnswerStcIdx": ""
+    }]
+  }, {
+    "id": "79fb8ce5-a1a2-4b07-81bd-92c358f175b8",
+    "type": "end",
+    "label": "종료",
+    "left": 0,
+    "top": 0,
+    "attr": []
+  }],
+  "edges": [{
+    "source": "74a13f41-33ac-4a06-92ad-6fee852325ad",
+    "data": {
+      "id": "04c7da6e-5f6a-47a8-a2b8-dcb4cec40229",
+      "type": "default",
+      "label": "YES",
+      "attr": []
+    }
+  }, {
+    "source": "74a13f41-33ac-4a06-92ad-6fee852325ad",
+    "target": "5c32e959-db95-43e6-ba65-79a8d796f379",
+    "data": {
+      "id": "70d18029-79ae-4cb6-9260-45f41ae679bf",
+      "type": "default",
+      "label": "NO",
+      "attr": []
+    }
+  }, {
+    "source": "5c32e959-db95-43e6-ba65-79a8d796f379",
+    "target": "88f75c33-a0ec-43d8-af2b-b1c3e37a19e3",
+    "data": {
+      "id": "b7319a61-e0ea-4404-8dc4-87ed6c5cd113",
+      "type": "default",
+      "label": "주민등록증",
+      "attr": [{
+        "utter": "주민등록증 utter"
+      }
+      ]
+    }
+  }, {
+    "source": "5c32e959-db95-43e6-ba65-79a8d796f379",
+    "target": "1ef514fd-cc0d-485d-b2cd-4b23040591c4",
+    "data": {
+      "id": "1059d7b2-7e4d-4a27-8774-1c8ff8dfb8f5",
+      "type": "default",
+      "label": "NO",
+      "attr": []
+    }
+  }, {
+    "source": "88f75c33-a0ec-43d8-af2b-b1c3e37a19e3",
+    "target": "c68c29fd-a3af-46c0-8203-d833e58aac9a",
+    "data": {
+      "id": "48b4a933-5836-4acf-aec0-cb965c3f16f2",
+      "type": "default",
+      "label": "YES",
+      "attr": []
+    }
+  }, {
+    "source": "88f75c33-a0ec-43d8-af2b-b1c3e37a19e3",
+    "target": "c68c29fd-a3af-46c0-8203-d833e58aac9a",
+    "data": {
+      "id": "02a043fa-161c-46a2-bda7-08d97fcd4c93",
+      "type": "default",
+      "label": "NO",
+      "attr": []
+    }
+  }, {
+    "source": "c68c29fd-a3af-46c0-8203-d833e58aac9a",
+    "target": "9688419c-2985-43d0-856f-2b1b98bd4449",
+    "data": {
+      "id": "f8162dd4-723c-47fc-88c8-5c6a69b35f61",
+      "type": "default",
+      "label": "YES",
+      "attr": []
+    }
+  }, {
+    "source": "c68c29fd-a3af-46c0-8203-d833e58aac9a",
+    "target": "9688419c-2985-43d0-856f-2b1b98bd4449",
+    "data": {
+      "id": "a879f0a6-4d11-4b94-af3f-5d60e0e43064",
+      "type": "default",
+      "label": "NO",
+      "attr": []
+    }
+  }, {
+    "source": "9688419c-2985-43d0-856f-2b1b98bd4449",
+    "target": "79fb8ce5-a1a2-4b07-81bd-92c358f175b8",
+    "data": {
+      "id": "9dd05145-70f2-4b4e-8ba3-775c64cd253a",
+      "type": "default",
+      "label": "YES",
+      "attr": []
+    }
+  }, {
+    "source": "9688419c-2985-43d0-856f-2b1b98bd4449",
+    "target": "79fb8ce5-a1a2-4b07-81bd-92c358f175b8",
+    "data": {
+      "id": "f00b641b-434d-461f-b8d7-59ff23199bd6",
+      "type": "default",
+      "label": "NO",
+      "attr": []
+    }
+  }]
+}

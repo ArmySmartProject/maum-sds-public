@@ -1,0 +1,48 @@
+/*--main-text-rgb, --main-color-rgb, --main-logo, --main-icon*/
+/* MINDsLab. UX/UI Team. AMR. 20201201 */
+#chatbot {display:block; overflow:hidden; position:fixed; width: 90px; right:0; bottom:55px; height:75px; border-radius:10px; z-index:9999;}
+#chatbot.chatOpen {width: 370px; height:80%; bottom: 0px;}
+#chatbot.aside_area {width: 725px;}
+#chatbot_iframe {position: absolute; right: 0px; bottom: 0px; width:775px;height:100%; border:none;}
+.chatGreeting:hover .btn_greetClose {opacity: 1;}
+.chatGreeting {display:block; position:fixed; right:100px; bottom:30px; margin-bottom:0px; padding:10px 35px 10px 10px; line-height: 18px; color:rgba(--main-text-rgb,1.0); font-size:12px; text-align:right; border-radius:7px; background:rgba(--main-color-rgb,1.0); z-index:700; -webkit-animation-duration:1.2s; animation-duration:1.2s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chatGreeting; animation-name:chatGreeting; animation-delay:0.5s;}
+/* 200310 AMR animation 경량화 */
+@-webkit-keyframes chatGreeting {
+    0%   {opacity:0; display:none; transform: translateY(0px);}
+    50%  {opacity:0; display:none; transform: translateY(0px);}
+    100% {opacity:1; display:block; transform: translateY(-30px);}
+}
+@keyframes chatGreeting {
+    0%   {opacity:0; display:none; transform: translateY(0px);}
+    50%  {opacity:0; display:none; transform: translateY(0px);}
+    100% {opacity:1; display:block; transform: translateY(-30px);}
+}
+.chatGreeting.chatGreeting_hide {animation-delay:0s; -webkit-animation-duration:0.3s; animation-duration:0.3s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chatGreeting_hide; animation-name:chatGreeting_hide; }
+@-webkit-keyframes chatGreeting_hide {
+    0%   {opacity:1; display:block; transform: translateY(-30px);}
+    100% {opacity:0; display:none; transform: translateY(0px);}
+}
+@keyframes chatGreeting_hide {
+    0%   {opacity:1; display:block; transform: translateY(-30px);}
+    100% {opacity:0; display:none; transform: translateY(0px);}
+}
+.powered {display:block; position:fixed; right:20px; bottom:30px; margin-bottom:0; color:#fff; font-size:12px; text-align:right; text-shadow:1px 1px 3px rgba(0, 0, 0, 0.7); z-index:700;}
+.powered img {height:9px; margin:0 0 1px 4px; vertical-align:middle;}
+#chatbot.chatOpen ~ .chatGreeting {display:none;}
+#chatbot.chatOpen ~ .powered {display:none;}
+.btn_greetClose {overflow: hidden; position:absolute; top: 10px; right: 8px; width: 20px; height: 20px; text-indent:-99px; border:none; border-radius: 50%; cursor:pointer; background-color: rgba(255,255,255,0.7); transition:all 0.3s ease-out;opacity: 0;}
+.btn_greetClose:before,
+.btn_greetClose:after {content:''; position:absolute; top:50%; left:4px; width:12px; height:1px; background:rgba(0,0,0,0.9);}
+.btn_greetClose:before {transform:rotate(-45deg);}
+.btn_greetClose:after {transform:rotate(45deg);}
+@media all and (max-width: 768px) {
+    #chatbot {right:0; bottom:40px; width: 75px; height: 55px; border-radius:0; z-index:9999;}
+    #chatbot #btn_goChat {bottom:0; width:55px; margin:0 10px 40px 0; padding:50px 0 0 0;}
+    #chatbot.chatOpen {bottom:0px; width: 100%; height:100%;}
+    .powered {bottom:12px;}
+    .chatGreeting {left:auto; right: 80px; width: auto; margin-bottom: -20px; text-align:left; word-break: keep-all;}
+
+    #chatbot_iframe {width: 100%;}
+
+    .chatGreeting .btn_greetClose {opacity: 1;}
+}

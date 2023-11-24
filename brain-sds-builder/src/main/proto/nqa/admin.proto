@@ -1,0 +1,357 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package maum.brain.qa.nqa;
+
+// Basic Qa Admin Service
+service NQaAdminService {
+  /// ## INDEX (색인)
+  rpc Indexing (IndexingRequest) returns (IndexStatus);
+  /// 색인 취소
+  rpc AbortIndexing (IndexingRequest) returns (IndexStatus);
+  /// 색인 status 가져오기
+  rpc GetIndexingStatus (google.protobuf.Empty) returns (IndexStatus);
+  /// 색인된 keyword 가져오기 (NQA 신규)
+  rpc GetIndexedKeywords (GetIndexedKeywordsRequest) returns (GetIndexedKeywordsResponse);
+  /// solr 동의어 데이터 입력 (NQA 신규)
+  rpc UpdateSynonyms (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  /// ## INDEX SCHEDULE
+  /// 색인 일정 등록
+  rpc SetIndexingSchedule (IndexingSchedule) returns (IndexingSchedule);
+  /// 색인 일정 가져오기
+  rpc GetIndexingSchedule (google.protobuf.Empty) returns (IndexingSchedule);
+
+  /// ## DB CRUD rpc
+  // Channel
+  rpc GetChannelList (google.protobuf.Empty) returns (ChannelList);
+  rpc GetChannelById (NQaAdminChannel) returns (NQaAdminChannel);
+  rpc AddChannel (NQaAdminChannel) returns (NQaAdminChannel);
+  rpc EditChannel (NQaAdminChannel) returns (NQaAdminChannel);
+  rpc RemoveChannel (RemoveChannelRequest) returns (RemoveChannelResponse);
+
+  // Category
+  rpc GetCategoryListByChannelId (NQaAdminChannel) returns (CategoryList);
+  rpc GetCategoryListByName (NQaAdminCategory) returns (CategoryList);
+  rpc GetCategoryById (GetCategoryByIdRequest) returns (GetCategoryByIdResponse);
+  rpc AddCategory (AddCategoryRequest) returns (AddCategoryResponse);
+  rpc EditCategory (EditCategoryRequest) returns (EditCategoryResponse);
+  rpc RemoveCategory (RemoveCategoryRequest) returns (RemoveCategoryResponse);
+
+  // Layer
+  rpc GetLayerListByCategory (NQaAdminCategory) returns (LayerList);
+
+  // Question & Answer
+  rpc GetAnswerListByCategory (GetAnswerListByCategoryRequest) returns (AnswerList);
+  rpc getQAsetByCategory (getQAsetByCategoryRequest) returns (AnswerList);
+  rpc GetAnswerById (GetAnswerByIdRequest) returns (AnswerList);
+  rpc AddAnswer (AddAnswerRequest) returns (AddAnswerResponse);
+  // 기존 q&a 데이터를 모두 지우고 일괄 Upload 하는 rpc
+  rpc UploadAnswerList (UploadAnswerListRequest) returns (UploadAnswerListResponse);
+  rpc UploadStreamAnswerList (stream UploadStreamAnswerListRequest) returns (UploadAnswerListResponse);
+  rpc EditAnswer (EditAnswerRequest) returns (AnswerList);
+  rpc RemoveAnswer (RemoveAnswerRequest) returns (RemoveAnswerResponse);
+}
+
+message AnswerList {
+  message QaSet {
+    NQaAdminAnswer answer = 1;
+
+    repeated NQaAdminQuestion questions = 2;
+  }
+  repeated QaSet qaSets = 10;
+  int32 totalCount = 11;
+  int32 questionCount = 12;
+}
+
+message ChannelList {
+  repeated NQaAdminChannel channels = 1;
+}
+
+message CategoryList {
+  repeated NQaAdminCategory categories = 1;
+}
+
+message LayerList {
+  repeated NQaAdminLayer layers = 1;
+}
+
+message GetAnswerListByCategoryRequest {
+  int32 categoryId = 1;
+  int32 startRow = 2;
+  int32 endRow = 3;
+  string searchFiled = 4;
+  string searchValue = 5;
+  string sortModel = 6;
+  string sortType = 7;
+  repeated NQaAdminPaging searchList = 8;
+}
+
+message getQAsetByCategoryRequest {
+  int32 categoryId = 1;
+}
+
+message getQAsetByCategoryResponse {
+  message Qa {
+    int32 answerId = 1;
+    string answer = 2;
+    string question = 3;
+  }
+  repeated Qa qaList = 10;
+}
+
+message GetAnswerByIdRequest {
+  int32 id = 10;
+}
+
+message GetCategoryByIdRequest {
+  int32 id = 10;
+}
+
+message GetCategoryByIdResponse {
+  NQaAdminCategory category = 10;
+}
+
+message AddAnswerRequest {
+  NQaAdminAnswer answer = 10;
+  repeated NQaAdminQuestion questions = 20;
+}
+
+message AddAnswerResponse {
+  int32 count = 10;
+  NQaAdminAnswer answer = 20;
+  repeated NQaAdminQuestion questions = 30;
+}
+
+message SingleQaSet {
+  int32 id = 1;
+  NQaAdminAnswer answer = 2;
+  NQaAdminQuestion questions = 3;
+}
+
+message UploadAnswerListRequest {
+  int32 totalCount = 10;
+  NQaAdminChannel channel = 11;
+  int32 categoryId = 12;
+  repeated SingleQaSet qaSets = 13;
+}
+
+message UploadStreamAnswerListRequest {
+  SingleQaSet qaSets = 13;
+}
+
+message UploadAnswerListResponse {
+  int32 successCount = 10;
+  repeated SingleQaSet failedQaSets = 11;
+}
+
+message RemoveChannelRequest {
+  int32 id = 10;
+}
+
+message RemoveChannelResponse {
+  int32 count = 10;
+}
+
+message AddCategoryRequest {
+  NQaAdminCategory category = 10;
+}
+
+message AddCategoryResponse {
+  NQaAdminCategory category = 10;
+}
+
+message EditAnswerRequest {
+  message EditQaSet {
+    NQaAdminAnswer answer = 1;
+    repeated NQaAdminQuestion addedQuestions = 2;
+    repeated NQaAdminQuestion editedQuestions = 3;
+    repeated NQaAdminQuestion removedQuestions = 4;
+  }
+  repeated EditQaSet editQaSets = 10;
+}
+
+message RemoveAnswerRequest {
+  message AnswerIdSet {
+    int32 id = 1;
+    int32 copyId = 2;
+  }
+  repeated AnswerIdSet answerIdSets = 10;
+
+}
+
+message RemoveAnswerResponse {
+  int32 count = 10;
+}
+
+message EditCategoryRequest {
+  NQaAdminCategory category = 10;
+}
+
+message EditCategoryResponse {
+  NQaAdminCategory category = 10;
+}
+
+message RemoveCategoryRequest {
+  repeated int32 id = 10;
+}
+
+message RemoveCategoryResponse {
+  int32 count = 10;
+}
+
+message NQaAdminAnswer {
+  int32 id = 10;
+  int32 copyId = 11;
+  string answer = 12;
+  string answerView = 13;
+  string src = 14;
+  string summary = 15;
+  int32 categoryId = 21;
+  int32 rownum = 22;
+  string attr1 = 31;
+  string attr2 = 32;
+  string attr3 = 33;
+  string attr4 = 34;
+  string attr5 = 35;
+  string attr6 = 36;
+  NQaAdminLayer layer1 = 41;
+  NQaAdminLayer layer2 = 42;
+  NQaAdminLayer layer3 = 43;
+  NQaAdminLayer layer4 = 44;
+  NQaAdminLayer layer5 = 45;
+  NQaAdminLayer layer6 = 46;
+  repeated string tags = 51;
+  string creatorId = 101;
+  string updaterId = 102;
+  string createDtm = 103;
+  string updateDtm = 104;
+}
+
+message NQaAdminQuestion {
+  int32 id = 10;
+  int32 answerId = 11;
+  int32 answerCopyId = 12;
+  string question = 13;
+  string src = 14;
+  string creatorId = 101;
+  string updaterId = 102;
+  string createDtm = 103;
+  string updateDtm = 104;
+}
+
+message NQaAdminChannel {
+  int32 id = 10;
+  string name = 11;
+  string creatorId = 101;
+  string updaterId = 102;
+  string createDtm = 103;
+  string updateDtm = 104;
+}
+
+message NQaAdminCategory {
+  int32 id = 10;
+  string name = 11;
+  int32 channelId = 21;
+  string creatorId = 101;
+  string updaterId = 102;
+  string createDtm = 103;
+  string updateDtm = 104;
+  int32 pageIndex = 201;
+  int32 pageSize = 202;
+}
+
+message NQaAdminLayer {
+  int32 id = 10;
+  string name = 11;
+  int32 layerSection = 12;
+  int32 categoryId = 21;
+  string creatorId = 101;
+  string updaterId = 102;
+  string createDtm = 103;
+  string updateDtm = 104;
+}
+
+message NQaAdminPaging {
+  repeated string searchFiled = 1;
+  repeated string searchValue = 2;
+
+}
+
+// Indexing Request
+message IndexingRequest {
+  CollectionType collectionType = 1; // 색인할 collection 종류
+  IndexType indexType = 2; // 인덱싱할 종류
+  int32 channelId = 20; // channel Id
+  int32 categoryId = 30; // category Id
+  google.protobuf.Timestamp targetDate = 40;
+}
+
+enum IndexType {
+  FULL = 0;
+  ADD = 1;
+}
+
+// 색인할 collection 종류
+enum CollectionType {
+  QUESTION = 0; // 질문 collection
+  ANSWER = 1; // 답변 collection
+  BOTH = 2;
+}
+
+
+message IndexStatus {
+  bool status = 1; // 색인 상태
+
+  int32 total = 2; // 총 색인할 기존 문장 갯수
+  int32 fetched = 3; // 색인된 기존 문장 갯수
+  int32 processed = 4; // 색인된 문장 갯수
+
+  string message = 11; // 상태 메세지
+}
+
+
+message IndexingSchedule {
+  /*
+      표현식은 아래와 같이 설정
+      ex) cronExpression: * * * * * ?
+        초(Seconds): 0-59, *
+        분(Minutes): 0-59, *
+        시(Hours): 0-23, *
+        일(Day-of-Month): 1-31, * (?로 대체 가능)
+        월(Months): 1-12, *
+        요일(Days-of-Week): 1-7, * (?로 대체 가능)
+        연도(Year) - optional: 1979-2099 (생략 가능)
+*/
+  string cron = 10;
+}
+
+message GetIndexedKeywordsRequest {
+  int32 ntop = 1;  // 가져올 상위 갯수
+  int32 channel_id = 2;  // 채널
+  int32 category_id = 3;  // 카테고리
+  Section section = 4;
+  enum Section {
+    QUESTION = 0;
+    ANSWER = 1;
+    LAYER1 = 10;
+    LAYER2 = 11;
+    LAYER3 = 12;
+    LAYER4 = 13;
+    LAYER5 = 14;
+    LAYER6 = 15;
+    ATTR1 = 20;
+    ATTR2 = 21;
+    ATTR3 = 22;
+    ATTR4 = 23;
+    ATTR5 = 24;
+    ATTR6 = 25;
+    TAGS_MORPH = 30;
+  }
+}
+
+message GetIndexedKeywordsResponse {
+  map<string, int64> indexWords = 1; // 인덱싱된 단어 목록
+}
