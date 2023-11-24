@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px 0px 0px 0px
+        }
+
+        body {
+            background-color: #000044;
+            background-repeat:no-repeat;
+            background-position:center;
+        }
+
+        #chatbot_lang li {
+            display: inline-block;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="chatbot_lang">
+    <ul>
+        <li><a href="#" data="kor">한국어</a></li>
+        <li><a href="#" data="eng">영어</a></li>
+        <li><a href="#" data="jpn">일본어</a></li>
+        <li><a href="#" data="chn">중국어</a></li>
+    </ul>
+</div>
+<!--nofloat 는 script가 아닌 iframe으로 실행 -->
+<iframe id="exampleFrame" style="width: 320px; height: 500px;" src="http://localhost:10000/nofloat/hitch_med?lang=kor"></iframe>
+<textarea name="" id="exampleDebug" cols="30" rows="10"></textarea> <!--디버그 가능-->
+
+<script>
+    $(document).ready(function(){
+      var chatbot_lang = '';
+      $('#chatbot_lang a').on('click', function(){
+        if ( chatbot_lang === $(this).attr('data') ) return;
+
+        chatbot_lang = $(this).attr('data');
+        var obj = {'type': 'lang', 'lang': chatbot_lang}
+        document.getElementById("exampleFrame").contentWindow.postMessage(obj, '*');
+        $('#exampleFrame').attr('src', 'http://localhost:10000/nofloat/hitch_med?lang=' + chatbot_lang);
+      });
+    })
+
+  function foo(e){
+    document.getElementById("exampleDebug").value += e.data.type+"\n"
+  }
+  window.addEventListener("message", foo, false);
+</script>
+</body>
+</html>

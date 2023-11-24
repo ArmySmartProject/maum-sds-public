@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='resources/css/chatbot.css') }}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px 0px 0px 0px
+        }
+
+        body {
+            background-color: #000044;
+            background-image: url("{{ url_for('static', filename='resources/images/img_main.png') }}");
+            background-repeat:no-repeat;
+            background-position:center;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="chatbot">
+    </div>
+    <script>
+        const chat_meta = {"host" : "2", "lang" : "3"};
+    </script>
+    <script src="{{ url_for('static', filename='resources/js/chatbot.js') }}"></script>
+</body>
+</html>

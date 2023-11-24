@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="67px" height="69px" viewBox="0 0 67 69" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>send</title>
+    <defs>
+        <filter x="-4.4%" y="-4.5%" width="107.7%" height="107.8%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.717647059   0 0 0 0 0.717647059   0 0 0 0 0.717647059  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="MAIN" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="퀵바" transform="translate(-835.000000, -953.000000)" fill="#43ABF4" fill-rule="nonzero">
+            <g id="두봇창" filter="url(#filter-1)" transform="translate(186.000000, 323.000000)">
+                <path d="M704.32822,638.614032 C703.737437,637.997563 703.01537,637.86057 702.358946,638.134556 L658.181564,656.628608 C657.459497,656.902594 657,657.724552 657,658.478013 C657,659.231475 657.590782,659.984936 658.312849,660.258922 L677.677378,666.492103 L683.650842,686.63007 C683.84777,687.383532 684.504194,687.931504 685.357546,688 L685.423189,688 C686.145256,688 686.801681,687.520525 687.129893,686.767063 L704.787717,640.668926 C705.050287,639.983961 704.919002,639.162004 704.32822,638.614032 Z" id="send"></path>
+            </g>
+        </g>
+    </g>
+</svg>

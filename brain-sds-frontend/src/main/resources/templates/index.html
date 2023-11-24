@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+	<meta http-equiv="Content-Style-Type" content="text/css"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+	<!-- Cache reset -->
+	<meta http-equiv="Expires" content="Mon, 06 Jan 2016 00:00:01 GMT"/>
+	<meta http-equiv="Expires" content="-1"/>
+	<meta http-equiv="Pragma" content="no-cache"/>
+	<meta http-equiv="Cache-Control" content="no-cache"/>
+     <!-- css -->
+  <link rel="stylesheet" type="text/css" href="/resources/css/font.css"/>
+  <link rel="stylesheet" type="text/css" href="/resources/css/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="/resources/css/swiper.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/resources/css/bootstrap-datetimepicker.css"/>
+  <link rel="stylesheet" type="text/css"
+        href="/resources/css/bootstrap-datetimepicker-standalone.css"/>
+  <link rel="stylesheet" type="text/css" href="/resources/css/chatbot.css"/>
+  <link rel="stylesheet" type="text/css" th:href="${cssInfo}"/>
+  <link th:if="!${qrLocation == null || qrLocation == ''}" rel="stylesheet" type="text/css"
+        href="/resources/css/qr.css"/>
+  <!-- //css -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<title>Chat || MindsLab</title>
+</head>
+
+<body>
+
+<button type="button" id="btn_goChat">챗봇</button>
+<div id="chatUI_wrap">
+    <!-- 200514 AMR intro (최상위 레벨 레이어)
+     - #chatUI_wrap에 'intro_open' class가 추가되면 intro가 보여집니다. -->
+    <div class="intro">
+        <div class="sns_wrap">
+            <div class="text">
+                <p>
+                    안녕하세요. 여러분의 편안한<br>
+                    여행을 도와드리는 인공지능<br>
+                    챗봇입니다.<br>
+                    <br>
+                    아래의 '대화 시작' 버튼을 누르셔서<br>
+                    궁굼하신 내용을 물어봐 주세요!
+                </p>
+            </div>
+            <div class="btn">
+                <button type="button" id="start_chat">대화 시작
+                    <img src="/resources/images/arw_message.png" alt="종이비행기 모양">
+                </button>
+            </div>
+            <div class="sns_link">
+                <ul>
+                    <li>
+                        <a href="#none">
+                            <img src="/resources/images/sns_instagram.png" alt="인스타그램으로 바로가기">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#none">
+                            <img src="/resources/images/sns_kakao.png" alt="카카오톡으로 바로가기">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#none">
+                            <img src="/resources/images/sns_wechat.png" alt="위챗으로 바로가기">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#none">
+                            <img src="/resources/images/sns_facebook.png" alt="페이스북으로 바로가기">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- //sns_link -->
+        </div>
+    </div>
+    <!-- //sns intro-->
+
+    <!-- 210204 AMR notification (intro 다음 레벨 레이어)
+     - #chatUI_wrap에 'noti_on' class가 추가되면 notification이 보여집니다.
+     - .notification에 'active' class가 추가되면 dropdown 버튼이 닫는모양으로 변하고 noti_cont가 보여집니다. -->
+    <div class="notification">
+        <div class="noti_title">
+            <p>마음까지 생각하는 maum ai에서 공지사항을 알려드립니다. 자세한 사항은 아래 내용을 참고해주십시오.</p>
+            <button type="button" class="btn_dropdown"></button><!-- .notification에 'active' toggleClass를 하는 버튼입니다. -->
+        </div>
+        <div class="noti_cont"><!-- .notification에 'active' class가 추가되면 보여집니다. -->
+            <div class="noti">
+                <!--<img src="/resources/images/bg_login.png" alt="테스트 image">-->
+                <p class="noti_header">조식시간 변경 안내</p>
+                <p class="noti_p">오전 9시 -> 10시</p>
+                <p class="noti_p">조식 시간이 변경 되었으니 유의하여 이용해주시길 바랍니다.</p>
+                <p class="noti_header">수영장 운영 변경 안내</p>
+                <p class="noti_p">기존 : 월,화,수,목,금<br>변경 후 : 토,일</p>
+                <p class="noti_header">조식시간 변경 안내</p>
+                <p class="noti_p">오전 9시 -> 10시</p>
+                <p class="noti_p">조식 시간이 변경 되었으니 유의하여 이용해주시길 바랍니다.</p>
+                <p class="noti_header">수영장 운영 변경 안내</p>
+                <p class="noti_p">기존 : 월,화,수,목,금<br>변경 후 : 토,일</p>
+            </div>
+        </div>
+    </div>
+    <!-- notification -->
+
+	<div class="chatUI_top">
+		<h1><img src="/resources/images/ico_mindsLab_120x120.png" alt="마인즈랩 챗봇"></h1>
+
+		<div class="langBox">
+			<p><button type="button" class="btn_lang" title="언어선택">언어선택</button></p>
+			<ul class="lst_lang">
+				<li><button type="button" class="btn_lang ico_ko active" data-lang="1">한국어</button></li>
+				<li><button type="button" class="btn_lang ico_en" data-lang="2">English</button></li>
+				<li><button type="button" class="btn_lang ico_ja" data-lang="3">日本語</button></li>
+				<li><button type="button" class="btn_lang ico_zh_cn" data-lang="4">中文(汉语)</button></li>
+			</ul>
+		</div>
+		<button type="button" class="btn_chatClose" title="close">close</button>
+	</div>
+
+	<div class="chatUI_mid">
+		<ul class="lst_talk"></ul>
+	</div>
+    <div class="svc_area">
+<!--        리스트가 5개 이상이 되면 스크롤이 생깁니다. -->
+        <ul class="lst_svc_btn">
+            <li id="return_chatbot">챗봇으로 돌아가기</li>
+        </ul>
+    </div>
+
+	<div class="chatUI_btm">
+		<form method="post" action="" id="formChat" name="formChat">
+			<textarea id="inputArea" class="textArea" placeholder="메세지를 입력해 주세요"></textarea>
+			<input type="button" name="btn_chat" id="btn_chat" class="btn_chat" title="전송" value="전송">
+		</form>
+	</div>
+
+	<!-- [D 191129 추가] 지도 UI -->
+	<div class="mapWrap map_hide">
+		<div class="mapWrap_tit">
+			<button class="btn_mapWrap_back">뒤로가기</button>
+			<div class="iptBox">
+				<input type="text" id="startLctn" class="ipt_txt" value="출발지" autocomplete="off">
+				<input type="text" id="endtLctn" class="ipt_txt" value="도착지" autocomplete="off">
+				<!--                <button type="button" class="btn_lctn_change">출발지/도착지 전환</button>-->
+			</div>
+			<button class="btn_mapWrap_close">닫기</button>
+		</div>
+		<div class="mapWrap_cont">
+			<div id="map"></div>
+			<div class="mapLoad_detailBox">
+				<ul class="mapLoad_detail_lst" id="panel">
+				</ul>
+			</div>
+			<button class="btn_mapLoad_detail">상세경로보기</button>
+		</div>
+	</div>
+	<!-- //[D 191129 추가] 지도 UI -->
+</div>
+
+<!--Chat Aside-->
+<div class="chatAside">
+  <div class="chat_inquiry">
+    <!-- .chatAside_hd -->
+    <div class="chatAside_hd">
+        <h3>문의 남기기</h3>
+        <button type="button" class="btn_chatAside_close" title="close">close</button>
+    </div>
+    <!-- //.chatAside_hd -->
+
+    <!-- .chatAside_bd -->
+    <div class="chatAside_bd">
+        <div class="stnBox tos">
+            <p class="txt">[필독] 개인정보동의 약관</p>
+            <div class="iptBox">
+                <div class="checkBox">
+                    <input type="checkbox" name="agreement" id="terms_check" class="ipt_check">
+                    <label for="terms_check">동의</label>
+                </div>
+                <button type="button" class="btn_terms" title="close">약관보기</button>
+            </div>
+        </div>
+        <div class="stnBox form">
+            <p class="txt">안녕하세요. 원활한 예약진행을 위해 고객님의 정보를 입력해 주세요.</p>
+            <dl class="dlBox form_name">
+                <dt>이름 [필수]</dt>
+                <dd><input type="text" name="name" class="ipt_txt" placeholder="이름을 입력해 주세요."></dd>
+            </dl>
+            <dl class="dlBox form_gender">
+                <dt>성별 [필수]</dt>
+                <dd>
+                    <div class="radioBox">
+                        <input type="radio" name="gender" id="gender_man" class="ipt_check">
+                        <label for="gender_man">남자</label>
+                        <input type="radio" name="gender" id="gender_woman" class="ipt_check">
+                        <label for="gender_woman">여자</label>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dlBox form_tel">
+                <dt>전화번호 [필수]</dt>
+                <dd><input type="tel" name="tel" class="ipt_txt" placeholder="전화번호를 입력해 주세요."></dd>
+            </dl>
+            <dl class="dlBox form_email">
+                <dt>이메일 [필수]</dt>
+                <dd><input type="text" name="email" class="ipt_txt" placeholder="이메일을 입력해 주세요."></dd>
+            </dl>
+            <dl class="dlBox picker form_datetime">
+                <dt>예약일시 [필수]</dt>
+                <dd class="block_target">
+                    <!-- <div id="" class="input-append date " data-date="12-02-2012" data-date-format="yyyy-mm-dd hh:ii">
+                        <input name="datetime" class="span2" size="16" type="text" value="" placeholder="날짜와 시간을 선택해주세요">
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div> -->
+                    <div class="container">
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <!-- value 빼기 -->
+                                <input type='text' value="" placeholder="날짜와 시간을 선택해주세요"
+                                       name="datetime"
+                                       class="form-control ipt_txt" id='reservation_date' />
+                            </div>
+                        </div>
+                    </div>
+                </dd>
+                <dt class="box_hide">달력 표시 설명</dt>
+                <dd class="pick_guide">
+                    <div>
+                        <div class="pick_guide01"></div>
+                        <span>오늘</span>
+                    </div>
+                    <div>
+                        <div class="pick_guide02"></div>
+                        <span>진료가능일</span>
+                    </div>
+                    <div>
+                        <div class="pick_guide03"></div>
+                        <span>진료일선택</span>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dlBox form_person_cnt">
+                <dt>참석인원</dt>
+                <dd><input type="text" name="person_cnt" class="ipt_txt" placeholder="참석인원을 입력해주세요."></dd>
+            </dl>
+            <dl class="dlBox form_event_type">
+                <dt>행사유형</dt>
+                <dd>
+                    <div class="radioBox event_type">
+                        <input type="radio" name="event_type" id="group_event" class="ipt_check">
+                        <label for="group_event">기업/단체행사</label>
+                        <input type="radio" name="event_type" id="personal_event" class="ipt_check">
+                        <label for="personal_event">개인행사</label>
+                        <input type="radio" name="event_type" id="etc_event" class="ipt_check">
+                        <label for="etc_event">기타</label>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dlBox form_table_style">
+                <dt>테이블유형</dt>
+                <dd>
+                    <div class="radioBox table_style">
+                        <input type="radio" name="table_style" id="circle_style" class="ipt_check">
+                        <label for="circle_style">원형</label>
+                        <input type="radio" name="table_style" id="u_style" class="ipt_check">
+                        <label for="u_style">U자형</label>
+                        <input type="radio" name="table_style" id="rectangle_style" class="ipt_check">
+                        <label for="rectangle_style">ㅁ자형</label>
+                        <input type="radio" name="table_style" id="theater_style" class="ipt_check">
+                        <label for="theater_style">극장식</label>
+                        <input type="radio" name="table_style" id="etc_style" class="ipt_check">
+                        <label for="etc_style">기타</label>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dlBox form_inquiry">
+                <dt>요청사항 [필수]</dt>
+                <dd class="block_target"><textarea name="inquiry" rows="10" class="ipt_txt"></textarea></dd>
+            </dl>
+            <dl class="dlBox form_add">
+                <dt>기타사항</dt>
+                <dd class="block_target"><textarea name="add" rows="10" class="ipt_txt" placeholder="내용을 입력해주세요 (선택)"></textarea></dd>
+            </dl>
+        </div>
+        <div class="btnBox">
+            <button type="submit" class="btn_point btn_submit">문의남기기</button>
+        </div>
+
+        <!--
+            [D] 문의남기기 입력 완료(팝업)
+        -->
+        <div class="stnBox popup">
+            <div class="popup_content">
+                <div class="ico_circle">
+                    <img src="/resources/images/ico_success_74x.png" alt="완료">
+                </div>
+                <div class="popup_txt">
+                    <em>문의 접수 신청 완료</em>
+                    <p>
+                        문의 접수가 완료되었습니다.<br>
+                        빠른 시간 내 답변드릴 수<br>
+                        있도록 하겠습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 추가 200306 AMR 약관보기 (text박스) -->
+        <div class="stnBox info_text">
+            <div class="content">
+                <div class="txt_box">
+                    <!--<em>약관</em>-->
+                    <div class="txt" th:style="${host} == 'mayfield' ? 'display:none' : 'display:block'">
+                        <pre>
+1. 개인정보의 수집 및 이용 목적 (개인정보보호법 제15조)
+  이용자가 제공한 모든 정보는 관계법령 등에서 정하는 소관 업무의 수행을 위하여 다음과 같이 개인정보를 수집 및 이용합니다.
+수집된 개인정보는 정해진 목적(채팅 상담업무 처리·분석·관리) 이외의 용도로는 이용되지 않으며, 수집 목적이 변경될 경우 사전에 알리고 동의를 받을 예정입니다.
+
+2. 수집하는 개인정보의 항목 (개인정보보호법 제15조, 제16조)
+  가-1. 채팅 (필수항목 자동수집) : 이름, 이메일, 문의내용
+  가-2. 채팅 (선택항목) : 전화번호
+
+3. 개인정보의 보유 및 이용기간 (공공기록물 관리에 관한 법률 시행령 제26조)
+  원칙적으로 개인정보 보존기간(1년)이 경과하거나, 처리목적이 달성된 경우에는 지체 없이 개인정보를 파기합니다. 다만, 다른 법령에 따라 보존하여야 하는 경우에는 그러하지 않을 수 있습니다.
+
+4. 동의를 거부할 권리가 있다는 사실 및 동의 거부에 따른 불이익 내용 (개인정보보호법 제16조)
+  상담신청시 수집하는 필요한 최소한의 정보 외의 개인정보 수집 동의를 거부할 권리가 있으나 최소한의 개인정보 수집동의 거부 시에는 상담 서비스가 제한됩니다.
+                        </pre>
+                    </div>
+                  <div class="txt" th:style="${host} == 'mayfield' ? 'display:block' : 'display:none'" >
+                        <pre>
+개인정보처리방침
+메이필드호텔의 개인정보처리방침입니다.
+㈜정림개발이 운영하는 메이필드호텔 (이하 "메이필드")은 홈페이지 http://www.mayfield.co.kr (이하 "홈페이지")를 이용하시는 고객님의 개인정보를 매우 중요하게 생각하며 고객님이 제공하여 준 모든 정보가 철저히 보호 받을 수 있도록 최선을 다하고 있습니다. 이에 "메이필드"는 개인정보보호법, 정보통신망 이용 촉진 및 정보보호 등의 관련 법률과 정보통신서비스 제공자가 준수하여야 할 관련 법규상의 개인정보보호 규정 및 정보통신부가 제정한 개인정보보호 지침을 준수하고 있습니다.
+
+    1. 개인정보의 수집 범위
+    2. 개인정보의 처리 목적
+    3. 개인정보의 수집 및 이용 목적
+    4. 개인정보의 처리 기간
+    5. 개인정보의 파기절차 및 방법
+    6. 쿠키에 의한 개인정보 수집
+    7. 만14세 미만 아동의 개인정보보호
+    8. 개인정보 위탁 업체 및 업무 내용
+    9. 정보주체의 권리 및 행사,방법
+    10. 개인정보의 안정성 확보 조치
+    11. 영상정보처리기기 운영관리에,관한 사항
+    12. 개인정보 관련 불만처리
+    13. 개인정보 보호책임자
+    14. 정책 변경에 따른 공지
+    15. 정보보호 활동
+
+
+1. 개인정보의 수집 범위
+
+1-1 "메이필드"는 적법하고 공정한 수단에 의하여 고객님의 개인정보를 수집하고 있습니다
+
+1-2 수집하는 개인정보는 서비스 제공에 필요한 최소한의 정보만으로 한정되며, 고객님의 기본적 인권을 침해할 우려가 있는 민감한 개인정보(인종, 종교, 사상, 출신지, 본적지, 정치적 성향 및 범죄기록, 건강상태 및 성생활 등)는 기본적으로 수집하지 않습니다. 단, 특정 프로그램 이용 시 민감정보 중 일부 수집하며 그 경우 별도 안내를 통해 동의를 구합니다.
+
+
+2. 개인정보의 처리 목적
+
+"메이필드"는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.
+
+2-1 "홈페이지", 멤버십 회원 가입 및 관리
+회원 가입의사 확인, 회원제 서비스 제공에 따른 본인 식별·인증, 회원자격유지·관리, 제한적 본인 확인제 시행에 따른 본인확인, 서비스 부정이용 방지, 각종 고지·통지, 처리결과 통보 등의 목적으로 개인정보를 처리합니다.
+
+2-2 재화 또는 서비스 제공
+물품배송, 예약 및 서비스 제공, 계약서·청구서 발송, 콘텐츠 제공, 맞춤서비스 제공, 본인인증, 연령인증, 요금결제·정산, 채권추심 등을 목적으로 개인정보를 처리합니다.
+
+2-3고충 처리
+민원인의 신원 확인, 민원사항 확인, 사실조사를 위한 연락·통지, 처리결과 통보 등의 목적으로 개인정보를 처리합니다.
+
+
+3. 개인정보의 수집 및 이용 목적
+
+3-1 "메이필드"는 다음과 같은 목적을 위해 개인정보를 수집하고 있습니다.
+
+	</pre>
+                    <table class="pre_table">
+                      <thead>
+                      <tr>
+                        <th colspan="2">구분</th>
+
+                        <th>수집항목</th>
+                        <th>이용목적</th>
+                        <th>수집방법</th>
+                        <th>보유기간</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <th rowspan="6">멤버십(캐슬클럽)</th>
+                        <td rowspan="3">필수</td>
+                        <td>성명, 성별, 생년월일, 휴대폰번호</td>
+                        <td>- 회원제 서비스에 따른 본인 확인 절차</td>
+                        <td rowspan="6">홈페이지 / 전화 / 이메일 / 서면</td>
+                        <td rowspan="6">유효기간 만료 후 3년</td>
+                      </tr>
+                      <tr>
+
+
+                        <td>이메일 주소</td>
+                        <td>- 멤버십 혜택, 약관 변경, 고지사항 전달, 문의/상담 및 불만 등에 대한 민원 처리</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>우편물 수령지 주소</td>
+                        <td>- 멤버십 카드 및 브로슈어 전달</td>
+
+
+                      </tr>
+                      <tr>
+
+                        <td rowspan="3">선택</td>
+                        <td>회사명, 부서명, 직위</td>
+                        <td>- 회원 서비스 이용에 대한 통계 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>신용카드정보 (신용카드번호, 유효기간)</td>
+                        <td>- 연회비, 상품 구매에 대한 대금 결제
+                          *결제 시에만 이용하며 시스템 내 저장되지 않음</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>성명, 성별, 생년월일, 휴대폰번호, 이메일</td>
+                        <td>- 호텔및 프로모션, 이벤트에 대한 SMS, eDM, DM, TM을 통하여 마케팅, 홍보 목적으로 활용
+                          - 멤버십 가입 유치를 목적으로 한 TM에 활용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="2">홈페이지, 웹회원</th>
+                        <td>필수</td>
+                        <td>성명(영문/한글), 이메일, 성별, 생년월일, 휴대폰번호, 중복가입확인 정보(ID) *전자 가입 또는 온라인 가입 시</td>
+                        <td>- 회원제 서비스에 따른 본인 확인 절차
+                          - 홈페이지 이용 약관변경, 고지사항 전달, 문의/상담 및 불만 등에 대한 민원 처리</td>
+                        <td rowspan="2">홈페이지</td>
+                        <td rowspan="2">탈퇴 시 까지</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>성명(영문/한글), 휴대폰, 이메일, 생년월일, 주소</td>
+                        <td>- 호텔 및 프로모션, 이벤트에 대한 SMS, eDM, DM, TM을 통해 홍보, 리서치 등 마케팅 목적으로 활용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="3">객실 등록 카드</th>
+                        <td>필수</td>
+                        <td>성명(영문/한글), 성별, 휴대폰번호, 국적</td>
+                        <td>- 호텔 및 객실 이용 서비스 제공
+                          - 서비스 이용에 대한 본인 확인 절차에 활용
+                          - 불만처리, 분실물 처리 등 민원 처리
+                          - 호텔 이용과 관련 문제 발생 시 수습 및 처리</td>
+                        <td rowspan="3">서면</td>
+                        <td rowspan="3">5년</td>
+                      </tr>
+                      <tr>
+
+                        <td rowspan="2">선택</td>
+                        <td>이메일, 회사명, 주소</td>
+                        <td>- 인구 통계학적 특성에 따른 서비스 제공 및 회원 서비스 이용에 따른 통계 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>성명(영문/한글), 이메일, 휴대폰번호 및 전화번호</td>
+                        <td>- 호텔 및 프로모션, 이벤트에 대한 SMS, eDM, DM, TM을 통해 홍보, 리서치 등 마케팅 목적으로 활용
+                          - 고객 만족도 조사 (CSI) 등 리서치 조사 및 통계활용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th>문의 (웨딩, 미팅, 가족연회, 기업 행사)</th>
+                        <td>필수</td>
+                        <td>성명(한글), 휴대폰번호, 이메일, 주소</td>
+                        <td>- 예약 및 상담, 문의사항 전달</td>
+                        <td>홈페이지</td>
+                        <td>6개월</td>
+                      </tr>
+                      <tr>
+                        <th rowspan="2">고객의 소리</th>
+                        <td>필수</td>
+                        <td>성명, 휴대폰번호, 이메일</td>
+                        <td>- 본인 확인 절차에 활용
+                          - 문의/상담 및 불만 등에 대한 민원 처리</td>
+                        <td rowspan="2">홈페이지</td>
+                        <td rowspan="2">3개월</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>이메일</td>
+                        <td>- 문의/상담 및 불만 등에 대한 민원 처리</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="2">온라인 예약 (객실)</th>
+                        <td>필수</td>
+                        <td>성명(영문/한글), 이메일, 휴대폰 번호, 신용카드정보 (신용카드번호, 유효기간)</td>
+                        <td>- 본인 확인 절차에 활용
+                          - 사전 결제 내용 확인 수단</td>
+                        <td rowspan="2">홈페이지</td>
+                        <td rowspan="2">3개월</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>휴대폰번호, 이메일</td>
+                        <td>- 예약 사항 고지 수단</td>
+
+
+                      </tr>
+                      <tr>
+                        <th>온라인 예약 (F&B 영업장)</th>
+                        <td>필수</td>
+                        <td>성명(영문/한글), 이메일, 휴대폰번호</td>
+                        <td>- 본인 확인 절차에 활용</td>
+                        <td>홈페이지</td>
+                        <td>3개월</td>
+                      </tr>
+                      <tr>
+                        <th rowspan="2">이벤트</th>
+                        <td>필수</td>
+                        <td>성명(한글), 휴대폰번호</td>
+                        <td>- 이벤트 경품 당첨 안내
+                          - 고지 사항 전달, 문의/상담, 불만처리 등 원활한 의사 소통 경로의 확보</td>
+                        <td rowspan="2">이벤트용지 / SNS 채널 (인스타그램, 페이스북) / 홈페이지</td>
+                        <td rowspan="2">3년</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>성별, 주소, 생년월일 나이, 상품 홍보 채널</td>
+                        <td>- 호텔 및 프로모션, 이벤트에 대한 SMS, eDM, DM, TM을 통해 홍보, 리서치 등 마케팅 목적으로 활용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="3">웨딩, 가족연, 기업행사 (연회예약실)</th>
+                        <td>필수</td>
+                        <td>성명, 휴대폰번호,이메일</td>
+                        <td>- 본인 확인 절차
+                          - 문의, 정보 및 예약내용 고지 수단</td>
+                        <td rowspan="3">유선 / 이메일 / 서면</td>
+                        <td rowspan="3">유효기간 만료 후 3년</td>
+                      </tr>
+                      <tr>
+
+                        <td rowspan="2">선택</td>
+                        <td>신용카드정보 (카드 동의서 작성, 카드 앞, 뒤 사본)</td>
+                        <td>- 계약금, 행사 진행에 대한 대금 결제
+                          *결제 시에만 이용하며 시스템 내 저장되지 않음</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>성명, 성별, 생년월일, 휴대폰번호, 이메일</td>
+                        <td>- 호텔 및 프로모션, 이벤트에 대한 SMS, eDM, DM, TM을 통하여 마케팅, 홍보 목적으로 활용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="11">F/C 멤버십</th>
+                        <td rowspan="6">필수</td>
+                        <td>성명(영문/한글), 휴대폰번호, 주민등록번호</td>
+                        <td>- 회원제 서비스에 대한 본인 확인 절차에 활용</td>
+                        <td rowspan="11">서면</td>
+                        <td rowspan="11">멤버십 유효기간 만료 후 3년</td>
+                      </tr>
+                      <tr>
+
+
+                        <td>이메일, 주소(우편물 수령지), 전화번호(자택,회사)</td>
+                        <td>- 멤버십 혜택, 약관 변경 등 고지사항 전달
+                          - 문의/상담 및 불만 등에 대한 민원 처리
+                          - 멤버십 카드 및 청구서, 브로슈어 전달</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>주민등록번호</td>
+                        <td>- 국세청 과세자료 제출 (상속세 및 증여세법 시행령 제 84조)
+                          - 취득세 신고용 증빙자료 제출 (지방세법 제 20조 제 1항 및 같은 법 시행령제 33조 제 1항, ‘지방세법’ 제 152조 제 1항 및 ‘농어촌특별세법’ 제 7조)</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>가족 정보</td>
+                        <td>- 회원에게 위급상황 발생 시 비상연락에 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>차량번호</td>
+                        <td>- 주차스티커 발급 및 반납
+                          - 차량관련 안전문제 발생 및 주차장 이용을 위한 자료로 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>계좌번호</td>
+                        <td>- F/C 탈퇴 시 보증금 반환에 활용 (탈퇴 시 수집 및 활용)</td>
+
+
+                      </tr>
+                      <tr>
+
+                        <td rowspan="5">선택</td>
+                        <td>사진</td>
+                        <td>- 맞춤 서비스 제공
+                          - 타인의 대리 사용 방지</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>회사명, 부서명, 직위</td>
+                        <td>- 인구 통계학적 특성에 따른 서비스 제공 및 회원 서비스 이용에 따른 통계 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>구좌 대표 회원명</td>
+                        <td>- 가족 추가 가입 시 모 구좌 확인용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>병력 (건강정보)</td>
+                        <td>- 시설 이용 중 응급 상황 시 참고자료로 활용</td>
+
+
+                      </tr>
+                      <tr>
+
+
+                        <td>추천인</td>
+                        <td>- MGM 프로모션 진행 시 확인용</td>
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="2">레스토랑 문의 (가족연, 기업 행사 등 )</th>
+                        <td>필수</td>
+                        <td>성명(한글/문의), 휴대폰번호</td>
+                        <td rowspan="2">- 예약 및 상담
+                          - 문의 사항 전달</td>
+                        <td rowspan="2">방문 / 유선 / 이메일</td>
+                        <td rowspan="2">3개월</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>이메일</td>
+
+
+
+                      </tr>
+                      <tr>
+                        <th rowspan="2">레스토랑 예약 및 계약 (가족연, 기업행사 등)</th>
+                        <td>필수</td>
+                        <td>성명(한글/영문), 휴대폰번호, 통장번호</td>
+                        <td rowspan="2">- 본인 확인 절차에 활용
+                          - 문의/상담 및 불만 등에 대한 민원 처리
+                          - 통장번호: 예약 취소 시 예약금 반환에 활용</td>
+                        <td rowspan="2">유선 / 방문예약 / 계약서</td>
+                        <td rowspan="2">3년</td>
+                      </tr>
+                      <tr>
+
+                        <td>선택</td>
+                        <td>이메일</td>
+
+
+
+                      </tr>
+                      <tr>
+                        <th>레스토랑 (상품 판매)</th>
+                        <td>필수</td>
+                        <td>성명(한글/영문), 휴대폰번호, 주소(수령지)</td>
+                        <td>- 본인 확인 절차에 활용
+                          - 판매 상품에 대한 배송</td>
+                        <td>방문 / 판매LIST</td>
+                        <td>3년</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                    <pre>
+서비스 이용과정에서 아래 개인정보 항목이 자동으로 생성되어 수집될 수 있습니다.
+- IP주소, 쿠키, MAC주소, 서비스이용기록, 방문기록, 상담 시 통화내역 등
+
+
+4. 개인정보의 처리 기간
+
+4-1 "메이필드"는 "홈페이지" 탈퇴 요청이나 멤버십 회원의 개인정보 삭제 요청 시에는 수집된 개인정보가 열람 또는 이용될 수 없도록 즉시 처리합니다
+
+4-2 하지만, 해지 시 상법 등 법령의 규정에 의하여 더 보존할 필요성이 있는 경우에는 법령에서 규정한 보존기간 동안 거래내역과 최소한의 기본정보를 보유할 수 있으며 보유기간을 회원님에게 미리 고지하거나 개별적으로 회원님의 동의를 받은 경우에는 약속한 보존기간 동안 개인정보를 보유합니다. 이 경우, "메이필드"는 보유하는 정보를 그 보유 목적으로만 이용하며, 보존기간은 아래와 같습니다.
+
+가. 계약 또는 청약철회 등에 관한 기록
+- 보존이유: 전자상거래 등에서의 소비자보호에 관한 법률
+- 보존기간 : 3년
+
+나. 대금결제 및 재화 등의 공급에 관한 기록
+- 보존이유: 전자상거래 등에서의 소비자보호에 관한 법률
+- 보존기간 : 3년
+
+다.소비자의 불만 또는 분쟁처리에 관한 기록
+- 보존이유: 전자상거래 등에서의 소비자보호에 관한 법률
+- 보존기간 : 3년
+
+4-3 단, 온라인 "홈페이지"의 경우 1년간(최종 로그인 후 12개월) 웹사이트 이용기록이 없을 시, 서비스 미이용 회원의 개인정보는 정보통신망 이용촉진 및 정보보호 등에 관한 법률 제29조에 근거하여 해당 회원에게 사전통지하고 개인정보를 파기하거나 별도로 분리하여 저장 관리합니다. 다만, "홈페이지" 가입 이력관리를 위해 아이디는 보관됩니다.
+
+
+5. 개인정보의 파기절차 및 방법
+
+"메이필드"는 적시 파기 원칙에 의거하여 개인정보 수집 및 이용목적이 달성된 후에는 보유기간 및 이용기간에 따라 해당 정보를 지체 없이 파기합니다. 구체적인 파기절차, 파기기한, 파기방법은 다음과 같습니다.
+
+5-1 파기절차
+회원가입 등을 위해 입력하신 정보는 목적이 달성된 후 내부 방침 및 기타 관련 법령에 의한 정보보호 사유에 따라 일정기간 저장된 후 파기합니다. 동 개인정보는 법률에 의한 경우가 아니면 이외의 다른 목적으로 이용되지 않습니다.
+
+5-2 파기기한
+회원님의 개인정보는 개인정보의 보유기간이 경과된 경우에는 보유기간의 종료일로부터 5일 이내에 파기하며 개인정보의 처리 목적 달성, 해당 서비스의 폐지, 사업의 종료 등 그 개인정보가 불필요하게 되었을 때에는 개인정보의 처리가 불필요한 것으로 인정되는 날로부터 5일 이내에 그 개인정보를 파기합니다.
+
+5-3 파기방법
+(1) 종이에 출력된 개인정보 : 분쇄기로 분쇄하거나 소각
+(2) 전자적 파일 형태로 저장된 개인정보 : 기록을 재생할 수 없는 기술적 방법을 사용하여 삭제
+
+
+6. 쿠키에 의한 개인정보 수집
+
+6-1 "메이필드"는 회원님의 정보를 저장하고 수시로 찾아내는 '쿠키(cookie)'를 운영합니다. 쿠키는 웹사이트가 회원님의 컴퓨터 웹 브라우저(인터넷익스플로러, 크롬 등)로 전송하는 소량의 정보로서 회원님이 웹사이트에 로그인(log-in)하면 "메이필드"의 서버는 회원님의 브라우저에 있는 쿠키의 내용을 읽고, 회원님의 추가정보를 회원님의 컴퓨터에서 찾아 서비스를 제공하게 됩니다. 이러한 쿠키 정보는 회원님께 유용하고 보다 편리한 맞춤 서비스를 제공하는데 사용되게 됩니다. 그러나 쿠키정보는 회원님의 컴퓨터를 식별할 수는 있지만 회원 개개인을 식별하지는 않습니다.
+
+6-2 이러한 쿠키의 사용여부에 대하여 회원님께서 선택하실 수 있습니다. 웹 브라우저의 옵션 설정을 통해 모든 쿠키를 허용할 수도 있고, 쿠키가 저장될 때마다 확인을 거치거나 모든 쿠키의 저장을 거부할 수도 있습니다.
+- 설정방법 : (예:인터넷익스플로어의 경우) : 웹 브라우저 상단의 도구 > 인터넷 옵션 > 개인정보)
+단, 쿠키의 저장을 거부할 경우에는 일부 서비스는 이용할 수 없습니다.
+
+
+7. 만14세 미만 아동의 개인정보보호
+
+"메이필드"는 만 14세 미만 아동의 개인정보를 수집하지 않으며, 회원 가입이 불가합니다.
+
+
+8. 개인정보 위탁 업체 및 업무 내용
+
+"메이필드"는 회원님의 서비스 유지 및 관리, 고객상담, 기타 서비스 안내를 위하여 전문 용역 업체에 일부 업무를 위탁 운영하고 있습니다. 위탁을 받은 업체는 위탁을 받은 목적을 벗어나서 개인정보를 이용할 수 없습니다. 또한 "메이필드"는 이러한 위탁업체에 대하여 해당 개인정보가 위법하게 이용되지 않도록 정기적인 감시와 감독을 실시합니다. "메이필드"는 업무의 일부를 위탁하는 경우 회원님에게 미리 그 사실을 고지합니다. 개인정보 위탁업체는 다음과 같습니다.
+
+	</pre>
+                    <table class="pre_table">
+                      <thead>
+                      <tr>
+                        <th>수탁자명</th>
+                        <th>처리 위탁 업무</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>㈜산하정보기술</td>
+                        <td>홈페이지 및 고객 정보 전산 처리, 유지/관리</td>
+                      </tr>
+                      <tr>
+                        <td>㈜아이크레티브</td>
+                        <td>문자 발송 프로그램 유지/보수</td>
+                      </tr>
+                      <tr>
+                        <td>㈜일양로지스</td>
+                        <td>상품 배송 업무</td>
+                      </tr>
+                      <tr>
+                        <td>㈜넷퍼씨 메일링크</td>
+                        <td>eDM 발송 프로그램 유지 보수</td>
+                      </tr>
+                      <tr>
+                        <td>네이버㈜</td>
+                        <td>네이버 예약 (레스토랑) 및 네이버 페이</td>
+                      </tr>
+                      <tr>
+                        <td>㈜비즈아이솔루션</td>
+                        <td>CSI (고객 만족도) 온라인 설문 관리</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                    <pre>
+
+
+9. 정보주체의 권리 및 행사 방법
+회원님은 개인정보주체로서 다음과 같은 권리를 행사할 수 있습니다.
+
+9-1 정보주체는 "메이필드"에 대해 언제든지 다음 각 호의 개인정보보호 관련 권리를 행사할 수 있습니다.
+가. 개인정보 열람요구
+나. 변경 및 오류 등이 있을 경우 정정요구
+다. 삭제 요구
+라. 처리정지 요구
+
+9-2 제1항에 따른 권리 행사는 "메이필드"에 대해 개인정보보호법 시행규칙 별지 8호에 서식에 따라 서면, 전자우편, 모사전송(FAX) 등을 통하여 하실 수 있으며 "메이필드"는 이에 대해 지체 없이 조치해 드릴 것입니다.
+
+9-3 정보주체가 개인정보의 오류 등에 대한 정정 또는 삭제를 요구한 경우에는 "메이필드"는 정정 또는 삭제를 완료할 때까지 해당 개인정보를 이용하거나 제공하지 않습니다.
+
+9-4 제1항에 따른 권리 행사는 정보주체의 법정대리인이나 위임을 받은 자 등 대리인을 통하여 하실 수 있습니다. 이 경우 개인정보보호법 시행규칙 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.
+
+
+10. 개인정보의 안전성 확보 조치
+"메이필드"는 개인정보보호법 제 29조에 따라 다음과 같이 안전성 확보에 필요한 기술적/관리적 및 물리적 조치를 취하고 있습니다.
+
+    1. 개인정보 처리 인력의 최소화
+    개인정보보호를 위해 개인정보 처리자에 대한 권한 부여를 최소화하고 있습니다.
+    2. 개인정보 처리 인력에 대한 정기적 교육 시행
+    개인정보보호에 대한 인식 제고를 위해 정기적인 교육을 시행하고 있습니다.
+    3. 내부 점검 정기적 시행
+    개인정보의 처리 관련 안정성 확보를 위해 정기적으로 자체 점검을 실시하고 있습니다.
+    4. 내부 관리계획의 수립 및 시행
+    개인정보의 안전한 처리 및 관리를 위해 내부관리계획을 수립하여 관리하고 있습니다.
+    5. 개인정보의 암호화
+    회원님의 개인정보와 비밀번호는 암호화되어 저장/관리되고 있으며 전송 시에도 별도의 보안기능을 사용하여 안전하게 관리하고 있습니다.
+    6. 해킹 등에 대한 기술적 대책
+    "메이필드"는 해킹이나 컴퓨터 바이러스 등에 의한 개인정보 유출 및 훼손을 막기 위하여 보안 프로그램을 설치하고 주기적인 갱신/점검을 하여 외부로부터 접근이 통제된 구역에 시스템을 설치하고 기술적, 물리적으로 감시 및 차단하고 있습니다.
+    7. 개인정보에 대한 접근 제한
+    개인정보를 처리하는 데이터베이스시스템에 대한 접근권한의 부여, 변경, 말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단 시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
+    8. 접속기록의 보관 및 위•변조 방지
+    개인정보 처리시스템에 접속한 기록을 최소 6개월 이상 보관, 관리하고 있으며 접속 기록이 위•변조 및 도난 분실 되지 않도록 보안기능을 사용하고 있습니다.
+    9. 문서보안을 위한 잠금장치 사용
+    개인정보가 포함된 서류, 보조저장매체 등을 잠금장치가 있는 안전한 장소에 보관하고 있습니다.
+    10. 비인가자에 대한 출입 통제
+    개인정보를 보관하고 있는 물리적 보관 장소를 별도로 두고 이에 대해 출입통제 절차를 수립, 운영하고 있습니다.
+    11. 재해, 재난 대비 안전조치
+    천재지변을 비롯한 재해, 재난 발생에 대비하여 위기대응 매뉴얼 등 대응절차를 마련하고 점검하고 있습니다.
+	12. 하지만 온라인서비스는 회원님 개인의 실수나 기본적인 인터넷의 위험성 때문에 일어나는 일들에 대해 책임을 지지 않습니다.
+
+
+11. 영상정보처리기기 운영관리에 관한 사항
+
+"메이필드"는 아래와 같이 영상정보처리기기를 설치운영하고 있습니다.
+
+11-1 영상정보처리기기 설치 근거/목적
+메이필드 호텔에 출입하는 고객/직원(종사자)의 안전과 호텔의 자산을 보호하고 범죄 및 각종 사고의 증거자료 테러, 화재 등 재난으로부터 시설/이용객의 안전확보 등 사실 증빙 자료로 활용 할 목적으로 한다
+
+11-2 CCTV 정보
+A. 설치 대수: 193대
+B. 설치 위치, 촬영 범위: 호텔 본관, 스위트동, 공용지역, 외곽지역, 식음영업장, 주차장
+
+
+11-3 관리책임자, 담당부서 및 영상정보에 대한 접근 권한자
+	</pre>
+                    <table class="pre_table">
+                      <thead>
+                      <tr>
+                        <th>설치 장소</th>
+                        <th>CCTV 수</th>
+                        <th>담당자</th>
+                        <th>연락처</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>객실 (본관)</td>
+                        <td>32대</td>
+                        <td rowspan="6">관리 책임자 :
+                          안창환 대리 (보안실)</td>
+                        <td rowspan="6">02-2660-9112</td>
+                      </tr>
+                      <tr>
+                        <td>객실 (스위트)</td>
+                        <td>8대</td>
+
+
+                      <tr>
+                        <td>공용지역</td>
+                        <td>62대</td>
+
+
+                      </tr>
+                      <tr>
+                        <td>외곽지역</td>
+                        <td>17대</td>
+
+
+                      </tr>
+                      <tr>
+                        <td>주차장</td>
+                        <td>30대</td>
+
+
+                      </tr>
+                      <tr>
+                        <td>식음영업장</td>
+                        <td>44대</td>
+
+
+                      </tr>
+                      </tbody>
+                    </table>
+                    <pre>
+
+
+12. 개인정보 관련 불만처리
+
+12-1 "메이필드"가 개인정보 처리방침을 지키지 않는다고 판단되시면, 아래 개인정보 보호책임자 또는 개인정보 보호담당자에게 알려주십시오. 지적하신 문제를 즉시 확인하고 수정이 필요한 경우에는 최대한 빠른 시간 내에 조치하도록 노력하겠습니다. "메이필드"는 고객님의 개인정보와 관련하여 고객 여러분들의 의견을 수렴하고 있으며 불만을 처리하기 위하여 모든 절차와 방법을 마련하고 있습니다.
+
+12-2 또한 개인정보 침해에 대한 신고, 상담이 필요하신 경우에는 한국정보보호진흥원(KISA) 개인정보 침해신고센터로 문의하시기 바랍니다. 고객님이 개인정보침해를 통해 금전적, 정신적 피해를 입으신 경우에는 개인정보 분쟁조정위원회에 피해구제를 신청하실 수 있습니다. 기타 개인정보에 관한 상담이 필요한 경우에는 개인정보침해신고센터, 대검찰청 인터넷범죄수사센터, 경찰청 사이버테러대응센터 등으로 문의하실 수 있습니다.
+
+• 개인정보침해신고센터
+- 전화: 1336
+- URL: www.1336.or.kr
+
+• 대검찰청 인터넷범죄수사센터
+- 전화: 02-3480-3600
+- URL: www.spo.go.kr
+
+• 경찰청 사이버테러대응센터
+- 전화: 02-392-0330
+- URL: www.ctrc.go.kr
+
+
+13. 개인정보 관리책임자
+
+고객님의 개인정보를 보호하고 개인정보와 관련한 불만을 처리하기 위하여 "메이필드"는 개인정보 보호책임자를 두고 있습니다. 개인정보와 관련된 문의사항이 있으시면 아래의 개인정보 보호책임자/보호담당자에게 연락 주시기 바랍니다. 문의하신 사항에 대해서 신속하고 성실하게 답변해 드리겠습니다.
+
+• 개인정보 보호책임자
+- 성명: 이 석 우
+- 소속: 혁신추진실
+- 직책: 부장
+- 이메일: swlee@mayfield.co.kr
+- 전화번호: 02-2660-9025
+
+• 개인정보 보호담당자
+- 성명: 이 경 문
+- 소속: 혁신추진실
+- 직책: 주임
+- 이메일: charles@mayfield.co.kr
+- 전화번호: 02-2660-9018
+
+일반적인 문의는 "메이필드" 대표번호(02-2660-9000)로 문의하여 주시기 바랍니다.
+
+
+
+14. 정책 변경에 따른 공지
+
+14-1 개인정보처리방침은 "홈페이지" 첫 화면에 공개함으로써 고객님께서 언제나 용이하게 보실 수 있도록 조치하고 있습니다.
+
+14-2 법령 정책 또는 보안기술의 변경에 따라 내용의 추가 삭제 및 수정이 있을 시에는 변경되는 개인정보처리방침은 시행하기 30일전에 "홈페이지"를 통해 변경 이유 및 내용 등을 공지하도록 하겠습니다. 그 외 내용 변경 시에는 최소 1주일 이전에 변경 내용, 사유 등을 공지하도록 하겠습니다.
+
+14-3 본 개인정보처리방침의 내용은 수시로 변경될 수 있으므로 "홈페이지"를 방문하실 때마다, 이를 확인하시기 바랍니다.
+
+개인정보처리방침 시행일자 : 2006년 11월 3일
+개인정보처리방침 시행일자 : 2012년 4월 1일
+개인정보처리방침 시행일자 : 2017년 8월 29일
+
+
+15. 정보보호 활동
+
+㈜정림개발이 운영하는 "메이필드"는 이용자가 더욱 안심하고 신뢰할 수 있는 서비스를 제공할 수 있도록 항상 노력하고 있으며 이러한 노력을 대외적으로도 인정받고 있습니다. 한분 한분 이용자 여러분의 정보를 소중히 생각하며 또 그것을 안전하게 지키기 위해 더욱 최선의 노력을 다할 것을 약속 드립니다.
+
+
+(시행일) 본 개인정보처리방침은 2017년 8월 29일부터 시행합니다.
+                        </pre>
+                    </div>
+                </div>
+                <div class="btnBox">
+                    <button type="submit" class="btn_point">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //.chatAside_bd -->
+</div>
+</div>
+
+<!-- 200408 AMR 주문하기 (카페 파반 메뉴) -->
+<div class="chatAside">
+  <div class="chat_order cafe_order">
+    <!-- .chatAside_hd -->
+    <div class="chatAside_hd">
+      <h3>식/음료 예약하기</h3>
+      <button type="button" class="btn_chatAside_close" title="close">close</button>
+    </div>
+    <!-- //.chatAside_hd -->
+    <!-- .chatAside_bd -->
+    <div class="chatAside_bd">
+      <div class="stn_area">
+        <div class="stnBox">
+          <p class="txt">개인정보동의 약관</p>
+          <div class="iptBox">
+            <div class="checkBox">
+              <input type="checkbox" name="agreement" id="terms_check" class="ipt_check">
+              <label for="terms_check">동의</label>
+            </div>
+            <button type="button" class="btn_terms" title="close">약관보기</button>
+          </div>
+        </div>
+        <div class="stnBox">
+          <p class="txt">예약 정보 입력</p>
+          <dl class="dlBox">
+            <dt>이름</dt>
+            <dd><input type="text" name="name" class="ipt_txt" placeholder="필수사항입니다"></dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>전화번호</dt>
+            <dd><input type="tel" name="tel" class="ipt_txt" placeholder="필수사항입니다"></dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>이메일</dt>
+            <dd><input type="email" name="email" class="ipt_txt" placeholder="주문내역을 받아볼 수 있습니다."></dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>수령방법</dt>
+            <dd>
+              <div class="radioBox">
+                <input type="radio" name="take" id="takeIn" class="ipt_check" checked>
+                <label for="takeIn">Take-In</label>
+                <input type="radio" name="take" id="takeOut" class="ipt_check">
+                <label for="takeOut">Take-Out</label>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox order_menu">
+            <dt>메뉴</dt>
+            <dd class="block_target">
+              <span class="dd_description">*사이즈업 주문은 불가합니다.</span>
+              <ul id="order_menu_area" class="menu">
+                <li>
+                  <button type="button" class="category">coffee</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="espresso_hot" id="coffee_1_0" class="ipt_check">
+                      <label for="coffee_1_0">에스프레소 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="espresso_ice" id="coffee_1_1" class="ipt_check">
+                      <label for="coffee_1_1">에스프레소 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2800</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="americano_hot" id="coffee_1_2" class="ipt_check">
+                      <label for="coffee_1_2">아메리카노 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="americano_ice" id="coffee_1_3" class="ipt_check">
+                      <label for="coffee_1_3">아메리카노 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2800</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="latte_hot" id="coffee_1_4" class="ipt_check">
+                      <label for="coffee_1_4">카페라떼 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="latte_ice" id="coffee_1_5" class="ipt_check">
+                      <label for="coffee_1_5">카페라떼 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="cappuccino_hot" id="coffee_1_6" class="ipt_check">
+                      <label for="coffee_1_6">카푸치노 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="cappuccino_ice" id="coffee_1_7" class="ipt_check">
+                      <label for="coffee_1_7">카푸치노 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="vanilla_latte_hot" id="coffee_1_8" class="ipt_check">
+                      <label for="coffee_1_8">바닐라라떼 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3400</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="vanilla_latte_ice" id="coffee_1_9" class="ipt_check">
+                      <label for="coffee_1_9">바닐라라떼 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3900</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mochaccino_hot" id="coffee_1_10" class="ipt_check">
+                      <label for="coffee_1_10">모카치노 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3400</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mochaccino_ice" id="coffee_1_11" class="ipt_check">
+                      <label for="coffee_1_11">모카치노 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3900</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="caramel_macchiato_hot" id="coffee_1_12" class="ipt_check">
+                      <label for="coffee_1_12">카라멜마끼아또 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3400</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="caramel_macchiato_ice" id="coffee_1_13" class="ipt_check">
+                      <label for="coffee_1_13">카라멜마끼아또 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3900</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="cafe_mocha_hot" id="coffee_1_14" class="ipt_check">
+                      <label for="coffee_1_14">카페모카 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3400</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="cafe_mocha_ice" id="coffee_1_15" class="ipt_check">
+                      <label for="coffee_1_15">카페모카 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3900</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <button type="button" class="category">non-coffee</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="greentea_latte_hot" id="non-coffee_2_0" class="ipt_check">
+                      <label for="non-coffee_2_0">녹차라떼 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="greentea_latte_ice" id="non-coffee_2_1" class="ipt_check">
+                      <label for="non-coffee_2_1">녹차라떼 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mixedgrains_latte_hot" id="non-coffee_2_2" class="ipt_check">
+                      <label for="non-coffee_2_2">오곡라떼 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mixedgrains_latte_ice" id="non-coffee_2_3" class="ipt_check">
+                      <label for="non-coffee_2_3">오곡라떼 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="sweetpotato_latte_hot" id="non-coffee_2_4" class="ipt_check">
+                      <label for="non-coffee_2_4">고구마라떼 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="sweetpotato_latte_ice" id="non-coffee_2_5" class="ipt_check">
+                      <label for="non-coffee_2_5">고구마라떼 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="chocolate_hot" id="non-coffee_2_6" class="ipt_check">
+                      <label for="non-coffee_2_6">핫초코</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="chocolate_ice" id="non-coffee_2_7" class="ipt_check">
+                      <label for="non-coffee_2_7">아이스초코</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="milktea_hot" id="non-coffee_2_8" class="ipt_check">
+                      <label for="non-coffee_2_8">로얄밀크티 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="milktea_ice" id="non-coffee_2_9" class="ipt_check">
+                      <label for="non-coffee_2_9">로얄밀크티 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <button type="button" class="category">tea</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="greentea_Hot" id="tea_3_0" class="ipt_check">
+                      <label for="tea_3_0">녹차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="greentea_Ice" id="tea_3_1" class="ipt_check">
+                      <label for="tea_3_1">녹차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="luiboss_Hot" id="tea_3_2" class="ipt_check">
+                      <label for="tea_3_2">루이보스 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="luiboss_Ice" id="tea_3_3" class="ipt_check">
+                      <label for="tea_3_3">루이보스 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="dazzling_Hot" id="tea_3_4" class="ipt_check">
+                      <label for="tea_3_4">다즐링 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="dazzling_Ice" id="tea_3_5" class="ipt_check">
+                      <label for="tea_3_5">다즐링 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="earlgrey_Hot" id="tea_3_6" class="ipt_check">
+                      <label for="tea_3_6">얼그레이 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="earlgrey_Ice" id="tea_3_7" class="ipt_check">
+                      <label for="tea_3_7">얼그레이 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="camomile_Hot" id="tea_3_8" class="ipt_check">
+                      <label for="tea_3_8">캐모마일 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="camomile_Ice" id="tea_3_9" class="ipt_check">
+                      <label for="tea_3_9">캐모마일 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="peppermint_Hot" id="tea_3_10" class="ipt_check">
+                      <label for="tea_3_10">페퍼민트 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="peppermint_Ice" id="tea_3_11" class="ipt_check">
+                      <label for="tea_3_11">페퍼민트 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="yuzatea_Hot" id="tea_3_12" class="ipt_check">
+                      <label for="tea_3_12">유자차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="yuzatea_Ice" id="tea_3_13" class="ipt_check">
+                      <label for="tea_3_13">유자차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="lemontea_Hot" id="tea_3_14" class="ipt_check">
+                      <label for="tea_3_14">레몬차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="lemontea_Ice" id="tea_3_15" class="ipt_check">
+                      <label for="tea_3_15">레몬차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="quincetea_Hot" id="tea_3_16" class="ipt_check">
+                      <label for="tea_3_16">모과차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="quincetea_Ice" id="tea_3_17" class="ipt_check">
+                      <label for="tea_3_17">모과차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="gingertea_Hot" id="tea_3_18" class="ipt_check">
+                      <label for="tea_3_18">생강차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="gingertea_Ice" id="tea_3_19" class="ipt_check">
+                      <label for="tea_3_19">생강차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="grapefruittea_Hot" id="tea_3_20" class="ipt_check">
+                      <label for="tea_3_20">자몽차 Hot</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="grapefruittea_Ice" id="tea_3_21" class="ipt_check">
+                      <label for="tea_3_21">자몽차 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <button type="button" class="category">frappuccino &amp; smoothy &amp; ade</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="javachip_frap" id="coldDrink_4_0"
+                             class="ipt_check">
+                      <label for="coldDrink_4_0">초코자바칩프라푸치노</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mochachip_frap" id="coldDrink_4_1"
+                             class="ipt_check">
+                      <label for="coldDrink_4_1">초코모카프라푸치노</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mintchoco_frap" id="coldDrink_4_2"
+                             class="ipt_check">
+                      <label for="coldDrink_4_2">민트초코프라푸치노</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="greantea_frap" id="coldDrink_4_3"
+                             class="ipt_check">
+                      <label for="coldDrink_4_3">그린티프라푸치노</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="plain_yogurt" id="coldDrink_4_4"
+                             class="ipt_check">
+                      <label for="coldDrink_4_4">플레인요거트 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="strawberry_yogurt" id="coldDrink_4_5"
+                             class="ipt_check">
+                      <label for="coldDrink_4_5">딸기요거트 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="kiwi_yogurt" id="coldDrink_4_6"
+                             class="ipt_check">
+                      <label for="coldDrink_4_6">키위요거트 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="mango_yogurt" id="coldDrink_4_7"
+                             class="ipt_check">
+                      <label for="coldDrink_4_7">망고요거트 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="blueberry_yogurt" id="coldDrink_4_8"
+                             class="ipt_check">
+                      <label for="coldDrink_4_8">블루베리요거트 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="yuza_smoothy" id="coldDrink_4_9"
+                             class="ipt_check">
+                      <label for="coldDrink_4_9">유자스무디 </label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">4000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="lemon_ade" id="coldDrink_4_10" class="ipt_check">
+                      <label for="coldDrink_4_10">레몬 에이드</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="orange_ade" id="coldDrink_4_11"
+                             class="ipt_check">
+                      <label for="coldDrink_4_11">오렌지 에이드</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="grapefruit_ade" id="coldDrink_4_12"
+                             class="ipt_check">
+                      <label for="coldDrink_4_12">자몽 에이드</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="lime_ade" id="coldDrink_4_13" class="ipt_check">
+                      <label for="coldDrink_4_13">라임 에이드</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="blueberry_ade" id="coldDrink_4_14"
+                             class="ipt_check">
+                      <label for="coldDrink_4_14">블루베리 에이드</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="peach_icetea" id="coldDrink_4_15" class="ipt_check">
+                      <label for="coldDrink_4_15">복숭아 아이스티 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="lemon_icetea" id="coldDrink_4_16"
+                             class="ipt_check">
+                      <label for="coldDrink_4_16">레몬 아이스티 Ice</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">3500</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </li>
+                <li>
+                  <button type="button" class="category">other</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="cola" id="other_5_0" class="ipt_check">
+                      <label for="other_5_0">콜라</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="sprite" id="other_5_1" class="ipt_check">
+                      <label for="other_5_1">사이다</label>
+                      <div class="how_many">
+                        <em class="price"><span class="price">2000</span><span>원</span></em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>결제방법</dt>
+            <dd>
+              <div class="radioBox">
+                <input type="radio" name="payment" id="payForCard" class="ipt_check">
+                <label for="payForCard">카드</label>
+                <input type="radio" name="payment" id="payForCash" class="ipt_check">
+                <label for="payForCash">현금</label>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox picker">
+            <dt>수령시간</dt>
+            <dd class="block_target">
+              <span class="dd_description">*시간을 여유롭게 주문해주세요.</span>
+              <div class="container">
+                <div class="row">
+                  <div class='col-sm-6'>
+                    <!-- value 빼기 -->
+                    <input type='text' name="pickupTime" value="" placeholder="날짜와 시간을 선택해주세요" class="form-control ipt_txt" id='pickup_time' />
+                  </div>
+                </div>
+              </div>
+            </dd>
+            <dt class="box_hide">달력 표시 설명</dt>
+            <dd class="pick_guide">
+              <div>
+                <div class="pick_guide01"></div>
+                <span>오늘</span>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>요청사항</dt>
+            <dd class="block_target"><textarea name="add" rows="10" class="ipt_txt" placeholder="내용을 입력해주세요 (선택)"></textarea></dd>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <p class="total_price">총 가격: <em>0</em>원</p>
+      </div>
+      <div class="btnBox">
+        <button type="submit" class="btn_point btn_submit">주문하기</button>
+      </div>
+
+      <!--
+        [D] 예약하기 주문 확인(팝업)
+        20200207 AMR
+      -->
+      <div class="stnBox popup">
+        <div class="popup_content check_order">
+          <span class="title">주문 정보 확인 <em>(확인완료를 클릭하셔야 주문정보가 전달됩니다.)</em></span>
+          <ul>
+            <li>
+              <span class="order_name">이름 :</span> <em>안미례</em>
+            </li>
+            <li>
+              <span class="order_phone">전화번호 :</span> <em>010-1212-3434</em>
+            </li>
+            <li>
+              <span class="order_email">이메일 :</span> <em>livedetuc@mindslab.ai</em>
+            </li>
+            <li>
+              <span class="order_reqList">선택한 메뉴 :</span>
+              <p>
+                <em>아메리카노 Ice 3개</em>
+                <em>바닐라라떼 Ice 1개</em>
+                <em>유자스무디 1개</em>
+              </p>
+            </li>
+            <li>
+              <span class="order_take">수령방법 :</span> <em>Take-Out</em>
+            </li>
+            <li>
+              <span class="order_payment">결제방법 :</span> <em>카드</em>
+            </li>
+            <li>
+              <span class="order_pickupTime">수령시간 :</span> <em>14:30</em>
+            </li>
+            <li>
+              <span class="order_msg">요청사항 :</span>
+              <p>
+                맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~
+              </p>
+            </li>
+            <li>
+              <span class="order_totalPrice">총 가격 :</span> <em>0</em>원
+            </li>
+          </ul>
+          <div class="btnBox">
+            <button type="button" class="btn_point btn_chatAside_close">확인완료</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //.chatAside_bd -->
+  </div>
+</div>
+
+<!-- 200417 AMR 주문하기 (식당 딜라잇푸드 메뉴) -->
+<div class="chatAside">
+  <div class="chat_order food_order">
+    <!-- .chatAside_hd -->
+    <div class="chatAside_hd">
+      <h3>식/음료 예약하기</h3>
+      <button type="button" class="btn_chatAside_close" title="close">close</button>
+    </div>
+    <!-- //.chatAside_hd -->
+    <!-- .chatAside_bd -->
+    <div class="chatAside_bd">
+      <div class="stn_area">
+        <div class="stnBox">
+          <p class="txt">개인정보동의 약관</p>
+          <div class="iptBox">
+            <div class="checkBox">
+              <input type="checkbox" name="agreement" id="food_terms_check" class="ipt_check">
+              <label for="terms_check">동의</label>
+            </div>
+            <button type="button" class="btn_terms" title="close">약관보기</button>
+          </div>
+        </div>
+        <div class="stnBox">
+          <p class="txt">예약 정보 입력</p>
+          <dl class="dlBox">
+            <dt>이름</dt>
+            <dd><input type="text" name="name" class="ipt_txt" placeholder="필수사항입니다"></dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>전화번호</dt>
+            <dd><input type="tel" name="tel" class="ipt_txt" placeholder="필수사항입니다"></dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>이메일</dt>
+            <dd><input type="email" name="email" class="ipt_txt" placeholder="주문내역을 받아볼 수 있습니다."></dd>
+          </dl>
+          <dl class="dlBox order_menu">
+            <dt>메뉴</dt>
+            <dd class="block_target">
+              <ul id="food_order_menu_area" class="menu">
+                <li>
+                  <button type="button" class="category">메뉴</button>
+                  <div class="checkBox category_menu">
+                    <div class="each_menu">
+                      <input type="checkbox" name="salad" id="food_1_0" class="ipt_check">
+                      <label for="food_1_0">샐러드</label>
+                      <div class="how_many">
+                        <em><span class="price">6000</span> 원</em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                    <div class="each_menu">
+                      <input type="checkbox" name="cup_set" id="food_1_1" class="ipt_check">
+                      <label for="food_1_1">컵밥 + 컵라면</label>
+                      <div class="how_many">
+                        <em><span class="price">6000</span> 원</em>
+                        <input type="number" placeholder="0" class="ipt_txt count"><span>개</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>결제방법</dt>
+            <dd>
+              <div class="radioBox">
+                <input type="radio" name="payment" id="food_payForCard" class="ipt_check">
+                <label for="food_payForCard">직원카드</label>
+                <input type="radio" name="payment" id="food_payForCash" class="ipt_check">
+                <label for="food_payForCash">현금</label>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox picker">
+            <dt>수령일자</dt>
+            <dd class="block_target">
+              <div class="container">
+                <div class="row">
+                  <div class='col-sm-6'>
+                    <!-- value 빼기 -->
+                    <input type='text' name="pickupTime" value="" placeholder="날짜와 시간을 선택해주세요" class="form-control ipt_txt" id='delight_pickup'/>
+                  </div>
+                </div>
+              </div>
+            </dd>
+            <dt class="box_hide">달력 표시 설명</dt>
+            <dd class="pick_guide">
+              <div>
+                <div class="pick_guide01"></div>
+                <span>오늘</span>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>수령시간</dt>
+            <dd>
+              <div class="radioBox">
+                <input type="radio" name="take" id="lunch" class="ipt_check" checked>
+                <label for="lunch">점심(12시)</label>
+                <input type="radio" name="take" id="dinner" class="ipt_check">
+                <label for="dinner">저녁(18시)</label>
+              </div>
+            </dd>
+          </dl>
+          <dl class="dlBox">
+            <dt>요청사항</dt>
+            <dd class="block_target"><textarea name="add" rows="10" class="ipt_txt" placeholder="내용을 입력해주세요 (선택)"></textarea></dd>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <p class="total_price">총 가격: <em>0</em>원</p>
+      </div>
+      <div class="btnBox">
+        <button type="submit" class="btn_point btn_submit">주문하기</button>
+      </div>
+
+      <!--
+        [D] 예약하기 주문 확인(팝업)
+        20200207 AMR
+      -->
+      <div class="stnBox popup">
+        <div class="popup_content check_order">
+          <span class="title">주문 정보 확인 <em>(확인완료를 클릭하셔야 주문정보가 전달됩니다.)</em></span>
+          <ul>
+            <li>
+              <span class="order_name">이름 :</span> <em>안미례</em>
+            </li>
+            <li>
+              <span class="order_phone">전화번호 :</span> <em>010-1212-3434</em>
+            </li>
+            <li>
+              <span class="order_email">이메일 :</span> <em>test@mindslab.ai</em>
+            </li>
+            <li>
+              <span class="order_reqList">선택한 메뉴 :</span>
+              <p>
+                <em>아메리카노 Ice 3개</em>
+                <em>바닐라라떼 Ice 1개</em>
+                <em>유자스무디 1개</em>
+              </p>
+            </li>
+            <li>
+              <span class="order_pickupTime">수령시간 :</span> <em>14:30</em>
+            </li>
+            <li>
+              <span class="order_msg">요청사항 :</span>
+              <p>
+                맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~맛있게 만들어주세요~
+              </p>
+            </li>
+            <li>
+              <span class="order_totalPrice">총 가격 :</span> <em>10000</em>원
+            </li>
+          </ul>
+          <div class="btnBox">
+            <button type="button" class="btn_point btn_chatAside_close">확인완료</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //.chatAside_bd -->
+  </div>
+</div>
+
+<!-- script -->
+<script type="text/javascript" src="/resources/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/resources/js/swiper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+<script type="text/javascript" src="/resources/js/socket_client.js"></script>
+<script type="text/javascript" src="/resources/js/chatbot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js"></script>
+<!--<script type="text/javascript" src="/resources/js/map.js"></script>-->
+<script type="text/javascript" src="/resources/js/moment.js"></script>
+<script type="text/javascript" src="/resources/js/bootstrap-datetimepicker.js"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuZtW-deiqIw5G9iCmTLTU7YDeODD63ag&language=ko&libraries=geometry,places&callback=initMap" async defer ></script>-->
+<script type="text/javascript">
+  $(document).ready(function() {
+    // 추가 200420 AMR 딜라잇푸드 datepicker
+    $('#delight_pickup').datetimepicker({
+      locale: 'ko',
+      inline: true,
+      format: 'MM월 DD일',
+      dayViewHeaderFormat: 'YYYY 년 MM 월',
+      daysOfWeekDisabled: [0, 6],
+      minDate: moment().add(1, 'days').startOf('day'),
+      maxDate: moment().add(9, 'days').endOf('day'),
+      disabledDates: ['2020-01-01', '2020-03-01', '2020-05-01', '2020-05-05', '2020-06-06', '2020-08-15', '2020-10-03', '2020-10-09', '2020-12-25'],
+      // 01-01 새해(신정), 03-01 삼일절, 05-01 근로자의날, 05-05 어린이날, 06-06 현충일, 08-15 광복절, 10-03 개천절, 10-09 한글날, 12-25 크리스마스
+      // 설날(구정)				음력 1월 1일
+      // 석가탄신일(부처님오신날)	 음력 4월 8일
+      // 추석						음력 8월 15일
+      icons: {
+          time: 'glyphicon glyphicon-time',
+          date: 'glyphicon glyphicon-calendar',
+          up: 'glyphicon glyphicon-chevron-up',
+          down: 'glyphicon glyphicon-chevron-down',
+          previous: 'glyphicon glyphicon-chevron-left',
+          next: 'glyphicon glyphicon-chevron-right',
+          today: 'glyphicon glyphicon-screenshot',
+          clear: 'glyphicon glyphicon-trash',
+          close: 'glyphicon glyphicon-remove'
+      },
+    });
+    $('.noti_title .btn_dropdown').on('click', function(){
+        $('.notification').toggleClass('active');
+    })
+  });
+</script>
+
+</body>
+</html>

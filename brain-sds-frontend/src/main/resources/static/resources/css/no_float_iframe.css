@@ -1,0 +1,24 @@
+#chatUI_wrap{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.chatUI_top{
+  display: none;
+}
+
+.chatUI_mid{
+  height: calc(100% - 54px);
+}
+
+#chatUI_wrap .chatUI_mid{
+  height: calc(100% - 54px);
+}
+
+#chatbot{
+  position: inherit;
+}

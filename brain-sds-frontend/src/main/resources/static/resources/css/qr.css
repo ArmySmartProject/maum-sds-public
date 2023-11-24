@@ -1,0 +1,14 @@
+#chatUI_wrap.chatUI_show {
+  -webkit-animation: none;
+  -moz-animation: none;
+  -o-animation: none;
+  animation: none;
+}
+
+#btn_goChat {
+  visibility: hidden
+}
+
+.btn_chatClose {
+  display: none;
+}

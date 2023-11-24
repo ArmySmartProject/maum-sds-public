@@ -1,0 +1,36 @@
+
+#chatbot_frame {height: 100%; width: 100%; z-index: 888; border-radius: 1%;}
+.chatbot_on .powered, .chatbot_on .chatGreeting {display:none;}
+
+#chatbot {display:block; overflow:hidden; position:fixed; right:0; bottom:0; width:760px; height:130px; border-radius:10px; z-index:9999;}
+#chatbot.chatbot_on {height:80%;}
+#chatbot_iframe {width:100%; height:100%; border:none;}
+.powered {display:block; position:fixed; right:20px; bottom:30px; margin-bottom:0; color:#fff; font-size:12px; text-align:right; text-shadow:1px 1px 3px rgba(0, 0, 0, 0.7); z-index:700;}
+.powered img {height: 15px; margin: 0 0 0 5px; vertical-align: middle;}
+.chatGreeting {display:block; position:fixed; right:100px; bottom:60px; margin-bottom:0; padding:10px; color:#fff; font-size:12px; text-align:right; border-radius:7px; background:#007d8c; z-index:700; -webkit-animation-duration:1.2s; animation-duration:1.2s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chatGreeting; animation-name:chatGreeting; animation-delay:0.5s;}
+
+@keyframes chatGreeting {
+0%   {opacity:0; display:none; bottom:30px;}
+50%  {opacity:0; display:none; bottom:30px;}
+100% {opacity:1; display:block; bottom:60px;}
+}
+
+.chatGreeting.chatGreeting_hide {animation-delay:0s; -webkit-animation-duration:0.3s; animation-duration:0.3s; -webkit-animation-fill-mode:both; animation-fill-mode:both; -webkit-animation-name:chatGreeting_hide; animation-name:chatGreeting_hide; }
+@-webkit-keyframes chatGreeting_hide {
+0%   {opacity:1; display:block; bottom:60px;}
+100% {opacity:0; display:none; bottom:30px;}
+}
+
+@keyframes chatGreeting_hide {
+0%   {opacity:1; display:block; bottom:60px;}
+100% {opacity:0; display:none; bottom:30px;}
+}
+
+@media screen and (max-width:760px) {
+
+#chatbot {right:0; bottom:0; border-radius:0; z-index: 9999;}
+#chatbot #btn_goChat {bottom:10px; width:55px; margin-right:10px; padding:50px 0 0 0;}
+#chatbot.chatbot_on {right:0; bottom:0; width:100%; height:100%;}
+.powered {bottom:12px;}
+#chatbot_frame {border-radius: 0%;}
+}

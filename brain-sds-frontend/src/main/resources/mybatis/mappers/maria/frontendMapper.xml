@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.frontend.model.FrontMapper">
+    <select id="selectHostCode" parameterType="String" resultType="java.lang.String">
+        <![CDATA[
+            select No from Account where Host = #{host}
+        ]]>
+    </select>
+    <select id="selectHostName" parameterType="String" resultType="java.lang.String">
+        <![CDATA[
+            select Host from Account where Host = #{host}
+        ]]>
+    </select>
+    <select id="selectHostInfo" parameterType="String" resultType="Map">
+        <![CDATA[
+            select * from Account where Host = #{host}
+        ]]>
+    </select>
+    <select id="selectSupplier" parameterType="String" resultType="Map">
+        <![CDATA[
+            select supplier from style_css where host = #{hostNo}
+        ]]>
+    </select>
+    <insert id="addLinkLog" parameterType="hashmap">
+        INSERT INTO ChatbotLog.LinkLog(host, lang, href, createdAt, sessionId)
+        VALUES(#{host}, #{lang}, #{href}, NOW(), (SELECT id from ChatbotLog.SessionLog WHERE session = #{sessionId}))
+    </insert>
+</mapper>
