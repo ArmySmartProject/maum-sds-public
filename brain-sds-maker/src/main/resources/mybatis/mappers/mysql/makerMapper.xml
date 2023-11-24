@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.maker.components.SdsMakerMapper">
+    <select id="getResponse" parameterType="maum.brain.sds.maker.data.MakerDatabaseDto" resultType="maum.brain.sds.maker.data.DbResponseDto">
+        <![CDATA[
+            CALL SP_GET_RESPONSE(#{account}, #{session}, #{intent}, #{entityNameCs}, #{entityValuesCs}, #{lang});
+        ]]>
+    </select>
+    <select id="getReqEntity" parameterType="java.lang.String" resultType="java.lang.String">
+        <![CDATA[
+            select ifnull(max(Entity), 'N') as Entity from Intent where Main=#{intent} and Language=#{lang} and Account=#{host}
+        ]]>
+    </select>
+    <select id="getEntityName" parameterType="int" resultType="java.lang.String">
+        <![CDATA[
+            select Name from Entities where No=#{num}
+        ]]>
+    </select>
+    <select id="checkIntent" parameterType="java.lang.String" resultType="int">
+        select count(*) from Intent where Main=#{intent} and Account=#{host}
+    </select>
+    <select id="getIntentRel" parameterType="java.lang.String" resultType="maum.brain.sds.maker.data.IntentRelDto">
+        select *
+        from IntentRel
+        where BertIntent=(select No
+        from BertIntent
+        where Name=#{bertIntent}
+        and Language=#{lang}
+        and BertItfId=(select id
+        from BackendInfo
+        where host=#{host} and service='ITF'))
+        <choose>
+            <when test='srcIntent != null and srcIntent !=""'>
+                and (SrcIntent=0
+                or SrcIntent=(select No
+                from Intent
+                where Main=#{srcIntent} and Account=#{host} and Language=#{lang}))
+            </when>
+            <otherwise>
+                and SrcIntent=0
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getConditionAnswer" parameterType="java.lang.String" resultType="java.lang.String">
+        select Answer
+        from Answer
+        where No=#{num} and Account=#{host} and Language=#{lang}
+    </select>
+</mapper>

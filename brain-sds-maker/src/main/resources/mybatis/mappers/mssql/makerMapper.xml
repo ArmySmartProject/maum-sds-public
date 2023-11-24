@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="maum.brain.sds.maker.components.SdsMakerMapper">
+<!--    <select id="getResponse" parameterType="maum.brain.sds.maker.data.MakerDatabaseDto" resultType="maum.brain.sds.maker.data.DbResponseDto">-->
+<!--        declare @it nvarchar(100)-->
+<!--        declare @in int-->
+<!--        declare @ia int-->
+<!--        declare @ite nvarchar(100)-->
+<!--        declare @en nvarchar(100)-->
+<!--        declare @ev nvarchar(100)-->
+<!--        declare @ic int-->
+<!--        declare @si nvarchar(100)-->
+<!--        declare @siu nvarchar(100)-->
+<!--        declare @an int-->
+
+<!--        set @si = 'testmindslab-12'-->
+<!--        set @it = #{data}-->
+<!--        set @in = isnull((select no from data with (nolock) where main = @it),'')-->
+<!--        set @ite = isnull((select entity from data with (nolock) where no = @in),'')-->
+<!--        set @ia = isnull((select answer from data with (nolock) where no = @in),'')-->
+<!--        set @en = #{entityNameCs}-->
+<!--        set @ev = #{entityValuesCs}-->
+<!--        set @an = isnull((select answer from data with (nolock) where no = @in),'')-->
+
+<!--        create table #temp (-->
+<!--                               no int identity(1,1),-->
+<!--                               name nvarchar(100),-->
+<!--                               val nvarchar(100)-->
+<!--        )-->
+
+<!--        insert into #temp (name,val)-->
+<!--        select val,null from FN_SPLIT (@en,',')-->
+
+<!--        create table #temp_u (-->
+<!--                                 num int,-->
+<!--                                 val nvarchar(100)-->
+<!--        )-->
+
+<!--        insert into #temp_u (num,val)-->
+<!--        select row_number() over (order by (select 1)) as num, val from fn_split (@ev,',')-->
+
+<!--        update a-->
+<!--        set a.val = b.val-->
+
+<!--        from #temp a inner join #temp_u b on a.no = b.num-->
+
+<!--        drop table #temp_u-->
+
+<!--        create table #temp_1 (name nvarchar(100))-->
+
+<!--        insert into #temp_1-->
+<!--        select a.name-->
+<!--        from entities a with (nolock) inner join #temp b on a.name = b.name COLLATE DATABASE_DEFAULT and a.val = b.val COLLATE DATABASE_DEFAULT-->
+<!--        where data = @in-->
+<!--        group by a.name-->
+
+<!--        create table #temp_2 (val nvarchar(100))-->
+
+<!--        insert into #temp_2 (val)-->
+<!--        select val from fn_split(@ite,',') where val not in-->
+<!--                                                 (-->
+<!--                                                     select name COLLATE DATABASE_DEFAULT from #temp_1-->
+<!--                                                 )-->
+
+<!--        create table #temp_3 (answer nvarchar(100))-->
+
+<!--        insert into #temp_3 (answer)-->
+<!--        select answer from entities a with (nolock)  inner join #temp_2 b on a.name = b.val COLLATE DATABASE_DEFAULT where data = @in-->
+<!--        group by answer-->
+
+<!--        if exists (select 1 from #temp_3)-->
+<!--            begin-->
+
+<!--                declare @ni1 nvarchar(100)-->
+<!--                set @ni1 = (select isnull(next,'') from data where no = @in)-->
+<!--                select answer,'' as next from answer where no in (-->
+<!--                    select answer from #temp_3-->
+<!--                )-->
+<!--                union all-->
+<!--                select '',main as next from data where no in (-->
+<!--                    select val from fn_split(@ni1,',')-->
+<!--                )-->
+<!--            end-->
+<!--        else-->
+<!--            begin-->
+
+<!--                declare @ni2 nvarchar(100)-->
+<!--                set @ni2 = (select isnull(next,'') from data where no = @in)-->
+<!--                select answer,'' as next from answer where no = @an-->
+<!--                union all-->
+<!--                select '',main as next from data where no in (-->
+<!--                    select val from fn_split(@ni2,',')-->
+<!--                )-->
+<!--            end-->
+
+<!--        drop table #temp-->
+<!--        drop table #temp_1-->
+<!--        drop table #temp_2-->
+<!--        drop table #temp_3-->
+<!--    </select>-->
+<!--        2019-08-28 주석처리-->
+<!--    <select id="getResponse" parameterType="maum.brain.sds.maker.data.MakerDatabaseDto" resultType="maum.brain.sds.maker.data.DbResponseDto">-->
+<!--        declare @it nvarchar(100)-->
+<!--        declare @in int-->
+<!--        declare @ia int-->
+<!--        declare @ite nvarchar(100)-->
+<!--        declare @en nvarchar(100)-->
+<!--        declare @ev nvarchar(100)-->
+<!--        declare @ic int-->
+<!--        declare @si nvarchar(100)-->
+<!--        declare @siu nvarchar(100)-->
+<!--        declare @an int-->
+
+<!--        set @si = #{session}-->
+<!--        set @it = #{intent}-->
+<!--        set @in = isnull((select no from intent with (nolock) where main = @it),'')-->
+<!--        set @ite = isnull((select entity from intent with (nolock) where no = @in),'')-->
+<!--        set @ia = isnull((select answer from intent with (nolock) where no = @in),'')-->
+<!--        set @en = #{entityNameCs}-->
+<!--        set @ev = #{entityValuesCs}-->
+<!--        set @an = isnull((select answer from intent with (nolock) where no = @in),'')-->
+
+<!--        create table #temp (-->
+<!--        no int identity(1,1),-->
+<!--        name nvarchar(100),-->
+<!--        val nvarchar(100)-->
+<!--        )-->
+
+<!--        insert into #temp (name,val)-->
+<!--        select val,null from FN_SPLIT (@en,',')-->
+
+<!--        create table #temp_u (-->
+<!--        num int,-->
+<!--        val nvarchar(100)-->
+<!--        )-->
+
+<!--        insert into #temp_u (num,val)-->
+<!--        select row_number() over (order by (select 1)) as num, val from fn_split (@ev,',')-->
+
+<!--        update a-->
+<!--        set a.val = b.val-->
+
+<!--        from #temp a inner join #temp_u b on a.no = b.num-->
+
+<!--        drop table #temp_u-->
+
+<!--        create table #temp_1 (name nvarchar(100))-->
+
+<!--        insert into #temp_1-->
+<!--        select a.name-->
+<!--        from entities a with (nolock) inner join #temp b on a.name = b.name COLLATE DATABASE_DEFAULT and a.val = b.val COLLATE DATABASE_DEFAULT-->
+<!--        where intent = @in-->
+<!--        group by a.name-->
+
+<!--        create table #temp_2 (val nvarchar(100))-->
+
+<!--        insert into #temp_2 (val)-->
+<!--        select val from fn_split(@ite,',') where val not in-->
+<!--        (-->
+<!--         select name COLLATE DATABASE_DEFAULT from #temp_1-->
+<!--        )-->
+
+<!--        create table #temp_3 (answer nvarchar(100))-->
+
+<!--        insert into #temp_3 (answer)-->
+<!--        select answer from entities a with (nolock)  inner join #temp_2 b on a.name = b.val COLLATE DATABASE_DEFAULT where intent = @in-->
+<!--        group by answer-->
+
+<!--        if exists (select 1 from #temp_3)-->
+<!--        begin-->
+
+<!--        declare @ni1 nvarchar(100)-->
+<!--        set @ni1 = (select isnull(replace(replace(next,'b',''),'i',''),'') from intent where no = @in)-->
+<!--         select answer,'' as next from answer where no in (-->
+<!--         select answer from #temp_3-->
+<!--         )-->
+<!--         union all-->
+<!--         select '',main as next from intent where no in (-->
+<!--         select val from fn_split(@ni1,',')-->
+<!--         )-->
+<!--        end-->
+<!--        else-->
+<!--        begin-->
+
+<!--        declare @ni2 nvarchar(100)-->
+<!--        set @ni2 = (select isnull(replace(replace(next,'b',''),'i',''),'') from intent where no = @in)-->
+<!--         select answer,'' as next from answer where no = @an-->
+<!--         union all-->
+<!--         select '',main as next from intent where no in (-->
+<!--         select val from fn_split(@ni2,',')-->
+<!--         )-->
+<!--        end-->
+
+<!--        drop table #temp-->
+<!--        drop table #temp_1-->
+<!--        drop table #temp_2-->
+<!--        drop table #temp_3-->
+<!--    <select id="getResponse" parameterType="maum.brain.sds.maker.data.MakerDatabaseDto" resultType="maum.brain.sds.maker.data.DbResponseDto">-->
+<!--        <![CDATA[-->
+<!--        declare @it nvarchar(500)-->
+<!--        declare @in int-->
+<!--        declare @ite nvarchar(500)-->
+<!--        declare @en nvarchar(500)-->
+<!--        declare @ev nvarchar(500)-->
+<!--        declare @si nvarchar(500)-->
+<!--        declare @an int-->
+<!--        declare @if int-->
+<!--        declare @ic int-->
+<!--        declare @ic2 int-->
+<!--        declare @ic3 int-->
+
+<!--        set @si = #{session}-->
+<!--        set @it = #{intent}-->
+<!--        set @in = isnull((select Intent.no from intent with (nolock) where Intent.main = @it),'')-->
+<!--        set @ite = isnull((select Intent.entity from intent with (nolock) where Intent.no = @in),'')-->
+<!--        set @en = #{entityNameCs}-->
+<!--        set @ev = #{entityValuesCs}-->
+<!--        set @an = isnull((select Intent.answer from intent with (nolock) where Intent.no = @in),'')-->
+<!--        set @ic = (select count(*) from FN_SPLIT (@ite,','))-->
+
+<!--        if isnull(@ite,'') <> ''-->
+<!--            begin-->
+<!--                declare @n int-->
+<!--                set @n = 1-->
+
+<!--                create table #entity-->
+<!--                (-->
+<!--                    en nvarchar(500),-->
+<!--                    ev nvarchar(500)-->
+<!--                )-->
+
+<!--                insert into #entity (en,ev)-->
+<!--                select-->
+<!--                    c.VAL, d.VAL-->
+<!--                from (-->
+<!--                         select row_number() over (order by @n) as no , FN_SPLIT.val-->
+<!--                         from FN_SPLIT(@en,',')) c inner join (-->
+<!--                    select row_number() over (order by @n) as no , FN_SPLIT.val-->
+<!--                    from FN_SPLIT(@ev,',')) d on c.no = d.no-->
+
+<!--                set @ic2 = (select count(*)-->
+<!--                            from Entities a with (nolock) inner join #entity f on a.name = f.en COLLATE DATABASE_DEFAULT-->
+<!--                            where a.intent = @in-->
+<!--                              and a.no in (select val from FN_SPLIT (@ite,','))-->
+<!--                              and a.val = case when a.val ='*' and f.ev not in ('',null)-->
+<!--                                                   then '*'-->
+<!--                                               else f.ev COLLATE DATABASE_DEFAULT-->
+<!--                                end-->
+<!--                )-->
+
+<!--                set @ic3 = (select count(distinct a.No) from Entities a with (nolock) inner join answer b with (nolock) on a.answer = b.no-->
+<!--                            where a.intent = @in-->
+<!--                              and a.name not in (select #entity.en COLLATE DATABASE_DEFAULT from #entity)-->
+<!--                              and a.val not in (select #entity.ev COLLATE DATABASE_DEFAULT from #entity)-->
+<!--                              and a.val = '*'-->
+<!--                )-->
+
+<!--                if @ic > @ic2 and @ic3 <> 0-->
+<!--                    begin-->
+<!--                        select b.answer from Entities a with (nolock) inner join answer b with (nolock) on a.answer = b.no-->
+<!--                        where a.intent = @in-->
+<!--                          and a.name not in (select #entity.en COLLATE DATABASE_DEFAULT from #entity)-->
+<!--                          and a.val not in (select #entity.ev COLLATE DATABASE_DEFAULT from #entity)-->
+<!--                    end-->
+<!--                else-->
+<!--                    begin-->
+<!--                        set @if = 2-->
+<!--                    end-->
+<!--                drop table #entity-->
+<!--            end-->
+<!--        else-->
+<!--            begin-->
+<!--                set @if = 2-->
+<!--            end-->
+<!--        if @if = 2-->
+<!--            begin-->
+<!--                declare @ni2 nvarchar(100)-->
+<!--                set @ni2 = (select isnull(Intent.next,'') from intent where Intent.no = @in)-->
+<!--                select Answer.answer-->
+<!--                     ,'' as next-->
+<!--                     ,'' as name-->
+<!--                     ,'' as Type-->
+<!--                     ,'' as url-->
+<!--                     ,'' as ds-->
+<!--                from answer  with (nolock) where Answer.no = @an-->
+<!--                union all-->
+<!--                select '',-->
+<!--                       a.main as next,-->
+<!--                       a.name,-->
+<!--                       Case When left(val,1) = 'b'-->
+<!--                                Then 'B'-->
+<!--                            When left(val,1) = 'i'-->
+<!--                                Then 'I'-->
+<!--                            else 'L'-->
+<!--                           End as Type,-->
+<!--                       a.url as url,-->
+<!--                       a.Description as ds-->
+<!--                from intent a with (nolock) inner join (select fn_split.val from fn_split(@ni2,',')) b on a.no = Convert(int,isnull(replace(replace(b.val,'b',''),'i',''),''))-->
+<!--            end-->
+<!--    ]]>-->
+<!--    </select>-->
+    <select id="getResponse" parameterType="maum.brain.sds.maker.data.MakerDatabaseDto" resultType="maum.brain.sds.maker.data.DbResponseDto">
+        <![CDATA[
+
+        declare @it nvarchar(500)
+        declare @in int
+        declare @ite nvarchar(500)
+        declare @en nvarchar(500)
+        declare @ev nvarchar(500)
+        declare @si nvarchar(500)
+        declare @an int
+        declare @if int
+        declare @account int
+        declare @ic int
+        declare @ic2 int
+        declare @ic3 int
+        declare @lang int
+        set @lang = #{lang}
+        /* 언어: 1 (한국어), 2 (영어), 3 (일본어), 4 (중국어) */
+        set @account = #{account}
+        /* 현재 1 - 이제너두, 2 - 골든튤립 */
+        set @si = #{session}
+        set @it = #{intent}
+        set @in = isnull((select no from intent with (nolock) where main = @it and account = @account and Language = @lang),'')
+        set @ite = isnull((select entity from intent with (nolock) where no = @in and account = @account and Language = @lang ),'N')
+        set @en = #{entityNameCs}
+        set @ev = #{entityValuesCs}
+        set @an = isnull((select answer from intent with (nolock) where no = @in and account = @account and Language = @lang),'')
+        set @ic = (select count(*) from FN_SPLIT (@ite,','))
+        if isnull(@ite,'N') <> 'N'
+            begin
+                declare @n int
+                set @n = 1
+                create table #entity
+                    (
+                    en nvarchar(500),
+                    ev nvarchar(500)
+                    )
+                insert into #entity (en,ev)
+                select
+                c.VAL, d.VAL
+                from (
+                select row_number() over (order by @n) as no , FN_SPLIT.val
+                from FN_SPLIT(@en,',')) c inner join (
+                select row_number() over (order by @n) as no , FN_SPLIT.val
+                from FN_SPLIT(@ev,',')) d on c.no = d.no
+                set @ic2 = (select count(*)
+                    from Entities a with (nolock) inner join #entity f on a.name = f.en COLLATE DATABASE_DEFAULT
+                    where a.intent = @in
+                      and a.no in (select val from FN_SPLIT (@ite,','))
+                      and a.val = case when a.val ='*' and f.ev not in ('',null)
+                          then '*'
+                          else f.ev COLLATE DATABASE_DEFAULT
+                          end
+                      and a.account = @account
+                      and a.Language = @lang
+                    )
+                set @ic3 = (select count(distinct a.No) from Entities a with (nolock) inner join answer b with (nolock) on a.answer = b.no
+                        where a.intent = @in
+                        and a.name not in (select #entity.en COLLATE DATABASE_DEFAULT from #entity)
+                        and a.val not in (select #entity.ev COLLATE DATABASE_DEFAULT from #entity)
+                        and a.val = '*'
+                        and a.account = @account
+                        and a.Language = @lang
+                            )
+                if @ic > @ic2 and @ic3 <> 0
+                    begin
+                        select b.answer from Entities a with (nolock) inner join answer b with (nolock) on a.answer = b.no
+                        where a.intent = @in
+                        and a.name not in (select #entity.en COLLATE DATABASE_DEFAULT from #entity)
+                        and a.val not in (select #entity.ev COLLATE DATABASE_DEFAULT from #entity)
+                        and a.account = @account
+                        and a.Language = @lang
+                    end
+                else
+                    begin
+                        set @if = 2
+                    end
+            drop table #entity
+            end
+        else
+            begin
+                set @if = 2
+            end
+        if @if = 2
+            begin
+                declare @ni2 nvarchar(500)
+                set @ni2 = isnull((select isnull(next, '') from intent where no = @in and account = @account), '')
+                  select
+                  distinct
+                      c.answer as hi
+                      ,b.answer as answer
+                      ,a.Name as display
+                      ,a.ResponseOrder as responseOrder
+                      ,'' as No
+                      ,'' as next
+                      ,'' as name
+                      ,'' as ROW
+                      ,'' as Type
+                      ,'' as URL
+                      ,'' as DS
+                      ,b.url as answerUrl
+                  from intent a with (nolock) inner join answer b with (nolock) on a.answer = b.no
+                                              left outer join answer c with (nolock) on a.greet = c.No
+                  where b.no = @an
+                  and a.account = @account
+                  and a.Language = @lang
+                 union all
+                 select
+                 distinct
+                        '',
+                        '',
+                        '',
+                        '',
+                        a.No,
+                        a.main as next,
+                        a.name,
+                        ROW,
+                        Case When left(val,1) = 'b'
+                             Then 'B'
+                             When left(val,1) = 'i'
+                             Then 'I'
+                            else 'L'
+                        End as Type,
+                        a.URL as URL,
+                        a.Description as DS,
+                        ''
+                        from intent a with (nolock) inner join (select row_number() over (ORDER BY (Select 0)) AS ROW, fn_split.val from fn_split(@ni2,',')) b on a.no = Convert(int,isnull(replace(replace(b.val,'b',''),'i',''),''))
+                where a.account = @account
+                and a.Language = @lang order by ROW
+            end
+
+        ]]>
+    </select>
+    <select id="getReqEntityIds" parameterType="java.lang.String" resultType="java.lang.String">
+        <![CDATA[
+            select entity from intent where main=#{intent} and Language=#{lang} and Account=#{host}
+        ]]>
+    </select>
+    <select id="getReqEntity" parameterType="map" resultType="map">
+        <![CDATA[
+            select * from Entity
+            where No in
+         ]]>
+            <foreach collection="entityIds" item="item" index="index" separator="," open="(" close=")">
+                #{item.value}
+            </foreach>
+    </select>
+    <select id="getRequestAnswer" parameterType="map" resultType="java.lang.String">
+        <![CDATA[
+            select a.Answer
+            from Answer as a
+            where a.No = (
+                select e.Answer
+                from Entity as e
+                where e.Account=#{host} and e.Lang=#{lang} and e.Name=#{name}
+            )
+        ]]>
+    </select>
+    <select id="getEntityName" parameterType="int" resultType="java.lang.String">
+        <![CDATA[
+            select name from Entities where No=#{num}
+        ]]>
+    </select>
+    <select id="checkIntent" parameterType="java.lang.String" resultType="int">
+        select count(*) from Intent where Main=#{intent} and Account=#{host}
+    </select>
+    <select id="getIntentRel" parameterType="java.lang.String" resultType="maum.brain.sds.maker.data.IntentRelDto">
+        select *
+        from IntentRel
+        where SrcIntent in (
+            select No
+            from Intent
+            where Main=#{srcIntent} and Account=#{host} and Language=#{lang})
+        and DestIntent in (
+            select No
+            from Intent
+            where Main=#{destIntent} and Account=#{host} and Language=#{lang}
+        ) and BertIntent = #{bert}
+    </select>
+    <select id="getConditionAnswer" parameterType="java.lang.String" resultType="java.lang.String">
+        select Answer
+        from Answer
+        where No=#{num} and Account=#{host} and Language=#{lang}
+    </select>
+
+    <select id="getEntityList" parameterType="java.lang.String" resultType="map">
+        select *
+        from Entity
+        where Account=#{host} and Lang=#{lang}
+    </select>
+</mapper>
