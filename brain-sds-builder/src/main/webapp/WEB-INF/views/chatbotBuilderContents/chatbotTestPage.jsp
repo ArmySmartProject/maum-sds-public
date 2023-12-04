@@ -15,10 +15,10 @@
     <title>chatbot builder TestPage</title>
     <script src="${pageContext.request.contextPath}/js/jquery.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery.form.js"></script>
-    <link rel="stylesheet" href="https://sds.maum.ai/css?host=${hostName}&v=${queryString}"/>
+    <link rel="stylesheet" href="https://sds-dev.maum.ai/css?host=${hostName}&v=${queryString}"/>
 </head>
 <body>
-<script src="https://sds.maum.ai/js/${hostName}?v=${queryString}"></script>
+<script src="https://sds-dev.maum.ai/js/${hostName}?v=${queryString}"></script>
 <%--<script src="http://localhost:10000/js/${hostName}"></script>--%>
 </body>
 </html>

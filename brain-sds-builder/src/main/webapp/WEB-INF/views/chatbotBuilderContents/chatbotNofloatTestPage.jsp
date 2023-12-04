@@ -15,7 +15,7 @@
     <title>chatbot builder TestPage</title>
     <script src="${pageContext.request.contextPath}/js/jquery.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery.form.js"></script>
-    <link rel="stylesheet" href="https://sds.maum.ai/css?host=${hostName}&v=${queryString}"/>
+    <link rel="stylesheet" href="https://sds-dev.maum.ai/css?host=${hostName}&v=${queryString}"/>
 </head>
 <body>
 <style>
@@ -25,6 +25,6 @@
     }
 </style>
 
-<iframe id="exampleFrame" src="https://sds.maum.ai/nofloat/${hostName}?lang=kor"></iframe>
+<iframe id="exampleFrame" src="https://sds-dev.maum.ai/nofloat/${hostName}?lang=kor"></iframe>
 </body>
 </html>
