@@ -4,24 +4,24 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- 기본 BackendInfo 설정 -->
     <bean id="defaultBackendInfo" class="first.common.util.PropInfo">
-        <constructor-arg name="itfIP"       value="172.31.16.182"    />
-        <constructor-arg name="itfPort"     value="35000"              />
-        <constructor-arg name="nerIP"       value="114.108.173.112"    />
-        <constructor-arg name="nerPort"     value="35006"              />
-        <constructor-arg name="SimpleBotTTSIP"       value="http://183.110.62.66"    />
-        <constructor-arg name="SimpleBotTTSPort"     value="9998"              />
+        <constructor-arg name="itfIP"       value="0"  /> <!-- 사용하는 itf 엔진 없음 -->
+        <constructor-arg name="itfPort"     value="0"  /> <!-- 사용하는 itf 엔진 없음 -->
+        <constructor-arg name="nerIP"       value="0"  /> <!-- 사용하는 ner 엔진 없음 -->
+        <constructor-arg name="nerPort"     value="0"  /> <!-- 사용하는 ner 엔진 없음 -->
+        <constructor-arg name="SimpleBotTTSIP"       value="http://183.110.62.66"    /> <!-- 심플봇 사용안함 -->
+        <constructor-arg name="SimpleBotTTSPort"     value="9998"              /> <!-- 심플봇 사용안함 -->
         <!-- 현대해상용 설정 -->
         <constructor-arg name="siteCustom"     value="mindslab"              />
         <!-- NQA 학습 사용여부 -->
-        <constructor-arg name="nqaYN"     value="Y"              />
+        <constructor-arg name="nqaYN"     value="N"              /> <!-- ner 엔진 통신 N -->
         <!-- 심플봇-음성봇 테스트용 bl 외부용 ip, port -->
         <constructor-arg name="env"       value="prod"    />
-        <constructor-arg name="blIP"       value="125.132.250.244"    />
-        <constructor-arg name="blPort1"     value="26001"              />
-        <constructor-arg name="blPort2"     value="26002"              />
-        <constructor-arg name="cmIP"       value="121.133.247.250"    />
-        <constructor-arg name="cmPort"     value="15000"              />
-        <constructor-arg name="m2uUrl"       value="https://fast-aicc.maum.ai:9990"    />
+        <constructor-arg name="blIP"       value="125.132.250.244"    /> <!-- 사용안함 -->
+        <constructor-arg name="blPort1"     value="26001"              /> <!-- 사용안함 -->
+        <constructor-arg name="blPort2"     value="26002"              /> <!-- 사용안함 -->
+        <constructor-arg name="cmIP"       value="121.133.247.250"    /> <!-- 사용안함 -->
+        <constructor-arg name="cmPort"     value="15000"              /> <!-- 사용안함 -->
+        <constructor-arg name="m2uUrl"       value="http://localhost:9990"    /> <!-- 사용안함 -->
 
 
         <!-- 심플봇-음성봇 테스트용 bl 내부 테스트용 ip, port -->
