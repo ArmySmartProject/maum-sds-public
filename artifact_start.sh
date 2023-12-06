@@ -6,7 +6,7 @@ echo "sds profile ${SDS_PROFILE}, port offset ${SDS_PROFILE_OFFSET}"
 
 java -jar \
  -Dbrain.sds.profile=${SDS_PROFILE} -Dbrain.sds.port.offset=${SDS_PROFILE_OFFSET} \
- -Dserver.port=443 \
+ -Dserver.port=28080 \
  ./jar/brain-sds-frontend.jar > ${LOG_DIRECTORY}/sds_frontend.log &
 java -jar \
  -Dbrain.sds.profile=${SDS_PROFILE} -Dbrain.sds.port.offset=${SDS_PROFILE_OFFSET} \
