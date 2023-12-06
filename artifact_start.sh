@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 export SDS_PROFILE="production"
 export SDS_PROFILE_OFFSET="0"
-export LOG_DIRECTORY="/home/minds/maum-sds/logs"
+export LOG_DIRECTORY="/home/minds/sds/logs"
 echo "sds profile ${SDS_PROFILE}, port offset ${SDS_PROFILE_OFFSET}"
 
 java -jar \
