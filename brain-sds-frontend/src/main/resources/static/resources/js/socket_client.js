@@ -55,6 +55,8 @@ socketClient.setEventListeners = function (writeMessage, createLoadingMsg, delet
       talker = 'me';
     } else if (data.userType === 'supporter') {
       talker = 'supporter'
+    } else if (data.userType === 'alarm') {
+      talker = 'alarm'
     }
 
     writeMessage(data.roomId, talker, data.talkObj);

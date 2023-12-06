@@ -441,6 +441,8 @@ $(document).ready(function (){
             createSystemMsg(msg);
         } else if (talker === 'supporter') {
             createCounselorMsg(msg);
+        } else if (talker === 'alarm') {
+            createAlarmMsg(talkObj);
         }
 
         if (previousTime === 'y') {
@@ -500,7 +502,37 @@ $(document).ready(function (){
 
         $('.chatUI_mid').scrollTop($('.chatUI_mid')[0].scrollHeight);
     }
+    function createAlarmMsg(talkObj) {
+        $('.chatUI_mid .loading').remove();
+        let msg = talkObj.message;
+        let jobList = talkObj.jobList;
 
+        let button_li = '';
+        if (jobList) {
+            jobList.forEach((job) => {
+                button_li += '<li><a class="intent btnStart" ' +
+                    'href="' + job.url + '" data-display="' + job.name + '" ' +
+                    'data-intent="' + job.name + '">'+ job.name +'</a></li>';
+            })
+        }
+        $('.chatUI_mid .lst_talk').append(
+            '<li class="bot counselor"> \
+                <span class="cont"> \
+                    <em class="txt">' + msg + '</em> \
+                    <div class="bot_msg">\
+                        <div class="btnItem">\
+                            <ul>'+button_li+' </ul>\
+                        </div>\
+                    </div>\
+                    <em class="date">' + getNowTime() + '</em> \
+                </span> \
+            </li>'
+        );
+        $('.chatbot_contents .bot_infoBox').css({'display':'none'});
+        $('.chatbot_contents .lst_talk').css({'display':'block'});
+
+        $('.chatUI_mid').scrollTop($('.chatUI_mid')[0].scrollHeight);
+    }
 
     // chat window 에 나의 msg UI 생성
     createUsrMsg = function(msg, time) {
