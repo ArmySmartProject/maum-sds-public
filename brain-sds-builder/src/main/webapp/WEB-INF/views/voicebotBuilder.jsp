@@ -1455,7 +1455,7 @@
       if(socket) {
         socket.disconnect();
       }
-      socket = io.connect('wss://fast-aicc.maum.ai:51000', {'force new connection': true});
+      socket = io.connect('wss://fast-aicc-dev.maum.ai:51000', {'force new connection': true});
 
       // 웹에서 계속 연결 시도하기 때문에 close
       setTimeout(function() {
