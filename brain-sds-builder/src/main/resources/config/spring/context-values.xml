@@ -35,7 +35,7 @@
     </bean>
 
     <bean id="defaultStyleCssPath" class="first.common.util.StyleCssInfo">
-        <constructor-arg name="resourcesPath"       value="/home/minds/sds/server/imgUpload"    />
+        <constructor-arg name="resourcesPath"       value="/DATA/server/imgUpload"    />
         <constructor-arg name="defaultStyle"        value="chatbot.css/chatbot_custom.css/chatbot_floating.css"/>
         <constructor-arg name="supplier"            value="default/mindslab/redtie"/>
         <constructor-arg name="logoiconMappingval"       value="https://sds-dev.maum.ai/imagesLi/"    />

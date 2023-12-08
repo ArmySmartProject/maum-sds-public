@@ -61,7 +61,7 @@
 
   <context-param>
     <param-name>excelPath</param-name>
-    <param-value>/home/minds/sds/server/excel/</param-value>
+    <param-value>/DATA/server/excel/builder/</param-value>
   </context-param>
 
 <!--  <context-param>-->
