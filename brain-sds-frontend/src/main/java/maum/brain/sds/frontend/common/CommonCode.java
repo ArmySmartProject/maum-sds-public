@@ -37,8 +37,8 @@ public class CommonCode {
         int serverPort;
 
         try {
-//            scheme = request.getScheme();
-            scheme="https";
+            scheme = request.getScheme();
+//            scheme="https";
             serverName = request.getServerName();
             serverPort = request.getServerPort();
             return String.format("%s://%s:%d", scheme, serverName, serverPort);

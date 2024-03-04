@@ -356,15 +356,14 @@ function chatClick(host, cp) {
             // 소스코드복사 부분
             let nowHostName  = ansList.HOST;
             let nowCopyText = "<!-- header에 추가 -->\n" +
-                "<link rel=\"stylesheet\" href=\"https://sds-dev.maum.ai/css?host="+nowHostName+"\"/>\n" +
+                "<link rel=\"stylesheet\" href=\"http://10.50.1.19:28080/css?host="+nowHostName+"\"/>\n" +
                 "<!-- body 가장 하단에 추가 -->\n" +
-                "<script src=\"https://sds-dev.maum.ai/js/" + nowHostName + "\"></script>";
+                "<script src=\"http://10.50.1.19:28080/js/" + nowHostName + "\"></script>";
             $(".copy_text").text(nowCopyText);
-            let nowQR = "https://sds-dev.maum.ai:8080/sds-builder/upload/getTestPage?host="+host;
+            let nowQR = "http://10.50.1.19:18090/sds-builder/upload/getTestPage?host="+host;
             console.log("nowQR : " + nowQR)
             qrcode.clear();
             qrcode.makeCode(nowQR);
-
 
 
             let cssStyleList = result.cssList;

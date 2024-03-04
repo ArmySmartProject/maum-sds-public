@@ -24,7 +24,7 @@
   <script src="${pageContext.request.contextPath}/js/jquery-3.1.0.min.js"></script>
   <script src="${pageContext.request.contextPath}/js/popper-2.5.4.min.js"></script>
   <script src="${pageContext.request.contextPath}/js/go.js?v=${queryString}"></script>
-  <script src="https://static.maum.ai/common/resources/js/mui_alert.js?v=${queryString}"></script>
+  <script src="${pageContext.request.contextPath}/js/mui_alert.js?v=${queryString}"></script>
   <script src="${pageContext.request.contextPath}/js/an-select.js?v=${queryString}"></script>
   <script src="${pageContext.request.contextPath}/js/voicebotBuilderContents/voicebotBuilderCommon.js?v=${queryString}"></script>
   <script src="${pageContext.request.contextPath}/js/datatables.min.js"></script>

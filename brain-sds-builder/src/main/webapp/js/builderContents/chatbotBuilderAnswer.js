@@ -2128,7 +2128,7 @@ function confirmAnswerFirstly(){
                         timeout: 600000,
                         success: function (data) {
                             finAjax();
-                            confirmAnswerAfter("https://sds-dev.maum.ai:8080/sds-builder/upload/chat/img/" + data.imgName);
+                            confirmAnswerAfter("http://10.50.1.19:18090/sds-builder/upload/chat/img/" + data.imgName);
                             // confirmAnswerAfter("http://localhost:8080/sds-builder/upload/chat/img/" + data.imgName);
                         },
                         error: function (e) {

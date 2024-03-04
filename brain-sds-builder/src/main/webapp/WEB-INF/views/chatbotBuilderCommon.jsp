@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/font.css?v=${queryString}">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/swiper.min.css?v=${queryString}">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/simplebot.css?v=${queryString}">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mui_alert.css?v=${queryString}">
 
     <script src="${pageContext.request.contextPath}/js/corejs-3.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery.js"></script>
@@ -27,7 +28,7 @@
     <script src="${pageContext.request.contextPath}/js/builderContents/chatbotBuilderCommon.js?v=${queryString}"></script>
     <script src="${pageContext.request.contextPath}/js/builderContents/chatbotTestPage.js?v=${queryString}"></script>
 
-    <script src="https://static.maum.ai/common/resources/js/mui_alert.js?v=${queryString}"></script>
+    <script src="${pageContext.request.contextPath}/js/mui_alert.js?v=${queryString}"></script>
 
     <title>chatbot builder</title>
 </head>

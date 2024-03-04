@@ -8,7 +8,7 @@
   <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource"
         destroy-method="close">
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-    <property name="url" value="jdbc:mysql://maumai-db:9004/Chatbot?useUnicode=true&amp;allowMultiQueries=true"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/Chatbot?useUnicode=true&amp;allowMultiQueries=true"/>
     <property name="validationQuery" value="select 1"/>
     <property name="testWhileIdle" value="true"/>
     <property name="timeBetweenEvictionRunsMillis" value="7200000"/>
@@ -19,7 +19,7 @@
   <!-- SIMPLEBOT(HAPPYCALL4) -->
   <bean id="dataSourceSpied2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-    <property name="url" value="jdbc:mysql://maumai-db:9004/HAPPYCALL4?useUnicode=true&amp;allowMultiQueries=true"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/HAPPYCALL4?useUnicode=true&amp;allowMultiQueries=true"/>
     <property name="validationQuery" value="select 1"/>
     <property name="testWhileIdle" value="true"/>
     <property name="timeBetweenEvictionRunsMillis" value="7200000"/>

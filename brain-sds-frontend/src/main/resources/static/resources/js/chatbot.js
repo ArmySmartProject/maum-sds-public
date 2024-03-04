@@ -299,8 +299,7 @@ $(document).ready(function (){
             qrLocation = data.qrLocation;
             country = data.country;
             previousSess = data.previousSess;
-            serverURL = data.chatServerURL ? data.chatServerURL : 'https://fast-aicc-dev.maum.ai:50000';
-            serverURL = 'https://fast-aicc-dev.maum.ai:50000';
+            serverURL = data.chatServerURL ? data.chatServerURL : 'http://10.50.1.19:50000';
 
             console.log('chatWSServer URL is ' + serverURL);
 

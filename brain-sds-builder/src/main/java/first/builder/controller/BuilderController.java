@@ -1297,7 +1297,7 @@ public class BuilderController {
   public void excelSampleDown(HttpServletRequest request, HttpServletResponse response,@RequestParam String host)
       throws Exception {
       try {
-        InputStream downloadfile = new FileInputStream(request.getSession().getServletContext().getInitParameter("excelPath") + "sample/[chatbot] TASK_ANSWER_샘플데이터.xlsx");
+        InputStream downloadfile = new FileInputStream(request.getSession().getServletContext().getInitParameter("excelPath") + "sample/TASK_ANSWER_SAMPLE.xlsx");
         XSSFWorkbook workbook = new XSSFWorkbook(downloadfile);
         XSSFSheet sheet = workbook.getSheetAt(0);
         XSSFSheet sheet2 = workbook.getSheetAt(1);
@@ -1357,7 +1357,7 @@ public class BuilderController {
 
         response.setContentType("ms-vnd/excel");
         response.setHeader("Set-Cookie", "fileDownload=true; path=/");
-        response.setHeader("Content-Disposition", "attachment;filename=[chatbot] TASK_ANSWER_샘플데이터.xlsx");
+        response.setHeader("Content-Disposition", "attachment;filename=[chatbot]TASK_ANSWER_SAMPLE.xlsx");
 
         workbook.write(response.getOutputStream());
         workbook.close();
@@ -2113,7 +2113,7 @@ public class BuilderController {
 
       response.setContentType("ms-vnd/excel");
       response.setHeader("Set-Cookie", "fileDownload=true; path=/");
-      response.setHeader("Content-Disposition", "attachment;filename=[chatbot] TASK_ANSWER_데이터.xlsx");
+      response.setHeader("Content-Disposition", "attachment;filename=[chatbot]TASK_ANSWER_DATA.xlsx");
 
       workbook.write(response.getOutputStream());
       workbook.close();
@@ -2403,7 +2403,7 @@ public class BuilderController {
 
       response.setContentType("ms-vnd/excel");
       response.setHeader("Set-Cookie", "fileDownload=true; path=/");
-      response.setHeader("Content-Disposition", "attachment;filename=[chatbot] TASK_ANSWER_데이터.xlsx");
+      response.setHeader("Content-Disposition", "attachment;filename=[chatbot]TASK_ANSWER_DATA.xlsx");
 
       workbook.write(response.getOutputStream());
       workbook.close();

@@ -14,6 +14,10 @@
       <param-name>encoding</param-name>
       <param-value>UTF-8</param-value>
     </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
   </filter>
 
   <filter-mapping>
@@ -61,7 +65,7 @@
 
   <context-param>
     <param-name>excelPath</param-name>
-    <param-value>/DATA/server/excel/builder/</param-value>
+    <param-value>/home/minds/maum/sds-builder/excel/</param-value>
   </context-param>
 
 <!--  <context-param>-->
