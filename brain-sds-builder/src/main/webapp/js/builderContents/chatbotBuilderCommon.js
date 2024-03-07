@@ -137,7 +137,7 @@ function changeContents(contentIndex){
         overlayTutorial(1);
     }
     var obj = new Object();
-    var contents = ["Answer","Intention","Setting", "NewChatbot", "ReplaceDict", "DeepLearning"];
+    var contents = ["Answer","Intention","Setting", "NewChatbot", "ReplaceDict", "DeepLearning"]; //DeepLearning 사용안함
     // contentIndex = contentIndex == 5 ? 4 : contentIndex;
 
     if(checkAjax()){return;}

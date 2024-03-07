@@ -34,12 +34,12 @@
         <div style="display: inline-block; margin-right: 15px;">
             <a href="#chat_regex_upload" class="btn_secondary btn_lyr_open" onclick="regexExcelModalOpen()">정규식 엑셀 업로드</a>
             <a class="btn_secondary btn_lyr_open" onclick="regexExcelDownload()">정규식 엑셀 다운로드</a>
-            <a href="#chat_learning_management" id="chatbot_learning" class="btn_secondary btn_lyr_open popper_box" style="display: none" onclick="handleLyr()">챗봇 학습
-                <%--            [D] 문장에 따라 width를 다르게 지정해 주어야 합니다. --%>
-                <span class="popper bg_bk" id="alert_nqa_train_start" style="width: 160px; display: none">학습되지 않은 데이터가 있습니다. 학습을 시작해 주세요.</span>
-                <span class="popper bg_bk" id="alert_nqa_training" style="width: 85px; display: none">학습중 입니다.</span>
-                <span class="popper bg_bk" id="alert_nqa_uploading" style="width: 140px; display: none">학습문장을 업로드 중 입니다.</span>
-            </a>
+<%--            <a href="#chat_learning_management" id="chatbot_learning" class="btn_secondary btn_lyr_open popper_box" style="display: none" onclick="handleLyr()">챗봇 학습--%>
+<%--                &lt;%&ndash;            [D] 문장에 따라 width를 다르게 지정해 주어야 합니다. &ndash;%&gt;--%>
+<%--                <span class="popper bg_bk" id="alert_nqa_train_start" style="width: 160px; display: none">학습되지 않은 데이터가 있습니다. 학습을 시작해 주세요.</span>--%>
+<%--                <span class="popper bg_bk" id="alert_nqa_training" style="width: 85px; display: none">학습중 입니다.</span>--%>
+<%--                <span class="popper bg_bk" id="alert_nqa_uploading" style="width: 140px; display: none">학습문장을 업로드 중 입니다.</span>--%>
+<%--            </a>--%>
         </div>
         <a href="#chat_intention_add" class="btn_secondary btn_lyr_open el_intent_step01" onclick="addPage()">추가</a>
     </div>

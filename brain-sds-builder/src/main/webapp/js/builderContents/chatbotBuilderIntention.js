@@ -54,19 +54,19 @@ function chatClick(host, cp) {
             $("#intentHead").empty();
             var innerHTML = '';
             innerHTML += '<col style="width: 65px;"><col style="width: 15%;"><col>';
-            if (nowSearchLang == 1) {
-              innerHTML += '<col>';
-            }
+            // if (nowSearchLang == 1) {
+            //   innerHTML += '<col>';
+            // }
             innerHTML += '<col style="width: 85px;"><col style="width: 85px;">';
             $("#intentColgroup").append(innerHTML);
             innerHTML = '';
             innerHTML += '<tr><th>순번</th><th>의도</th><th>정규식 문장</th>';
-            if (nowSearchLang == 1) {
-              innerHTML += '<th>학습 문장<i style="margin: 5px; font-size: 11px">(학습문장은 한국어만 사용 가능합니다.)</i></th>';
-              $("#chatbot_learning").css('display', 'inline-block');
-            } else {
-              $("#chatbot_learning").css('display', 'none');
-            }
+            // if (nowSearchLang == 1) {
+            //   innerHTML += '<th>학습 문장<i style="margin: 5px; font-size: 11px">(학습문장은 한국어만 사용 가능합니다.)</i></th>';
+            //   $("#chatbot_learning").css('display', 'inline-block');
+            // } else {
+            //   $("#chatbot_learning").css('display', 'none');
+            // }
             innerHTML += ''
                 // + '<th>BERT 학습 문장</th>'
                 + '<th><span class="text_hide">상세</span></th><th><span class="text_hide">삭제</span></th></tr>';
@@ -97,13 +97,13 @@ function chatClick(host, cp) {
                     innerHTML += '<span class="regex_type intent" name="regex">' + regexList[i] + '</span>';
                   }
                 }
-                if (nowSearchLang == 1) {
-                  if (v.question != undefined) {
-                    innerHTML += '<td><span class="text_ellipsis" name="question">'+ v.question +'</span></td>';
-                  } else {
-                    innerHTML += '<td></td>';
-                  }
-                }
+                // if (nowSearchLang == 1) {
+                //   if (v.question != undefined) {
+                //     innerHTML += '<td><span class="text_ellipsis" name="question">'+ v.question +'</span></td>';
+                //   } else {
+                //     innerHTML += '<td></td>';
+                //   }
+                // }
                 // innerHTML += '<td><span class="text_ellipsis" name="sentences">'+ v.sentences +'</span></td>';
                 // innerHTML += '</span>';
                 // innerHTML += '</td>';

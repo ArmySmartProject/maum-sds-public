@@ -89,7 +89,7 @@
                                 <li onclick="changeContents(1)" data-index="1" class="el_intent_step01 el_intent_step03">의도</li>
                                 <li onclick="changeContents(2)" data-index="2">설정</li>
                                 <li onclick="changeContents(4)" data-index="4" class="replace_dic">치환사전</li>
-                                <li onclick="changeContents(5)" data-index="5">딥러닝</li>
+<%--                                <li onclick="changeContents(5)" data-index="5">딥러닝</li>--%>
                             </ul>
                             <div class="prev_menu_cont"></div>
                             <div class="menu_cont">

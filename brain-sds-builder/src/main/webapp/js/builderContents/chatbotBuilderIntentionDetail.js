@@ -67,9 +67,9 @@ function chatClick(temp, cp, bertIntentNo, type) {
           innerHTML += '<p class="path"><em><a href="javascript:goIntention()" title="의도로 돌아가기">의도</a></em><span>&colon;</span><em id="intentTitle">'+list[0].Name+'</em></p>';
           innerHTML += '<div class="btn_switch">';
           innerHTML +=  '<button type="button" id="regex" class="primary active">정규식</button>';
-          if (nowSearchLang == 1) {
-            innerHTML +=  '<button type="button" id="nqa" class="primary">학습문장</button>';
-          }
+          // if (nowSearchLang == 1) {
+          //   innerHTML +=  '<button type="button" id="nqa" class="primary">학습문장</button>';
+          // }
           // innerHTML +=  '<button type="button" id="sentence" class="primary">BERT 학습문장</button>';
           innerHTML +=  '</div>';
           innerHTML +=  '</div>';
